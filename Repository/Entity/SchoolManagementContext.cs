@@ -17,85 +17,123 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<InstitutionDetail> InstitutionDetails { get; set; }
 
+    public virtual DbSet<SmspassTable> SmspassTables { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=WIN-J0V379CPS02;Database=SchoolManagement;User ID=CMS;Password=CMS@123;Trusted_Connection=False;TrustServerCertificate=True;");
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            // Connection string is configured via dependency injection
+        }
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<InstitutionDetail>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable(tb => tb.HasTrigger("trg_UpdateModifiedDate"));
+            entity.HasKey(e => e.Sysid);
 
             entity.Property(e => e.Address1)
-                .HasMaxLength(50)
+                .HasMaxLength(1000)
                 .IsUnicode(false);
             entity.Property(e => e.Address2)
+                .HasMaxLength(1000)
+                .IsUnicode(false);
+            entity.Property(e => e.AlternateMobileNumer)
+                .HasMaxLength(12)
+                .IsUnicode(false);
+            entity.Property(e => e.Districtname)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.AlternateMobileNo)
-                .HasMaxLength(10)
+            entity.Property(e => e.Emailid)
+                .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.DistrictName)
+            entity.Property(e => e.EnteredBy)
                 .HasMaxLength(30)
                 .IsUnicode(false);
-            entity.Property(e => e.EmailId)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("EmailID");
-            entity.Property(e => e.EntryBy)
-                .HasMaxLength(50)
+            entity.Property(e => e.EntryDate).HasColumnType("datetime");
+            entity.Property(e => e.FaviconContentType)
+                .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.EntryDate)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime");
-            entity.Property(e => e.FavIconContentType)
-                .HasMaxLength(30)
-                .IsUnicode(false);
-            entity.Property(e => e.FavIconFileName)
-                .HasMaxLength(50)
+            entity.Property(e => e.FaviconFileName)
+                .HasMaxLength(100)
                 .IsUnicode(false);
             entity.Property(e => e.InstitutionName)
-                .HasMaxLength(50)
+                .HasMaxLength(500)
                 .IsUnicode(false);
             entity.Property(e => e.InstitutionType)
-                .HasMaxLength(50)
+                .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.Landline)
-                .HasMaxLength(10)
+                .HasMaxLength(15)
                 .IsUnicode(false);
             entity.Property(e => e.LogoContentType)
-                .HasMaxLength(30)
-                .IsUnicode(false);
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("logoContentType");
+            entity.Property(e => e.LogoData).HasColumnName("logoData");
             entity.Property(e => e.LogoFileName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("logoFileName");
             entity.Property(e => e.LogoWithTextContentType)
-                .HasMaxLength(30)
-                .IsUnicode(false);
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("logoWithTextContentType");
+            entity.Property(e => e.LogoWithTextData).HasColumnName("logoWithTextData");
             entity.Property(e => e.LogoWithTextFileName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.MobileNo)
-                .HasMaxLength(10)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("logoWithTextFileName");
+            entity.Property(e => e.MobileNumer)
+                .HasMaxLength(12)
                 .IsUnicode(false);
             entity.Property(e => e.ModifiedBy)
-                .HasMaxLength(50)
+                .HasMaxLength(30)
                 .IsUnicode(false);
             entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
-            entity.Property(e => e.PinCode)
-                .HasMaxLength(6)
+            entity.Property(e => e.OfficialMail)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Pincode)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.PostofficeName)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.StaffIdprefix)
-                .HasMaxLength(5)
+                .HasMaxLength(10)
                 .IsUnicode(false)
                 .HasColumnName("StaffIDPrefix");
             entity.Property(e => e.StateName)
-                .HasMaxLength(30)
+                .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.SysId).ValueGeneratedOnAdd();
+            entity.Property(e => e.Website)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("website");
+        });
+
+        modelBuilder.Entity<SmspassTable>(entity =>
+        {
+            entity.HasKey(e => e.Sysid);
+
+            entity.ToTable("SMSPassTable");
+
+            entity.Property(e => e.Entrydate).HasColumnType("datetime");
+            entity.Property(e => e.FkInstitutionDetails).HasColumnName("FK_InstitutionDetails");
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.Password)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.UserName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Validitydate).HasColumnType("date");
+
+            entity.HasOne(d => d.FkInstitutionDetailsNavigation).WithMany(p => p.SmspassTables)
+                .HasForeignKey(d => d.FkInstitutionDetails)
+                .HasConstraintName("FK_SMSPassTable_InstitutionDetails");
         });
 
         OnModelCreatingPartial(modelBuilder);

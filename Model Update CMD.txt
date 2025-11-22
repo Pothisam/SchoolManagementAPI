@@ -1,0 +1,3 @@
+﻿Scaffold-DbContext "Server=WIN-J0V379CPS02;Database=SchoolManagement;User ID=CMS;Password=CMS@123;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entity
+
+Scaffold-DbContext "Server=WIN-J0V379CPS02;Database=SchoolManagement;User ID=CMS;Password=CMS@123;Trusted_Connection=False;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entity  -Force

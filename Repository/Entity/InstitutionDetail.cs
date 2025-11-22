@@ -5,25 +5,31 @@ namespace Repository.Entity;
 
 public partial class InstitutionDetail
 {
-    public long SysId { get; set; }
+    public int Sysid { get; set; }
 
-    public string InstitutionName { get; set; } = null!;
+    public string? InstitutionName { get; set; }
 
-    public string EmailId { get; set; } = null!;
+    public string? Emailid { get; set; }
+
+    public string? OfficialMail { get; set; }
 
     public string? Address1 { get; set; }
 
     public string? Address2 { get; set; }
 
-    public string? MobileNo { get; set; }
+    public string? MobileNumer { get; set; }
 
-    public string? AlternateMobileNo { get; set; }
+    public string? AlternateMobileNumer { get; set; }
+
+    public string? Website { get; set; }
 
     public string? Landline { get; set; }
 
-    public string? PinCode { get; set; }
+    public string? Pincode { get; set; }
 
-    public string? DistrictName { get; set; }
+    public string? PostofficeName { get; set; }
+
+    public string? Districtname { get; set; }
 
     public string? StateName { get; set; }
 
@@ -39,21 +45,23 @@ public partial class InstitutionDetail
 
     public byte[]? LogoWithTextData { get; set; }
 
-    public string? FavIconFileName { get; set; }
+    public string? FaviconFileName { get; set; }
 
-    public string? FavIconContentType { get; set; }
+    public string? FaviconContentType { get; set; }
 
-    public byte[]? FavIconData { get; set; }
+    public byte[]? FaviconData { get; set; }
 
-    public string InstitutionType { get; set; } = null!;
+    public string? InstitutionType { get; set; }
 
-    public string StaffIdprefix { get; set; } = null!;
+    public string? StaffIdprefix { get; set; }
 
-    public string? EntryBy { get; set; }
+    public string? EnteredBy { get; set; }
 
     public DateTime? EntryDate { get; set; }
 
     public string? ModifiedBy { get; set; }
 
     public DateTime? ModifiedDate { get; set; }
+
+    public virtual ICollection<SmspassTable> SmspassTables { get; set; } = new List<SmspassTable>();
 }
