@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.InstitutionDetailsModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Repository.InstitutionDetails
 {
     public interface IInstitutionDetailsRepo
     {
-        Task<string> FeesCollectAsync(string request);
+        Task<InstitutionDetailsResponse> GetInstitutionDetail(int InstitutionCode);
     }
 }

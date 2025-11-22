@@ -22,7 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Libraries\Models\Models.csproj" />
-    <ProjectReference Include="..\Libraries\Service\Service.csproj" />
+    <ProjectReference Include="..\Libraries\Services\Services.csproj" />
     <ProjectReference Include="..\Libraries\Repository\Repository.csproj" />
   </ItemGroup>
 

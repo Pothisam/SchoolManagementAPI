@@ -4,10 +4,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.7.34202.233
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchoolManagementAPI", "SchoolManagementAPI\SchoolManagementAPI.csproj", "{EBE288DF-EADA-4C1F-9208-B451AB55F2AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F27CEF4B-F11D-4CA4-85F1-F0AC34BC724D} = {F27CEF4B-F11D-4CA4-85F1-F0AC34BC724D}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{7D4738D0-FE17-4D87-B298-5F8B796D2ED2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Libraries\Service\Service.csproj", "{F27CEF4B-F11D-4CA4-85F1-F0AC34BC724D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Libraries\Services\Services.csproj", "{F27CEF4B-F11D-4CA4-85F1-F0AC34BC724D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Libraries\Models\Models.csproj", "{3122E5F1-0479-4316-AE8E-575F347287A9}"
 EndProject

@@ -1,4 +1,5 @@
 using Repository;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Register Repository services including DbContext
-builder.Services.RepositoryDependencyInjection(builder.Configuration);
+// Register Services including Repository services and DbContext
+builder.Services.ServicesDependencyInjection(builder.Configuration);
 
 var app = builder.Build();
 
