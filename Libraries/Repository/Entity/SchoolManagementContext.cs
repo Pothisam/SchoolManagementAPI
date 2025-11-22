@@ -20,12 +20,8 @@ public partial class SchoolManagementContext : DbContext
     public virtual DbSet<SmspassTable> SmspassTables { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (!optionsBuilder.IsConfigured)
-        {
-            // Connection string is configured via dependency injection
-        }
-    }
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=SARASC34693;Database=SchoolManagement;User ID=CMS;Password=Q8w$3Lm9#Vr7Xp2!;Trusted_Connection=False;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -51,7 +47,9 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.EnteredBy)
                 .HasMaxLength(30)
                 .IsUnicode(false);
-            entity.Property(e => e.EntryDate).HasColumnType("datetime");
+            entity.Property(e => e.EntryDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.FaviconContentType)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -91,7 +89,9 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.ModifiedBy)
                 .HasMaxLength(30)
                 .IsUnicode(false);
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.OfficialMail)
                 .HasMaxLength(500)
                 .IsUnicode(false);
@@ -120,9 +120,13 @@ public partial class SchoolManagementContext : DbContext
 
             entity.ToTable("SMSPassTable");
 
-            entity.Property(e => e.Entrydate).HasColumnType("datetime");
+            entity.Property(e => e.Entrydate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.FkInstitutionDetails).HasColumnName("FK_InstitutionDetails");
-            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
             entity.Property(e => e.Password)
                 .HasMaxLength(500)
                 .IsUnicode(false);
