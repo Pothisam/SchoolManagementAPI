@@ -123,7 +123,6 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.Entrydate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
-            entity.Property(e => e.FkInstitutionDetails).HasColumnName("FK_InstitutionDetails");
             entity.Property(e => e.ModifiedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -135,8 +134,9 @@ public partial class SchoolManagementContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Validitydate).HasColumnType("date");
 
-            entity.HasOne(d => d.FkInstitutionDetailsNavigation).WithMany(p => p.SmspassTables)
-                .HasForeignKey(d => d.FkInstitutionDetails)
+            entity.HasOne(d => d.InstitutionCodeNavigation).WithMany(p => p.SmspassTables)
+                .HasForeignKey(d => d.InstitutionCode)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_SMSPassTable_InstitutionDetails");
         });
 

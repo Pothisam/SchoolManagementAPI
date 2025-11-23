@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository.Entity;
 using Repository.InstitutionDetails;
+using Repository.UserRepository;
 
 namespace Repository
 {
@@ -11,6 +12,7 @@ namespace Repository
         public static IServiceCollection RepositoryDependencyInjection(this IServiceCollection service, IConfiguration config)
         {
             service.AddScoped<IInstitutionDetailsRepo, InstitutionDetailsRepo>();
+            service.AddScoped<IUserRepo, UserRepo>();
             service.AddDbContext<SchoolManagementContext>(option =>
                 option.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             return service;

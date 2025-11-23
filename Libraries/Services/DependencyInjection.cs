@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
+using Services.CommonServices;
 using Services.InstitutionDetailsServices;
+using Services.UserServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,8 @@ namespace Services
         {
             service.RepositoryDependencyInjection(config);
             service.AddScoped<IInstitutionDetailsService, InstitutionDetailsService>();
+            service.AddScoped<ICommonService, CommonService>();
+            service.AddScoped<IUserService,UserService>();
             return service;
         }
     }
