@@ -66,7 +66,6 @@ namespace Services.CommonServices
                 new Claim("InstitutionCode",response.InstitutionCode.ToString()),
                 new Claim("LoginType",response.LoginType ?? ""),
                 new Claim("Guid", response.Guid.HasValue ? response.Guid.Value.ToString() : ""),
-                new Claim("IsHOD", response.IsHOD.ToString()),
                 new Claim("IsPrincipal", response.IsPrincipal.ToString()),
             };
             return GenerateJWTToken(claims);
@@ -81,6 +80,18 @@ namespace Services.CommonServices
                 expires: DateTime.Now.AddMinutes(_appKeyConfig.TokenExpiry ?? 15),
                 signingCredentials: credentials);
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public APIRequestDetails GetAPIRequestDetails(ClaimsPrincipal user)
+        {
+            return new APIRequestDetails
+            {
+                InstitutionCode = Convert.ToInt32(user.FindFirst("InstitutionCode")?.Value),
+                UserName = user.FindFirst("UserName")?.Value,
+                LoginType = user.FindFirst("LoginType").Value,
+                SysId = Convert.ToInt32(user.FindFirst("SysId")?.Value),
+                Ispricipal = Convert.ToBoolean(user.FindFirst("Ispricipal")?.Value)
+            };
         }
     }
 }

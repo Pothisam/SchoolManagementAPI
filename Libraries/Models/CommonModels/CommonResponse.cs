@@ -17,5 +17,14 @@ namespace Models.CommonModels
         Success = 200,
         Failed = 300
     }
+    public class APIRequestDetails
+    {
+        public required string UserName { get; set; }
+        public required int InstitutionCode { get; set; }
+        public required string LoginType { get; set; }
+        public required int SysId { get; set; }
+        public required bool Ispricipal { get; set; }
 
+
+    }
 }

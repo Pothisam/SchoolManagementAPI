@@ -16,7 +16,6 @@ namespace Models.UserModels
         public string InstitutionType { get; set; } = null!;
         public int InstitutionCode { get; set; }
         public Guid? Guid { get; set; }
-        public bool IsHOD { get; set; } = false;
         public bool IsPrincipal { get; set; } = false;
     }
 }
