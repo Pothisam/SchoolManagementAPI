@@ -14,7 +14,7 @@ namespace SchoolManagementAPI.Controllers
             _institutionDetailsService = institutionDetailsService;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> GetInstitutionDetails()
         {
             var result = await _institutionDetailsService.GetInstitutionDetail(1);
