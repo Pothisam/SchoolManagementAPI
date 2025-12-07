@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Models.CommonModels;
 using Models.InstitutionDetailsModels;
 using Repository.Entity;
 using System;
@@ -16,6 +17,7 @@ namespace Repository.InstitutionDetails
         {
             _context = context;
         }
+
         public async Task<InstitutionDetailsResponse> GetInstitutionDetail(int InstitutionCode)
         {
             InstitutionDetailsResponse? Result = await (from x in _context.InstitutionDetails
@@ -41,6 +43,137 @@ namespace Repository.InstitutionDetails
                                                      ModifiedDate = x.ModifiedDate
                                                  }).FirstOrDefaultAsync();
             return Result;
+        }
+        public async Task<bool> AddInstitutionAsync(AddInstitutionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var inst = new InstitutionDetail
+            {
+                InstitutionName = request.InstitutionName,
+                Emailid = request.Emailid,
+                OfficialMail = request.OfficialMail,
+                Address1 = request.Address1,
+                Address2 = request.Address2,
+                MobileNumer = request.MobileNumer,
+                AlternateMobileNumer = request.AlternateMobileNumer,
+                Website = request.Website,
+                Landline = request.Landline,
+                Pincode = request.Pincode,
+                PostofficeName = request.PostofficeName,
+                Districtname = request.Districtname,
+                StateName = request.StateName,
+                InstitutionType = request.InstitutionType,
+                StaffIdprefix = request.StaffIdprefix,
+                EnteredBy = apiRequestDetails.UserName
+            };
+
+            _context.InstitutionDetails.Add(inst);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<InstitutionDetail?> GetInstitutionByNameAsync(string institutionName, int institutionCode)
+        {
+            return await _context.InstitutionDetails
+            .FirstOrDefaultAsync(x =>
+                x.InstitutionName == institutionName &&
+                x.Sysid == institutionCode);
+        }
+
+       
+
+        public async Task<InstitutionDetail?> GetInstitutionByIdAsync(int sysid)
+        {
+            return await _context.InstitutionDetails
+           .FirstOrDefaultAsync(x => x.Sysid == sysid);
+        }
+
+        public async Task<bool> UpdateInstitutionAsync(UpdateInstitutionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var inst = await _context.InstitutionDetails
+            .FirstOrDefaultAsync(x => x.Sysid == request.Sysid);
+
+            if (inst == null)
+                return false;
+
+            // Assign updated fields
+            inst.InstitutionName = request.InstitutionName;
+            inst.Emailid = request.Emailid;
+            inst.OfficialMail = request.OfficialMail;
+            inst.Address1 = request.Address1;
+            inst.Address2 = request.Address2;
+            inst.MobileNumer = request.MobileNumer;
+            inst.AlternateMobileNumer = request.AlternateMobileNumer;
+            inst.Website = request.Website;
+            inst.Landline = request.Landline;
+            inst.Pincode = request.Pincode;
+            inst.PostofficeName = request.PostofficeName;
+            inst.Districtname = request.Districtname;
+            inst.StateName = request.StateName;
+            inst.InstitutionType = request.InstitutionType;
+            inst.StaffIdprefix = request.StaffIdprefix;
+
+            inst.ModifiedBy = apiRequestDetails.UserName;
+            inst.ModifiedDate = DateTime.Now;
+
+            _context.InstitutionDetails.Update(inst);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<bool> UpdateInstitutionLogoAsync(UpdateInstitutionLogoRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var inst = await _context.InstitutionDetails
+        .FirstOrDefaultAsync(x => x.Sysid == request.Sysid);
+
+            if (inst == null)
+                return false;
+
+            inst.LogoFileName = request.LogoFileName;
+            inst.LogoContentType = request.LogoContentType;
+            inst.LogoData = request.LogoData;
+
+            inst.ModifiedBy = apiRequestDetails.UserName;
+            _context.InstitutionDetails.Update(inst);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> UpdateInstitutionFaviconAsync(UpdateInstitutionFaviconRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var inst = await _context.InstitutionDetails
+        .FirstOrDefaultAsync(x => x.Sysid == request.Sysid);
+
+            if (inst == null)
+                return false;
+
+            inst.FaviconFileName = request.FaviconFileName;
+            inst.FaviconContentType = request.FaviconContentType;
+            inst.FaviconData = request.FaviconData;
+
+            inst.ModifiedBy = apiRequestDetails.UserName;
+            _context.InstitutionDetails.Update(inst);
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> UpdateInstitutionLogoWithTextAsync(UpdateInstitutionLogoWithTextRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var inst = await _context.InstitutionDetails
+        .FirstOrDefaultAsync(x => x.Sysid == request.Sysid);
+
+            if (inst == null)
+                return false;
+
+            inst.LogoWithTextFileName = request.LogoWithTextFileName;
+            inst.LogoWithTextContentType = request.LogoWithTextContentType;
+            inst.LogoWithTextData = request.LogoWithTextData;
+
+            inst.ModifiedBy = apiRequestDetails.UserName;
+
+            _context.InstitutionDetails.Update(inst);
+
+            return await _context.SaveChangesAsync() > 0;
         }
     }
 }
