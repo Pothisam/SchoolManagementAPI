@@ -27,4 +27,10 @@ namespace Models.CommonModels
 
 
     }
+    public class InstitutionLogoResponse
+    {
+        public string? Logo { get; set; }
+        public string? LogoWithText { get; set; }
+        public string? FavIcon { get; set; }
+    }
 }

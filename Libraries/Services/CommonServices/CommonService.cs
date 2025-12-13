@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using Models.CommonModels;
 using Models.ConfigurationModels;
 using Models.UserModels;
+using Repository.CommonRepository;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -20,10 +21,12 @@ namespace Services.CommonServices
     {
         private readonly JwtConfig _jWTConfig;
         private readonly AppKeyConfig _appKeyConfig;
-        public CommonService(IOptionsSnapshot<JwtConfig> jWTConfigOptions, IOptionsSnapshot<AppKeyConfig> appKeyConfigOptions)
+        private readonly ICommonRepo _ICommonRepo;
+        public CommonService(IOptionsSnapshot<JwtConfig> jWTConfigOptions, IOptionsSnapshot<AppKeyConfig> appKeyConfigOptions, ICommonRepo ICommonRepo)
         {
             _jWTConfig = jWTConfigOptions.Value;
             _appKeyConfig = appKeyConfigOptions.Value;
+            _ICommonRepo = ICommonRepo;
         }
         private static readonly string EncryptionKey = "My@Vision$To*Make!My#MoM^Proude";
         private static readonly byte[] Salt = new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76 };
@@ -55,6 +58,7 @@ namespace Services.CommonServices
             response.Status = Status.Success;
             response.Message = "Welcome " + result.UserName;
             result.Token = GenerateToken(result, request.IPAddress);
+            response.Data = result;
         }
         private string GenerateToken(LoginResponse response, string IPAddress)
         {
@@ -92,6 +96,38 @@ namespace Services.CommonServices
                 SysId = Convert.ToInt32(user.FindFirst("SysId")?.Value),
                 Ispricipal = Convert.ToBoolean(user.FindFirst("Ispricipal")?.Value)
             };
+        }
+        public async Task<CommonResponse<string>> GetDatetime()
+        {
+            var response = new CommonResponse<string>();
+            var data = await _ICommonRepo.GetDatetime();
+            response.Status = Status.Success;
+            response.Data = data.ToString("yyyy-MM-dd");
+            return response;
+        }
+
+        public async Task<CommonResponse<InstitutionLogoResponse>> GetLogo(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<InstitutionLogoResponse>
+            {
+                Data = new InstitutionLogoResponse() // Initialize the Data property
+            };
+            byte[] LogoWithText = await _ICommonRepo.GetLogoWithTextAsync(apiRequestDetails);
+            if (LogoWithText != null)
+            {
+                response.Data.LogoWithText = "data:image/png;base64," + Convert.ToBase64String(LogoWithText, 0, LogoWithText.Length);
+            }
+            byte[] Logoonly = await _ICommonRepo.GetLogoonlyAsync(apiRequestDetails);
+            if (Logoonly != null)
+            {
+                response.Data.Logo = "data:image/png;base64," + Convert.ToBase64String(Logoonly, 0, Logoonly.Length);
+            }
+            byte[] FavIcon = await _ICommonRepo.GetFavIconAsync(apiRequestDetails);
+            if (FavIcon != null)
+            {
+                response.Data.FavIcon = "data:image/png;base64," + Convert.ToBase64String(FavIcon, 0, FavIcon.Length);
+            }
+            return response;
         }
     }
 }

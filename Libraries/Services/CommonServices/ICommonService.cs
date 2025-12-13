@@ -14,5 +14,7 @@ namespace Services.CommonServices
         Task<string> Encrypt(string CipherText);
         Task CreateJWTToken(CommonResponse<LoginResponse> response, LoginResponse result, LoginRequestwithIP request);
         APIRequestDetails GetAPIRequestDetails(ClaimsPrincipal user);
+        Task<CommonResponse<string>> GetDatetime();
+        Task<CommonResponse<InstitutionLogoResponse>> GetLogo(APIRequestDetails apiRequestDetails);
     }
 }
