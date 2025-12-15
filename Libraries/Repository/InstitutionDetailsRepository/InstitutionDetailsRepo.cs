@@ -90,7 +90,7 @@ namespace Repository.InstitutionDetails
         public async Task<bool> UpdateInstitutionAsync(UpdateInstitutionRequest request, APIRequestDetails apiRequestDetails)
         {
             var inst = await _context.InstitutionDetails
-            .FirstOrDefaultAsync(x => x.Sysid == request.Sysid);
+            .FirstOrDefaultAsync(x => x.Sysid == apiRequestDetails.InstitutionCode);
 
             if (inst == null)
                 return false;

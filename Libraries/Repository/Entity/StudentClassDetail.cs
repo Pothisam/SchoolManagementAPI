@@ -17,6 +17,8 @@ public partial class StudentClassDetail
 
     public string ExamRegisterNumber { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public int InstitutionCode { get; set; }
 
     public string EnteredBy { get; set; } = null!;

@@ -33,4 +33,16 @@ namespace Models.CommonModels
         public string? LogoWithText { get; set; }
         public string? FavIcon { get; set; }
     }
+    public class RecordHistoryResponse
+    {
+        public required string ModifiedBy { get; set; }
+        public required DateTime ModifiedDate { get; set; }
+        public required string Data { get; set; }
+    }
+    public class PostOfficeResponse
+    {
+        public string? OfficeName { get; set; }
+        public string? Districtname { get; set; }
+        public string? StateName { get; set; }
+    }
 }

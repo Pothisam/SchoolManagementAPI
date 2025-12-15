@@ -9,6 +9,8 @@ public partial class Class
 
     public string ClassName { get; set; } = null!;
 
+    public string Status { get; set; } = null!;
+
     public int InstitutionCode { get; set; }
 
     public string EnteredBy { get; set; } = null!;

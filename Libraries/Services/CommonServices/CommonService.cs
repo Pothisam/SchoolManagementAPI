@@ -129,5 +129,42 @@ namespace Services.CommonServices
             }
             return response;
         }
+
+        public async Task<CommonResponse<List<RecordHistoryResponse>>> GetRecordHistory(GetRecordHistoryRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<RecordHistoryResponse>>();
+            var data = await _ICommonRepo.GetRecordHistory(request, apiRequestDetails);
+            if (data != null && data.Any())
+            {
+                response.Status = Status.Success;
+                response.Message = "";
+                response.Data = data;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "The record history could not be located.";
+            }
+
+            return response;
+        }
+
+        public async Task<CommonResponse<List<PostOfficeResponse>>> GetPostOffice(PostOfficeRequest request)
+        {
+            var response = new CommonResponse<List<PostOfficeResponse>>();
+            List<PostOfficeResponse> result = await _ICommonRepo.GetPostOffice(request);
+            if (result == null)
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+            }
+            else
+            {
+                response.Status = Status.Success;
+                response.Message = "";
+                response.Data = result;
+            }
+            return response;
+        }
     }
 }

@@ -13,5 +13,7 @@ namespace Repository.CommonRepository
         Task<byte[]?> GetLogoWithTextAsync(APIRequestDetails apiRequestDetails);
         Task<byte[]?> GetLogoonlyAsync(APIRequestDetails apiRequestDetails);
         Task<byte[]?> GetFavIconAsync(APIRequestDetails apiRequestDetails);
+        Task<List<RecordHistoryResponse>> GetRecordHistory(GetRecordHistoryRequest request, APIRequestDetails apiRequestDetails);
+        Task<List<PostOfficeResponse>> GetPostOffice(PostOfficeRequest request);
     }
 }

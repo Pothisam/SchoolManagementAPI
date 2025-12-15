@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.CommonModels;
 using SchoolManagementAPI.Attributes;
 using Services.CommonServices;
 
@@ -28,6 +29,19 @@ namespace SchoolManagementAPI.Controllers
         {
             var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
             var result = await _ICommonService.GetLogo(apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetRecordHistory")]
+        public async Task<IActionResult> GetRecordHistory(GetRecordHistoryRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _ICommonService.GetRecordHistory(request, apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetPostOffice")]
+        public async Task<IActionResult> GetPostOffice(PostOfficeRequest request)
+        {
+            var result = await _ICommonService.GetPostOffice(request);
             return Ok(result);
         }
     }

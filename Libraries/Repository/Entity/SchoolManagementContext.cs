@@ -17,6 +17,8 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<AcademicYear> AcademicYears { get; set; }
 
+    public virtual DbSet<AllIndiaPincodeDatum> AllIndiaPincodeData { get; set; }
+
     public virtual DbSet<AuditTable> AuditTables { get; set; }
 
     public virtual DbSet<Class> Classes { get; set; }
@@ -73,6 +75,56 @@ public partial class SchoolManagementContext : DbContext
                 .IsUnicode(false);
         });
 
+        modelBuilder.Entity<AllIndiaPincodeDatum>(entity =>
+        {
+            entity.HasKey(e => e.Sysid);
+
+            entity.HasIndex(e => new { e.PinCode, e.DivisionName, e.CircleName, e.Districtname, e.StateName }, "PincodeData");
+
+            entity.HasIndex(e => new { e.Sysid, e.PinCode }, "index_AllIndiaPincodeData");
+
+            entity.Property(e => e.CircleName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.DeliveryStatus)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.Districtname)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.DivisionName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.OfficeName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.OfficeType)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.PinCode)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.RegionName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.StateName)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.Taluk)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+        });
+
         modelBuilder.Entity<AuditTable>(entity =>
         {
             entity
@@ -118,6 +170,10 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.ModifiedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
         });
 
         modelBuilder.Entity<ClassSection>(entity =>
@@ -144,7 +200,8 @@ public partial class SchoolManagementContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
 
             entity.HasOne(d => d.ClassFk).WithMany(p => p.ClassSections)
                 .HasForeignKey(d => d.ClassFkid)
@@ -155,6 +212,8 @@ public partial class SchoolManagementContext : DbContext
         modelBuilder.Entity<InstitutionDetail>(entity =>
         {
             entity.HasKey(e => e.Sysid);
+
+            entity.ToTable(tb => tb.HasTrigger("InstitutionDetailsAudit"));
 
             entity.Property(e => e.Address1)
                 .HasMaxLength(1000)
@@ -414,7 +473,8 @@ public partial class SchoolManagementContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
             entity.Property(e => e.Title)
                 .HasMaxLength(5)
                 .IsUnicode(false);
@@ -568,6 +628,10 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.RollNo)
                 .HasMaxLength(15)
                 .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
             entity.Property(e => e.StudentDetailsFkid).HasColumnName("StudentDetailsFKID");
 
             entity.HasOne(d => d.AcademicYearFk).WithMany(p => p.StudentClassDetails)
@@ -773,7 +837,8 @@ public partial class SchoolManagementContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
             entity.Property(e => e.Stdid)
                 .HasMaxLength(50)
                 .IsUnicode(false);

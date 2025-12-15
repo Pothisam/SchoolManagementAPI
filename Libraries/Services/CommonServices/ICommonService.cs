@@ -16,5 +16,7 @@ namespace Services.CommonServices
         APIRequestDetails GetAPIRequestDetails(ClaimsPrincipal user);
         Task<CommonResponse<string>> GetDatetime();
         Task<CommonResponse<InstitutionLogoResponse>> GetLogo(APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<RecordHistoryResponse>>> GetRecordHistory(GetRecordHistoryRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<PostOfficeResponse>>> GetPostOffice(PostOfficeRequest request);
     }
 }

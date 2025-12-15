@@ -60,7 +60,7 @@ namespace Services.InstitutionDetailsServices
 
         public async Task<CommonResponse<string>> UpdateInstitutionAsync(UpdateInstitutionRequest request, APIRequestDetails apiRequestDetails)
         {
-            var existing = await _institutionDetailsRepo.GetInstitutionByIdAsync(request.Sysid);
+            var existing = await _institutionDetailsRepo.GetInstitutionByIdAsync(apiRequestDetails.InstitutionCode);
 
             if (existing == null)
             {
