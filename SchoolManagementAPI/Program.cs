@@ -5,6 +5,7 @@ using Models.ConfigurationModels;
 using Repository;
 using Services;
 using System.Text;
+using SchoolManagementAPI.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Add error logging middleware early in the pipeline to capture unhandled exceptions
+app.UseMiddleware<ErrorLoggingMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors(option =>
