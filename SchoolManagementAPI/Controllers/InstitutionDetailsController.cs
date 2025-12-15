@@ -7,6 +7,7 @@ using Services.InstitutionDetailsServices;
 namespace SchoolManagementAPI.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class InstitutionDetailsController : Controller
     {
