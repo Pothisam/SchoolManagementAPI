@@ -1,6 +1,9 @@
 ﻿using Models.ClassModels;
+using Models.ClassSectionModels;
 using Models.CommonModels;
 using Repository.ClassRepository;
+using Repository.ClassSectionRepository;
+using Repository.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +15,11 @@ namespace Services.ClassServices
     public class ClassService : IClassService
     {
         private readonly IClassRepo _classRepo;
-
-        public ClassService(IClassRepo classRepo)
+        private readonly IClassSectionRepo _classSectionRepo;
+        public ClassService(IClassRepo classRepo, IClassSectionRepo classSectionRepo)
         {
             _classRepo = classRepo;
+            _classSectionRepo = classSectionRepo;
         }
         public async Task<CommonResponse<string>> AddClassAsync(AddClassRequest request, APIRequestDetails apiRequestDetails)
         {
@@ -28,13 +32,24 @@ namespace Services.ClassServices
                     Message = "Class already exists"
                 };
             }
-            bool isAdded = await _classRepo.AddClassAsync(request, apiRequestDetails);
+            int isAdded = await _classRepo.AddClassAsync(request, apiRequestDetails);
+            if(isAdded > 0)
+            {
+                var entity = new ClassSection
+                {
+                    ClassFkid = isAdded,
+                    SectionName = "A",
+                    Status = "Active",
+                    InstitutionCode = apiRequestDetails.InstitutionCode,
+                    EnteredBy = apiRequestDetails.UserName
+                };
+
+                var inserted = await _classSectionRepo.InsertAsync(entity);
+            }
             return new CommonResponse<string>
             {
-                Status = isAdded ? Status.Success : Status.Failed,
-                Message = isAdded
-                ? "Class added successfully"
-                : "Unable to add class"
+                Status = isAdded > 0 ? Status.Success : Status.Failed,
+                Message = isAdded > 0? "Class added successfully" : "Unable to add class"
             };
         }
 

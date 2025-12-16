@@ -24,7 +24,7 @@ namespace Repository.ClassRepository
             x.InstitutionCode == apiRequestDetails.InstitutionCode &&
             (x.Status == "Active" || x.Status == "InActive"));
         }
-        public async Task<bool> AddClassAsync(AddClassRequest request, APIRequestDetails apiRequestDetails)
+        public async Task<int> AddClassAsync(AddClassRequest request, APIRequestDetails apiRequestDetails)
         {
             var entity = new Class
             {
@@ -35,7 +35,7 @@ namespace Repository.ClassRepository
             };
             _context.Classes.Add(entity);
             await _context.SaveChangesAsync();
-            return entity.SysId > 0;
+            return entity.SysId;
         }
 
         public async Task<List<ClassResponse>> GetClassListAsync(APIRequestDetails apiRequestDetails)

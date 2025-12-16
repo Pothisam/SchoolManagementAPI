@@ -12,7 +12,7 @@ namespace Repository.ClassRepository
     public interface IClassRepo
     {
         Task<bool> IsClassExistsAsync(AddClassRequest request, APIRequestDetails apiRequestDetails);
-        Task<bool> AddClassAsync(AddClassRequest request, APIRequestDetails apiRequestDetails);
+        Task<int> AddClassAsync(AddClassRequest request, APIRequestDetails apiRequestDetails);
         Task<List<ClassResponse>> GetClassListAsync(APIRequestDetails apiRequestDetails);
         Task<Class?> GetClassByIdAsync(UpdateClassStatusRequest request,APIRequestDetails apiRequestDetails);
         Task<bool> UpdateClassAsync(Class entity);

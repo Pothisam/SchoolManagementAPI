@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
+using Services.ClassSectionServices;
 using Services.ClassServices;
 using Services.CommonServices;
 using Services.InstitutionDetailsServices;
@@ -22,6 +23,7 @@ namespace Services
             service.AddScoped<ICommonService, CommonService>();
             service.AddScoped<IUserService,UserService>();
             service.AddScoped<IClassService, ClassService>();
+            service.AddScoped<IClassSectionService, ClassSectionService>();
             return service;
         }
     }

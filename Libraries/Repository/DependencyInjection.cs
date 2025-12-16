@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository.ClassRepository;
+using Repository.ClassSectionRepository;
 using Repository.CommonRepository;
 using Repository.Entity;
 using Repository.InstitutionDetails;
@@ -17,6 +18,7 @@ namespace Repository
             service.AddScoped<IUserRepo, UserRepo>();
             service.AddScoped<ICommonRepo, CommonRepo>();
             service.AddScoped<IClassRepo, ClassRepo>();
+            service.AddScoped<IClassSectionRepo, ClassSectionRepo>();
             service.AddDbContext<SchoolManagementContext>(option =>
                 option.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             return service;
