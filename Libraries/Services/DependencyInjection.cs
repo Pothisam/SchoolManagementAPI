@@ -5,7 +5,9 @@ using Services.AcademicYearServices;
 using Services.ClassSectionServices;
 using Services.ClassServices;
 using Services.CommonServices;
+using Services.DocumentLibraryServices;
 using Services.InstitutionDetailsServices;
+using Services.StaffServices;
 using Services.UserServices;
 using System;
 using System.Collections.Generic;
@@ -26,6 +28,8 @@ namespace Services
             service.AddScoped<IClassService, ClassService>();
             service.AddScoped<IClassSectionService, ClassSectionService>();
             service.AddScoped<IAcademicYearService, AcademicYearService>();
+            service.AddScoped<IStaffService, StaffService>();
+            service.AddScoped<IDocumentLibraryServices, DocumentLibraryService>();
             return service;
         }
     }

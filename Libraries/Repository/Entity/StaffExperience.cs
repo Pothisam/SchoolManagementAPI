@@ -3,27 +3,21 @@ using System.Collections.Generic;
 
 namespace Repository.Entity;
 
-public partial class StaffEducationDetail
+public partial class StaffExperience
 {
-    public int SysId { get; set; }
+    public int Sysid { get; set; }
 
     public int StaffDetailsFkid { get; set; }
 
-    public string DegreeType { get; set; } = null!;
-
-    public string Degree { get; set; } = null!;
-
-    public int YearOfpassing { get; set; }
-
-    public string UniversityName { get; set; } = null!;
-
     public string InstituionName { get; set; } = null!;
 
-    public string Mode { get; set; } = null!;
+    public string Position { get; set; } = null!;
 
-    public string PassPercentage { get; set; } = null!;
+    public DateTime FromDate { get; set; }
 
-    public string Specialization { get; set; } = null!;
+    public DateTime Todate { get; set; }
+
+    public int Salary { get; set; }
 
     public int InstitutionCode { get; set; }
 

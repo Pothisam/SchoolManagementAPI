@@ -3,21 +3,25 @@ using System.Collections.Generic;
 
 namespace Repository.Entity;
 
-public partial class StaffDetail
+public partial class StaffMasterView
 {
-    public int SysId { get; set; }
+    public int Sysid { get; set; }
 
     public string StaffId { get; set; } = null!;
 
     public string Title { get; set; } = null!;
 
-    public string Name { get; set; } = null!;
-
     public string Initial { get; set; } = null!;
+
+    public string Staffname { get; set; } = null!;
+
+    public string Name { get; set; } = null!;
 
     public string Sex { get; set; } = null!;
 
     public DateTime Dob { get; set; }
+
+    public int? Age { get; set; }
 
     public DateTime Doj { get; set; }
 
@@ -36,8 +40,6 @@ public partial class StaffDetail
     public string MobileNo { get; set; } = null!;
 
     public string? Emailid { get; set; }
-
-    public string? MotherTongue { get; set; }
 
     public string MaritalStatus { get; set; } = null!;
 
@@ -79,6 +81,8 @@ public partial class StaffDetail
 
     public string? CommunicationAddressState { get; set; }
 
+    public string? MotherTongue { get; set; }
+
     public string? Ifsccode { get; set; }
 
     public string? BankName { get; set; }
@@ -91,23 +95,17 @@ public partial class StaffDetail
 
     public string? PancardNo { get; set; }
 
-    public string Status { get; set; } = null!;
-
     public int InstitutionCode { get; set; }
+
+    public string Status { get; set; } = null!;
 
     public string EnteredBy { get; set; } = null!;
 
-    public DateTime EntryDate { get; set; }
+    public DateTime Entrydate { get; set; }
 
     public string? ModifiedBy { get; set; }
 
     public DateTime ModifiedDate { get; set; }
 
-    public virtual ICollection<StaffEducationDetail> StaffEducationDetails { get; set; } = new List<StaffEducationDetail>();
-
-    public virtual ICollection<StaffExperience> StaffExperiences { get; set; } = new List<StaffExperience>();
-
-    public virtual ICollection<StaffLanguageDetail> StaffLanguageDetails { get; set; } = new List<StaffLanguageDetail>();
-
-    public virtual ICollection<StaffPassTable> StaffPassTables { get; set; } = new List<StaffPassTable>();
+    public Guid? Guid { get; set; }
 }

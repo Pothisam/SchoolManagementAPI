@@ -25,6 +25,8 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<ClassSection> ClassSections { get; set; }
 
+    public virtual DbSet<DocumentLibrary> DocumentLibraries { get; set; }
+
     public virtual DbSet<InstitutionDetail> InstitutionDetails { get; set; }
 
     public virtual DbSet<SmspassTable> SmspassTables { get; set; }
@@ -33,7 +35,11 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<StaffEducationDetail> StaffEducationDetails { get; set; }
 
+    public virtual DbSet<StaffExperience> StaffExperiences { get; set; }
+
     public virtual DbSet<StaffLanguageDetail> StaffLanguageDetails { get; set; }
+
+    public virtual DbSet<StaffMasterView> StaffMasterViews { get; set; }
 
     public virtual DbSet<StaffPassTable> StaffPassTables { get; set; }
 
@@ -210,6 +216,48 @@ public partial class SchoolManagementContext : DbContext
                 .HasConstraintName("FK_ClassSection_Class");
         });
 
+        modelBuilder.Entity<DocumentLibrary>(entity =>
+        {
+            entity.HasKey(e => e.Sysid);
+
+            entity.ToTable("DocumentLibrary", tb => tb.HasTrigger("DocumentLibraryAudit"));
+
+            entity.HasIndex(e => new { e.Fkid, e.TableName }, "IX_DocumentLibrary_FKID_TableName");
+
+            entity.Property(e => e.Action)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.ContentType)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.EnteredBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.EntryDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.FileName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.FileType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Fkid).HasColumnName("FKID");
+            entity.Property(e => e.Guid).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.ModifiedBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.TableName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<InstitutionDetail>(entity =>
         {
             entity.HasKey(e => e.Sysid);
@@ -338,9 +386,6 @@ public partial class SchoolManagementContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.AddharCardNo)
                 .HasMaxLength(12)
-                .IsUnicode(false);
-            entity.Property(e => e.Age)
-                .HasMaxLength(5)
                 .IsUnicode(false);
             entity.Property(e => e.BankAddress)
                 .HasMaxLength(500)
@@ -529,6 +574,40 @@ public partial class SchoolManagementContext : DbContext
                 .HasConstraintName("FK_StaffEducationDetails_StaffDetails");
         });
 
+        modelBuilder.Entity<StaffExperience>(entity =>
+        {
+            entity.HasKey(e => e.Sysid);
+
+            entity.ToTable("StaffExperience", tb => tb.HasTrigger("StaffExperienceAudit"));
+
+            entity.Property(e => e.EnteredBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.EntryDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.FromDate).HasColumnType("date");
+            entity.Property(e => e.InstituionName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Position)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.StaffDetailsFkid).HasColumnName("StaffDetailsFKID");
+            entity.Property(e => e.Todate).HasColumnType("date");
+
+            entity.HasOne(d => d.StaffDetailsFk).WithMany(p => p.StaffExperiences)
+                .HasForeignKey(d => d.StaffDetailsFkid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StaffExperience_StaffDetails");
+        });
+
         modelBuilder.Entity<StaffLanguageDetail>(entity =>
         {
             entity.HasKey(e => e.SysId).HasName("PK_StaffLanguageDetails_SysId");
@@ -565,6 +644,155 @@ public partial class SchoolManagementContext : DbContext
                 .HasForeignKey(d => d.StaffFkid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StaffLanguageDetails_StaffDetails");
+        });
+
+        modelBuilder.Entity<StaffMasterView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("StaffMasterView");
+
+            entity.Property(e => e.AccountNumber)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.AddharCardNo)
+                .HasMaxLength(12)
+                .IsUnicode(false);
+            entity.Property(e => e.BankAddress)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.BankName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.BloodGroup)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.Cast)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddress1)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddress2)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressDistrict)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressPincode)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressPostOffice)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressState)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Community)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.DepartmentCode)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.DepartmentName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Designation)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Dob)
+                .HasColumnType("date")
+                .HasColumnName("DOB");
+            entity.Property(e => e.Doj)
+                .HasColumnType("date")
+                .HasColumnName("DOJ");
+            entity.Property(e => e.Dor)
+                .HasColumnType("date")
+                .HasColumnName("DOR");
+            entity.Property(e => e.Emailid)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.EnteredBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Entrydate).HasColumnType("datetime");
+            entity.Property(e => e.Ifsccode)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("IFSCCode");
+            entity.Property(e => e.Initial)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.MaritalStatus)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.Micrcode)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("MICRCode");
+            entity.Property(e => e.MobileNo)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.MotherTongue)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(62)
+                .IsUnicode(false);
+            entity.Property(e => e.PancardNo)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("PANCardNo");
+            entity.Property(e => e.ParmanentAddress1)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddress2)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressDistrict)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressPincode)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressPostOffice)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressState)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.PhysicalDisablity)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.PlaceOfBirth)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Religion)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Sex)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.StaffId)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("StaffID");
+            entity.Property(e => e.StaffType)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Staffname)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Title)
+                .HasMaxLength(5)
+                .IsUnicode(false);
         });
 
         modelBuilder.Entity<StaffPassTable>(entity =>
