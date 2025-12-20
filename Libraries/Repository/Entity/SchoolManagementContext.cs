@@ -73,6 +73,7 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.Year)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+            entity.Property(e => e.YearDate).HasColumnType("date");
         });
 
         modelBuilder.Entity<AllIndiaPincodeDatum>(entity =>

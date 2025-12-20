@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository;
+using Services.AcademicYearServices;
 using Services.ClassSectionServices;
 using Services.ClassServices;
 using Services.CommonServices;
@@ -24,6 +25,7 @@ namespace Services
             service.AddScoped<IUserService,UserService>();
             service.AddScoped<IClassService, ClassService>();
             service.AddScoped<IClassSectionService, ClassSectionService>();
+            service.AddScoped<IAcademicYearService, AcademicYearService>();
             return service;
         }
     }

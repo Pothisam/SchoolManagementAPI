@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Repository.AcademicYearRepository;
 using Repository.ClassRepository;
 using Repository.ClassSectionRepository;
 using Repository.CommonRepository;
@@ -19,6 +20,7 @@ namespace Repository
             service.AddScoped<ICommonRepo, CommonRepo>();
             service.AddScoped<IClassRepo, ClassRepo>();
             service.AddScoped<IClassSectionRepo, ClassSectionRepo>();
+            service.AddScoped<IAcademicYearRepo, AcademicYearRepo>();
             service.AddDbContext<SchoolManagementContext>(option =>
                 option.UseSqlServer(config.GetConnectionString("DefaultConnection")));
             return service;

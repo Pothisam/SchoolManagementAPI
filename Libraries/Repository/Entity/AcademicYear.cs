@@ -7,6 +7,8 @@ public partial class AcademicYear
 {
     public int SysId { get; set; }
 
+    public DateTime YearDate { get; set; }
+
     public string Year { get; set; } = null!;
 
     public string Status { get; set; } = null!;
