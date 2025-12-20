@@ -24,10 +24,9 @@ namespace Repository.AcademicYearRepository
             {
                 YearDate = request.YearDate,
                 Year = request.Year,
-                Status = "Active",
+                Status = "InActive",
                 InstitutionCode = apiRequestDetails.InstitutionCode,
-                EnteredBy = apiRequestDetails.UserName,
-                EntryDate = DateTime.Now
+                EnteredBy = apiRequestDetails.UserName
             };
 
             _context.AcademicYears.Add(entity);
@@ -54,6 +53,28 @@ namespace Repository.AcademicYearRepository
                               ModifiedBy = x.ModifiedBy,
                               ModifiedDate = x.ModifiedDate
                           }).OrderByDescending(x => x.YearDate).ToListAsync();
+        }
+
+        public async Task<bool> UpdateAcademicYearStatusAsync(UpdateAcademicYear request, APIRequestDetails apiRequestDetails)
+        {
+            try
+            {
+                var years = await _context.AcademicYears.Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode).ToListAsync();
+                if (!years.Any()) return false;
+
+                years.ForEach(x =>
+                {
+                    x.Status = x.SysId == request.Sysid ? "Active" : "InActive";
+                    x.ModifiedBy = apiRequestDetails.UserName;
+                });
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

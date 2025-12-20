@@ -11,4 +11,8 @@ namespace Models.AcademicYearModels
         public DateTime YearDate { get; set; }
         public string Year { get; set; } = null!;
     }
+    public class UpdateAcademicYear
+    {
+        public required int Sysid { get; set; } 
+    }
 }

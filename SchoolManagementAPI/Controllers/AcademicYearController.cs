@@ -33,5 +33,11 @@ namespace SchoolManagementAPI.Controllers
             var result = await _academicYearService.GetAcademicYearListAsync(apiRequestDetails);
             return Ok(result);
         }
+        [HttpPost("UpdateAcademicYearStatus")]
+        public async Task<IActionResult> UpdateAcademicYearStatus(UpdateAcademicYear request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            return Ok(await _academicYearService.UpdateAcademicYearStatusAsync(request, apiRequestDetails));
+        }
     }
 }

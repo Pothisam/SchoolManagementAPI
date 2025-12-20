@@ -13,5 +13,6 @@ namespace Services.AcademicYearServices
     {
         Task<CommonResponse<string>> AddAcademicYearAsync(AddAcademicYearRequest request,APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<AcademicYearResponse>>> GetAcademicYearListAsync(APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> UpdateAcademicYearStatusAsync(UpdateAcademicYear request, APIRequestDetails apiRequestDetails);
     }
 }

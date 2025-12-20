@@ -56,5 +56,18 @@ namespace Services.AcademicYearServices
                 Data = result
             };
         }
+
+        public async Task<CommonResponse<string>> UpdateAcademicYearStatusAsync(UpdateAcademicYear request, APIRequestDetails apiRequestDetails)
+        {
+            var result = await _academicYearRepo.UpdateAcademicYearStatusAsync(request, apiRequestDetails);
+
+            return new CommonResponse<string>
+            {
+                Status = result ? Status.Success : Status.Failed,
+                Message = result
+                    ? "Academic year activated successfully"
+                    : "Unable to update academic year status"
+            };
+        }
     }
 }
