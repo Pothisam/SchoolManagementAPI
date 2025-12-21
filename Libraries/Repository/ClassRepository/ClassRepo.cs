@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models.ClassModels;
 using Models.CommonModels;
 using Repository.Entity;
@@ -28,7 +28,7 @@ namespace Repository.ClassRepository
         {
             var entity = new Class
             {
-                ClassName = request.ClassName,
+                ClassName = request.ClassName.ToUpper(),
                 Status = "Active",
                 InstitutionCode = apiRequestDetails.InstitutionCode,
                 EnteredBy = apiRequestDetails.UserName,
@@ -59,20 +59,31 @@ namespace Repository.ClassRepository
 
         public async Task<Class?> GetClassByIdAsync(UpdateClassStatusRequest request, APIRequestDetails apiRequestDetails)
         {
-            return await _context.Classes.FirstOrDefaultAsync(x =>x.SysId == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+            return await _context.Classes.FirstOrDefaultAsync(x => x.SysId == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
         }
 
         public async Task<bool> UpdateClassAsync(Class entity)
         {
-            try { 
+            try
+            {
                 _context.Classes.Update(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return false;
             }
+        }
+
+        public async Task<List<GetClassResponse>> GetClassListActiveAsync(APIRequestDetails apiRequestDetails)
+        {
+            return await _context.Classes.Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Status == "Active").OrderBy(x => x.ClassName)
+                         .Select(x => new GetClassResponse
+                         {
+                             SysId = x.SysId,
+                             ClassName = x.ClassName
+                         }).ToListAsync();
         }
     }
 }

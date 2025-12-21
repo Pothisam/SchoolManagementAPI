@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.ClassModels;
 using Services.ClassServices;
@@ -42,6 +42,15 @@ namespace SchoolManagementAPI.Controllers
         {
             var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
             var result = await _IClassService.UpdateClassStatusAsync(request,apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetClassListActive")]
+        public async Task<IActionResult> GetClassListActive()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+
+            var result = await _IClassService.GetClassListActiveAsync(apiRequestDetails);
+
             return Ok(result);
         }
     }

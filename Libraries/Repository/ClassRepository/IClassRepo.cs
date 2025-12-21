@@ -1,4 +1,4 @@
-﻿using Models.ClassModels;
+using Models.ClassModels;
 using Models.CommonModels;
 using Repository.Entity;
 using System;
@@ -14,6 +14,7 @@ namespace Repository.ClassRepository
         Task<bool> IsClassExistsAsync(AddClassRequest request, APIRequestDetails apiRequestDetails);
         Task<int> AddClassAsync(AddClassRequest request, APIRequestDetails apiRequestDetails);
         Task<List<ClassResponse>> GetClassListAsync(APIRequestDetails apiRequestDetails);
+        Task<List<GetClassResponse>> GetClassListActiveAsync(APIRequestDetails apiRequestDetails);
         Task<Class?> GetClassByIdAsync(UpdateClassStatusRequest request,APIRequestDetails apiRequestDetails);
         Task<bool> UpdateClassAsync(Class entity);
     }

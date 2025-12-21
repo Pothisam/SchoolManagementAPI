@@ -1,4 +1,4 @@
-﻿using Models.ClassModels;
+using Models.ClassModels;
 using Models.ClassSectionModels;
 using Models.CommonModels;
 using Repository.ClassRepository;
@@ -50,6 +50,18 @@ namespace Services.ClassServices
             {
                 Status = isAdded > 0 ? Status.Success : Status.Failed,
                 Message = isAdded > 0? "Class added successfully" : "Unable to add class"
+            };
+        }
+
+        public async Task<CommonResponse<List<GetClassResponse>>> GetClassListActiveAsync(APIRequestDetails apiRequestDetails)
+        {
+            var result = await _classRepo.GetClassListActiveAsync(apiRequestDetails);
+
+            return new CommonResponse<List<GetClassResponse>>
+            {
+                Status = result.Any() ? Status.Success : Status.Failed,
+                Data = result,
+                Message = ""
             };
         }
 

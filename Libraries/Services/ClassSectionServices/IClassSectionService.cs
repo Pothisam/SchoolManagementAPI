@@ -1,4 +1,4 @@
-﻿using Models.ClassSectionModels;
+using Models.ClassSectionModels;
 using Models.CommonModels;
 using System;
 using System.Collections.Generic;
@@ -12,5 +12,6 @@ namespace Services.ClassSectionServices
     {
         Task<CommonResponse<string>> AddClassSectionAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> RemoveLastSectionAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<ClassSectionResponse>>> GetActiveSectionsAsync(ClassSectionRequest request,APIRequestDetails apiRequestDetails);
     }
 }

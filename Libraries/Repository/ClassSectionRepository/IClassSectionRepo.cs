@@ -1,4 +1,4 @@
-﻿using Models.ClassSectionModels;
+using Models.ClassSectionModels;
 using Models.CommonModels;
 using Repository.Entity;
 using System;
@@ -15,5 +15,6 @@ namespace Repository.ClassSectionRepository
         Task<bool> InsertAsync(ClassSection entity);
         Task<bool> ActivateSectionAsync(int sysId, APIRequestDetails apiRequestDetails);
         Task<bool> InactivateSectionAsync(int sysId, APIRequestDetails apiRequestDetails);
+        Task<List<ClassSectionResponse>> GetActiveSectionsAsync(ClassSectionRequest request,APIRequestDetails apiRequestDetails);
     }
 }

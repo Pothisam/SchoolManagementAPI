@@ -1,19 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models.ClassModels
+namespace Models.ClassSectionModels
 {
-    public class ClassResponse
+    public class ClassSectionResponse
     {
         public int SysId { get; set; }
-
+        public int ClassFkid { get; set; }
         public string ClassName { get; set; } = null!;
-
-        public string Status { get; set; } = null!;
-
+        public string SectionName { get; set; } = null!;
         public string EnteredBy { get; set; } = null!;
 
         public DateTime EntryDate { get; set; }
@@ -21,12 +19,5 @@ namespace Models.ClassModels
         public string? ModifiedBy { get; set; }
 
         public DateTime ModifiedDate { get; set; }
-    }
-    public class GetClassResponse
-    {
-        public int SysId { get; set; }
-
-        public string ClassName { get; set; } = null!;
-
     }
 }

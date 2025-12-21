@@ -1,4 +1,4 @@
-﻿using Models.ClassSectionModels;
+using Models.ClassSectionModels;
 using Models.CommonModels;
 using Repository.ClassSectionRepository;
 using Repository.Entity;
@@ -75,6 +75,17 @@ namespace Services.ClassSectionServices
                 Message = inserted
                     ? $"Section {nextLetter} added successfully"
                     : "Unable to add section"
+            };
+        }
+
+        public async Task<CommonResponse<List<ClassSectionResponse>>> GetActiveSectionsAsync(ClassSectionRequest request,APIRequestDetails apiRequestDetails)
+        {
+            var result = await _classSectionRepo.GetActiveSectionsAsync(request,apiRequestDetails);
+
+            return new CommonResponse<List<ClassSectionResponse>>
+            {
+                Status = Status.Success,
+                Data = result
             };
         }
 

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.ClassSectionModels;
 using Services.ClassSectionServices;
@@ -31,6 +31,13 @@ namespace SchoolManagementAPI.Controllers
         {
             var apiRequestDetails = _commonService.GetAPIRequestDetails(User);
             var result = await _classSectionService.RemoveLastSectionAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetActiveSections")]
+        public async Task<IActionResult> GetActiveSections(ClassSectionRequest request)
+        {
+            var apiRequestDetails = _commonService.GetAPIRequestDetails(User);
+            var result = await _classSectionService.GetActiveSectionsAsync(request,apiRequestDetails);
             return Ok(result);
         }
     }

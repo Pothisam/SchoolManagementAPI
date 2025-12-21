@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models.ClassSectionModels;
 using Models.CommonModels;
 using Repository.Entity;
@@ -34,6 +34,18 @@ namespace Repository.ClassSectionRepository
             {
                 return false;
             }
+        }
+
+        public async Task<List<ClassSectionResponse>> GetActiveSectionsAsync(ClassSectionRequest request,APIRequestDetails apiRequestDetails)
+        {
+            return await _context.ClassSections.AsNoTracking().Where(s => s.ClassFkid == request.ClassFkid && s.InstitutionCode == apiRequestDetails.InstitutionCode && s.Status == "Active" && s.ClassFk.Status == "Active")
+                      .Select(s => new ClassSectionResponse
+                      {
+                          SysId = s.SysId,
+                          ClassFkid = s.ClassFkid,
+                          ClassName = s.ClassFk.ClassName,
+                          SectionName = s.SectionName
+                      }).OrderBy(x => x.ClassName).ThenBy(x => x.SectionName).ToListAsync();
         }
 
         public async Task<List<ClassSection>> GetSectionsAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails)

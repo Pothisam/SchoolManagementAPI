@@ -1,0 +1,12 @@
+{
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": true,
+    "source.fixAll": true
+  },
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "csharp.format.enable": true,
+  // Recommend using the dotnet format tool if needed
+  "dotnet.format.enable": true
+}
