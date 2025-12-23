@@ -41,13 +41,9 @@ public partial class StaffDetail
 
     public string MaritalStatus { get; set; } = null!;
 
-    public string? AddharCardNo { get; set; }
+    public string AadharCardNo { get; set; } = null!;
 
     public string BloodGroup { get; set; } = null!;
-
-    public string DepartmentName { get; set; } = null!;
-
-    public string DepartmentCode { get; set; } = null!;
 
     public string Designation { get; set; } = null!;
 

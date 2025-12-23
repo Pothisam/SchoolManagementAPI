@@ -1,4 +1,4 @@
-﻿using Models.CommonModels;
+using Models.CommonModels;
 using Models.StaffModels;
 using Repository.Entity;
 using System;
@@ -13,6 +13,8 @@ namespace Repository.StaffRepository
     {
         Task<Boolean> CheckDuplicate(StaffDetailsAddRequest request, APIRequestDetails apiRequestDetails);
         Task<int> AddStaffAsync(StaffDetail staff, StaffPassTable passTable);
+        Task<List<AutoCompleteResponse>> GetStaffAutoComplete(StaffAutocompleteRequest request, APIRequestDetails apiRequestDetails);
+        Task<string> GenerateStaffID(APIRequestDetails apiRequestDetails);
         #region Add Language
         Task AddStaffLanguageDetail(StaffLanguageDetail request);
         #endregion

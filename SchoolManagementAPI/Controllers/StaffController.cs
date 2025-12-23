@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.StaffModels;
 using Services.CommonServices;
@@ -18,6 +18,13 @@ namespace SchoolManagementAPI.Controllers
         {
             _staffService = staffService;
             _ICommonService = ICommonService;
+        }
+        [HttpPost("GetStaffAutoComplete")]
+        public async Task<IActionResult> GetStaffAutoComplete(StaffAutocompleteRequest request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _staffService.GetStaffAutoComplete(request, apirequestdetails);
+            return Ok(result);
         }
         [HttpPost("AddStaff")]
         public async Task<IActionResult> AddStaff(AddStaffRequest request)

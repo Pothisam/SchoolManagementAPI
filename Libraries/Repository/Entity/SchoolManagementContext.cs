@@ -252,7 +252,8 @@ public partial class SchoolManagementContext : DbContext
                 .HasColumnType("datetime");
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
             entity.Property(e => e.TableName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
@@ -381,11 +382,11 @@ public partial class SchoolManagementContext : DbContext
 
             entity.ToTable(tb => tb.HasTrigger("StaffDetailsAudit"));
 
+            entity.Property(e => e.AadharCardNo)
+                .HasMaxLength(12)
+                .IsUnicode(false);
             entity.Property(e => e.AccountNumber)
                 .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.AddharCardNo)
-                .HasMaxLength(12)
                 .IsUnicode(false);
             entity.Property(e => e.BankAddress)
                 .HasMaxLength(500)
@@ -418,12 +419,6 @@ public partial class SchoolManagementContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false);
             entity.Property(e => e.Community)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.DepartmentCode)
-                .HasMaxLength(20)
-                .IsUnicode(false);
-            entity.Property(e => e.DepartmentName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Designation)
@@ -652,11 +647,11 @@ public partial class SchoolManagementContext : DbContext
                 .HasNoKey()
                 .ToView("StaffMasterView");
 
+            entity.Property(e => e.AadharCardNo)
+                .HasMaxLength(12)
+                .IsUnicode(false);
             entity.Property(e => e.AccountNumber)
                 .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.AddharCardNo)
-                .HasMaxLength(12)
                 .IsUnicode(false);
             entity.Property(e => e.BankAddress)
                 .HasMaxLength(500)
@@ -689,12 +684,6 @@ public partial class SchoolManagementContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false);
             entity.Property(e => e.Community)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.DepartmentCode)
-                .HasMaxLength(20)
-                .IsUnicode(false);
-            entity.Property(e => e.DepartmentName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Designation)

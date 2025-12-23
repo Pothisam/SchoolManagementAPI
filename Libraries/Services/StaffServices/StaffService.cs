@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models.CommonModels;
 using Models.DocumentLibraryModels;
 using Models.StaffModels;
@@ -39,9 +39,10 @@ namespace Services.StaffServices
                     Message = "Staff Mobile Number Already Exists Please Check"
                 };
             }
+            var staffId = await _staffRepo.GenerateStaffID(apiRequestDetails);
             var staff = new StaffDetail
             {
-                StaffId = request.StaffId,
+                StaffId = staffId,
                 Title = request.Title,
                 Name = request.Name,
                 Initial = request.Initial,
@@ -60,11 +61,9 @@ namespace Services.StaffServices
                 Emailid = request.Emailid,
                 MotherTongue = request.MotherTongue,
                 MaritalStatus = request.MaritalStatus,
-                AddharCardNo = request.AddharCardNo,
+                AadharCardNo = request.AadharCardNo,
                 BloodGroup = request.BloodGroup,
 
-                DepartmentName = request.DepartmentName,
-                DepartmentCode = request.DepartmentCode,
                 Designation = request.Designation,
                 DesignationCode = request.DesignationCode,
                 StaffType = request.StaffType,
@@ -207,6 +206,24 @@ namespace Services.StaffServices
                     ? "Staff added successfully"
                     : "Unable to add staff"
             };
+        }
+
+        public async Task<CommonResponse<List<AutoCompleteResponse>>> GetStaffAutoComplete(StaffAutocompleteRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<AutoCompleteResponse>>();
+            List<AutoCompleteResponse> result = await _staffRepo.GetStaffAutoComplete(request, apiRequestDetails);
+            if (result == null)
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+            }
+            else
+            {
+                response.Status = Status.Success;
+                response.Message = "";
+                response.Data = result;
+            }
+            return response;
         }
     }
 }

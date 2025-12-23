@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,5 +44,9 @@ namespace Models.CommonModels
         public string? OfficeName { get; set; }
         public string? Districtname { get; set; }
         public string? StateName { get; set; }
+    }
+    public class AutoCompleteResponse
+    {
+        public string? Column { get; set; }
     }
 }

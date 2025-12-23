@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +6,12 @@ using System.Threading.Tasks;
 
 namespace Models.StaffModels
 {
+    public class StaffAutocompleteRequest
+    {
+        public required string TableName { get; set; }
+        public required string ColumnName { get; set; } = null!;
+        public string SearchParam { get; set; }
+    }
     public class AddStaffRequest
     {
         public StaffDetailsAddRequest staffdetails { get; set; }
@@ -16,7 +22,6 @@ namespace Models.StaffModels
     }
     public class StaffDetailsAddRequest
     {
-        public string StaffId { get; set; }
         public string Title { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string Initial { get; set; } = null!;
@@ -35,11 +40,9 @@ namespace Models.StaffModels
         public string? Emailid { get; set; }
         public string? MotherTongue { get; set; }
         public string MaritalStatus { get; set; } = null!;
-        public string? AddharCardNo { get; set; }
+        public string? AadharCardNo { get; set; }
         public string BloodGroup { get; set; } = null!;
 
-        public string DepartmentName { get; set; } = null!;
-        public string DepartmentCode { get; set; } = null!;
         public string Designation { get; set; } = null!;
         public int DesignationCode { get; set; }
         public string StaffType { get; set; } = null!;

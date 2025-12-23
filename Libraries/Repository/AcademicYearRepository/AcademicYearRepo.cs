@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models.AcademicYearModels;
 using Models.CommonModels;
 using Repository.Entity;
@@ -22,7 +22,7 @@ namespace Repository.AcademicYearRepository
         {
             var entity = new AcademicYear
             {
-                YearDate = request.YearDate,
+                YearDate = new DateTime(request.YearDate, 1, 1),
                 Year = request.Year,
                 Status = "InActive",
                 InstitutionCode = apiRequestDetails.InstitutionCode,

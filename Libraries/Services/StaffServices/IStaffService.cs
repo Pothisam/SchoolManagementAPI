@@ -1,4 +1,4 @@
-﻿using Models.CommonModels;
+using Models.CommonModels;
 using Models.StaffModels;
 using Repository.Entity;
 using System;
@@ -11,10 +11,13 @@ namespace Services.StaffServices
 {
     public interface IStaffService
     {
+        Task<CommonResponse<List<AutoCompleteResponse>>> GetStaffAutoComplete(StaffAutocompleteRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> AddStaffAsync(StaffDetailsAddRequest request, List<StaffLanguageDetailAddRequest> languageRequests, List<StaffEducationDetailAddRequest> educationRequests, List<StaffExperienceDetailAddRequest> experienceRequests, List<DocumentLibraryBulkInsert> documnetRequests, APIRequestDetails apiRequestDetails);
+        
+
         #region Add Language
-        
+
         #endregion
-        
+
     }
 }
