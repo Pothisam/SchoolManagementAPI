@@ -1,4 +1,4 @@
-﻿using Models.CommonModels;
+using Models.CommonModels;
 using Models.DocumentLibraryModels;
 using Repository.DocumentLibraryRepository;
 using Repository.Entity;
@@ -17,6 +17,24 @@ namespace Services.DocumentLibraryServices
         {
             _IDocumentLibraryRepo = IDocumentLibraryRepo;
         }
+
+        public async Task<CommonResponse<DocumentLibraryImageExportResponse>> GetProfileImagebyID(DocumentLibraryGuid request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<DocumentLibraryImageExportResponse>();
+            var File = await _IDocumentLibraryRepo.GetProfileImagebyGuidAsync(request, apiRequestDetails);
+            if (File != null)
+            {
+                response.Status = Status.Success;
+                response.Data = File;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "";
+            }
+            return response;
+        }
+
         public async Task InsertDocumentLibrary(DocumentLibraryInsertRequest request, APIRequestDetails apiRequestDetails)
         {
             var newdocument = new DocumentLibrary

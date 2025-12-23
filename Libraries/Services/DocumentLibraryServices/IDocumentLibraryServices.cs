@@ -1,4 +1,4 @@
-﻿using Models.CommonModels;
+using Models.CommonModels;
 using Models.DocumentLibraryModels;
 using System;
 using System.Collections.Generic;
@@ -11,5 +11,6 @@ namespace Services.DocumentLibraryServices
     public interface IDocumentLibraryServices
     {
         Task InsertDocumentLibrary(DocumentLibraryInsertRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<DocumentLibraryImageExportResponse>> GetProfileImagebyID(DocumentLibraryGuid request, APIRequestDetails apiRequestDetails);
     }
 }

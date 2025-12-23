@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +19,9 @@ namespace Models.DocumentLibraryModels
         public required string ContentType { get; set; }
         public required byte[] Data { get; set; }
 
+    }
+    public partial class DocumentLibraryGuid
+    {
+        public required Guid Guid { get; set; }
     }
 }
