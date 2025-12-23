@@ -225,5 +225,62 @@ namespace Services.StaffServices
             }
             return response;
         }
+        #region Staff View List
+        public async Task<CommonResponse<StaffCountResponse>> GetStaffCountAsync(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<StaffCountResponse>();
+            var result = await _staffRepo.GetStaffCountAsync(apiRequestDetails);
+            if (result == null)
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+            }
+            else
+            {
+                response.Status = Status.Success;
+                response.Message = "";
+                response.Data = result;
+            }
+            return response;
+        }
+
+        public async Task<CommonResponse<List<DesignationListResponse>>> GetStaffDesignationListAsync(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<DesignationListResponse>>();
+            var designations = await _staffRepo.GetStaffDesignationListAsync(apiRequestDetails);
+
+            if (designations.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = designations;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "No designations found for the given institution code.";
+            }
+
+            return response;
+        }
+
+        public async Task<CommonResponse<List<StaffDetailSearchResponse>>> GetStaffDetailSearchAsync(StaffSearchRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StaffDetailSearchResponse>>();
+            var staffDetails = await _staffRepo.GetStaffDetailSearchAsync(request, apiRequestDetails);
+
+            if (staffDetails.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = staffDetails;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "No staff details found";
+            }
+
+            return response;
+        }
+        #endregion
     }
 }

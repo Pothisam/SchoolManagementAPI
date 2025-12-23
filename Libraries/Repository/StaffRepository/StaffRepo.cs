@@ -184,9 +184,113 @@ namespace Repository.StaffRepository
             return autoCompleteResponse;
         }
 
-        
+        #endregion
+        #region Staff View List
+        public async Task<StaffCountResponse> GetStaffCountAsync(APIRequestDetails apiRequestDetails)
+        {
+            StaffCountResponse? response = await (from x in _context.StaffMasterViews
+                                                  where x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                                  group x by new { x.InstitutionCode } into g
+                                                  select new StaffCountResponse
+                                                  {
+                                                      TotalStaff = g.Count(c => c.StaffType == "Teaching") + g.Count(c => c.StaffType == "Non-Teaching"),
+                                                      Male = g.Count(x => x.Sex == "Male"),
+                                                      Female = g.Count(x => x.Sex == "Female"),
+                                                      Teaching = g.Count(c => c.StaffType == "Teaching"),
+                                                      NonTeaching = g.Count(c => c.StaffType == "Non-Teaching")
+                                                  }).FirstOrDefaultAsync();
+            return response;
+        }
 
+        public async Task<List<DesignationListResponse>> GetStaffDesignationListAsync(APIRequestDetails apiRequestDetails)
+        {
+            var result = await (from x in _context.StaffMasterViews
+                                where x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                orderby x.DesignationCode ascending
+                                select new DesignationListResponse
+                                {
+                                    Designation = x.Designation,
+                                    DesignationCode = (int)x.DesignationCode
+                                }).Distinct().ToListAsync();
 
+            return result;
+        }
+
+        public async Task<List<StaffDetailSearchResponse>> GetStaffDetailSearchAsync(StaffSearchRequest request, APIRequestDetails apiRequestDetails)
+        {
+            List<StaffDetailSearchResponse> StaffMasterViewList = new();
+
+            IQueryable<StaffMasterView> query = _context.StaffMasterViews
+                .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode);
+
+            if (request.ColumnName == "Designation")
+            {
+                query = query.Where(x => x.DesignationCode == int.Parse(request.SearchParam));
+            }
+            else if (request.ColumnName == "Name")
+            {
+                query = query.Where(x => x.Name.Contains(request.SearchParam));
+            }
+            else if (request.ColumnName == "Gender")
+            {
+                query = query.Where(x => x.Sex == request.SearchParam);
+            }
+            else if (request.ColumnName == "StaffType")
+            {
+                query = query.Where(x => x.StaffType == request.SearchParam);
+            }
+
+            var documentQuery = _context.DocumentLibraries
+                .Where(d => d.Action == "Image-Upload"
+                            && d.TableName == "StaffDetails"
+                            && d.FileSize != 0);
+
+            StaffMasterViewList = await (from x in query
+                                         join y in documentQuery on x.Sysid equals y.Fkid into documentGroup
+                                         orderby x.Staffname ascending
+                                         select new StaffDetailSearchResponse
+                                         {
+                                             SysId = x.Sysid,
+                                             Name = x.Name,
+                                             Designation = x.Designation,
+                                             MobileNo = x.MobileNo,
+                                             StaffType = x.StaffType,
+                                             Gender = x.Sex,
+                                             EnteredBy = x.EnteredBy,
+                                             EntryDate = x.Entrydate,
+                                             ModifiedBy = x.ModifiedBy,
+                                             ModifiedDate = x.ModifiedDate,
+                                             Guid = documentGroup
+                                                 .OrderBy(d => d.ModifiedBy)
+                                                 .Select(d => (Guid?)d.Guid)
+                                                 .FirstOrDefault()
+                                         }).ToListAsync();
+
+            if (string.IsNullOrEmpty(request.ColumnName))
+            {
+                StaffMasterViewList = await query
+                    .OrderByDescending(x => x.ModifiedDate)
+                    .Select(x => new StaffDetailSearchResponse
+                    {
+                        SysId = x.Sysid,
+                        Name = x.Name,
+                        Designation = x.Designation,
+                        MobileNo = x.MobileNo,
+                        StaffType = x.StaffType,
+                        Gender = x.Sex,
+                        EnteredBy = x.EnteredBy,
+                        EntryDate = x.Entrydate,
+                        ModifiedBy = x.ModifiedBy,
+                        ModifiedDate = x.ModifiedDate,
+                        Guid = (from d in documentQuery
+                                where d.Fkid == x.Sysid
+                                orderby d.ModifiedBy
+                                select (Guid?)d.Guid).FirstOrDefault()
+                    }).ToListAsync();
+            }
+
+            return StaffMasterViewList;
+        }
         #endregion
     }
 }

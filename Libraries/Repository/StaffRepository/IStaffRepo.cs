@@ -24,5 +24,10 @@ namespace Repository.StaffRepository
         #region Expirence
         Task AddStaffExperienceDetail(StaffExperience request);
         #endregion
+        #region Staff View List
+        Task<StaffCountResponse> GetStaffCountAsync(APIRequestDetails apiRequestDetails);
+        Task<List<DesignationListResponse>> GetStaffDesignationListAsync(APIRequestDetails apiRequestDetails);
+        Task<List<StaffDetailSearchResponse>> GetStaffDetailSearchAsync(StaffSearchRequest request, APIRequestDetails apiRequestDetails);
+        #endregion
     }
 }

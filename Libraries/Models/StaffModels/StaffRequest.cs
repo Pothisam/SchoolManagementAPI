@@ -143,4 +143,9 @@ namespace Models.StaffModels
     {
         public required int FKID { get; set; }
     }
+    public class StaffSearchRequest
+    {
+        public required string ColumnName { get; set; } = null!;
+        public  string SearchParam { get; set; }
+    }
 }

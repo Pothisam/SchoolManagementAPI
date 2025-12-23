@@ -13,10 +13,12 @@ namespace Services.StaffServices
     {
         Task<CommonResponse<List<AutoCompleteResponse>>> GetStaffAutoComplete(StaffAutocompleteRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> AddStaffAsync(StaffDetailsAddRequest request, List<StaffLanguageDetailAddRequest> languageRequests, List<StaffEducationDetailAddRequest> educationRequests, List<StaffExperienceDetailAddRequest> experienceRequests, List<DocumentLibraryBulkInsert> documnetRequests, APIRequestDetails apiRequestDetails);
-        
 
-        #region Add Language
 
+        #region Staff View List
+        Task<CommonResponse<StaffCountResponse>> GetStaffCountAsync(APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<DesignationListResponse>>> GetStaffDesignationListAsync(APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<StaffDetailSearchResponse>>> GetStaffDetailSearchAsync(StaffSearchRequest request, APIRequestDetails apiRequestDetails);
         #endregion
 
     }

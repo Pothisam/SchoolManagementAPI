@@ -33,5 +33,28 @@ namespace SchoolManagementAPI.Controllers
             var result = await _staffService.AddStaffAsync(request.staffdetails, request.LanguageRequests, request.EducationRequests, request.ExperienceRequests, request.DocumentRequests, apirequestdetails);
             return Ok(result);
         }
+        #region Staff View List
+        [HttpPost("GetStaffCount")]
+        public async Task<IActionResult> GetStaffCount()
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _staffService.GetStaffCountAsync(apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("GetStaffDesignationList")]
+        public async Task<IActionResult> GetStaffDesignationList()
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _staffService.GetStaffDesignationListAsync(apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("GetStaffDetailSearch")]
+        public async Task<IActionResult> GetStaffDetailByDepartmentCode(StaffSearchRequest request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _staffService.GetStaffDetailSearchAsync(request, apirequestdetails);
+            return Ok(result);
+        }
+        #endregion
     }
 }
