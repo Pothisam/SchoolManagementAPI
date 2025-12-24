@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Models.CommonModels;
 using Models.ConfigurationModels;
@@ -165,6 +165,25 @@ namespace Services.CommonServices
                 response.Data = result;
             }
             return response;
+        }
+
+        public TOutput TransformClass<TInput, TOutput>(TInput input) where TOutput : new()
+        {
+            var output = new TOutput();
+            var inputProperties = typeof(TInput).GetProperties();
+            var outputProperties = typeof(TOutput).GetProperties();
+
+            foreach (var inputProp in inputProperties)
+            {
+                var outputProp = outputProperties.FirstOrDefault(p => p.Name == inputProp.Name && p.PropertyType == inputProp.PropertyType);
+                if (outputProp != null)
+                {
+                    var value = inputProp.GetValue(input);
+                    outputProp.SetValue(output, value);
+                }
+            }
+
+            return output;
         }
     }
 }

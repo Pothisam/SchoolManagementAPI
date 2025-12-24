@@ -1,12 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using Models.CommonModels;
-using Models.DocumentLibraryModels;
-using Repository.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Models.CommonModels;
+using Models.DocumentLibraryModels;
+using Models.StaffModels;
+using Repository.Entity;
 
 namespace Repository.DocumentLibraryRepository
 {
@@ -42,6 +43,46 @@ namespace Repository.DocumentLibraryRepository
         public async Task InsertDocumentLibrary(DocumentLibrary request)
         {
             await _context.DocumentLibraries.AddAsync(request);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<List<DocumentLibraryDetailsResponse>> GetDocumentLibrary(DocumentLibraryListRequest request, APIRequestDetails apiRequestDetails)
+        {
+            List<DocumentLibraryDetailsResponse>? response = await (from x in _context.DocumentLibraries
+                                                                    where x.Fkid == request.FKID && x.TableName == request.TableName
+                                                                    && x.Action == request.Action && x.Status == "Active" && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                                                    select new DocumentLibraryDetailsResponse
+                                                                    {
+                                                                        Sysid = x.Sysid,
+                                                                        FileName = x.FileName,
+                                                                        FileType = x.FileType,
+                                                                        FileSize = x.FileSize,
+                                                                        Guid = x.Guid,
+                                                                        EnteredBy = x.EnteredBy,
+                                                                        EntryDate = x.EntryDate,
+                                                                        ModifiedBy = x.ModifiedBy ?? "",
+                                                                        ModifiedDate = x.ModifiedDate
+                                                                    }).ToListAsync();
+            return response;
+        }
+
+        public async Task DeleteDocumentLibrary(DocumentLibrarySysid request, APIRequestDetails apiRequestDetails)
+        {
+            DocumentLibrary Col = _context.DocumentLibraries.Single(x => x.Sysid == request.SysId);
+            Col.FileSize = 0;
+            Col.Data = new byte[0];
+            Col.ModifiedBy = apiRequestDetails.UserName;
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateDocumentLibrary(DocumentLibraryUpdate request)
+        {
+            DocumentLibrary Col = _context.DocumentLibraries.Single(x => x.Sysid == request.Sysid);
+            Col.FileSize = (int)Math.Ceiling(request.Data.Length / 1024.0);
+            Col.ContentType = request.ContentType;
+            Col.FileName = request.FileName;
+            Col.Data = request.Data;
+            Col.ModifiedBy = request.ModifiedBy;
+            Col.Guid = Guid.NewGuid();
+            Col.Status = "Active";
             await _context.SaveChangesAsync();
         }
     }

@@ -13,6 +13,12 @@ namespace Models.DocumentLibraryModels
         public required string FileType { get; set; }
         public required string Action { get; set; }
     }
+    public class DocumentLibraryListRequest
+    {
+        public required int FKID { get; set; }
+        public required string TableName { get; set; }
+        public required string Action { get; set; }
+    }
     public class DocumentLibraryInsertRequest : DocumentLibraryGetRequest
     {
         public required string FileName { get; set; }
@@ -24,4 +30,9 @@ namespace Models.DocumentLibraryModels
     {
         public required Guid Guid { get; set; }
     }
+    public partial class DocumentLibrarySysid
+    {
+        public required int SysId { get; set; }
+    }
+
 }

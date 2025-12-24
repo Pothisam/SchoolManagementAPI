@@ -31,10 +31,10 @@ namespace Models.StaffModels
         public DateTime? Dor { get; set; }
 
         public string? PlaceOfBirth { get; set; }
-        public string? Religion { get; set; }
-        public string? Community { get; set; }
-        public string? Cast { get; set; }
-        public string? PhysicalDisablity { get; set; }
+        public string? religion { get; set; }
+        public string? community { get; set; }
+        public string? caste { get; set; }
+        public string? physicalDisability { get; set; }
 
         public string MobileNo { get; set; } = null!;
         public string? Emailid { get; set; }
@@ -47,12 +47,12 @@ namespace Models.StaffModels
         public int DesignationCode { get; set; }
         public string StaffType { get; set; } = null!;
 
-        public string? ParmanentAddress1 { get; set; }
-        public string? ParmanentAddress2 { get; set; }
-        public string? ParmanentAddressPincode { get; set; }
-        public string? ParmanentAddressPostOffice { get; set; }
-        public string? ParmanentAddressDistrict { get; set; }
-        public string? ParmanentAddressState { get; set; }
+        public string? PermanentAddress1 { get; set; }
+        public string? PermanentAddress2 { get; set; }
+        public string? PermanentAddressPincode { get; set; }
+        public string? PermanentAddressPostOffice { get; set; }
+        public string? PermanentAddressDistrict { get; set; }
+        public string? PermanentAddressState { get; set; }
 
         public string? CommunicationAddress1 { get; set; }
         public string? CommunicationAddress2 { get; set; }
@@ -81,7 +81,7 @@ namespace Models.StaffModels
     }
     public partial class StaffLanguageDetailAddRequest
     {
-        public string LanguageKnow { get; set; } = null!;
+        public string language { get; set; } = null!;
 
         public string ReadLanguage { get; set; } = null!;
 
@@ -100,7 +100,7 @@ namespace Models.StaffModels
 
         public string UniversityName { get; set; }
 
-        public string InstituionName { get; set; }
+        public string InstitutionName { get; set; }
 
         public string Mode { get; set; }
 
@@ -116,7 +116,7 @@ namespace Models.StaffModels
     }
     public partial class StaffExperienceDetailAddRequest
     {
-        public string InstituionName { get; set; }
+        public string InstitutionName { get; set; }
 
         public string Position { get; set; }
 
@@ -147,5 +147,78 @@ namespace Models.StaffModels
     {
         public required string ColumnName { get; set; } = null!;
         public  string SearchParam { get; set; }
+    }
+    public partial class StaffDetailsPK
+    {
+        public required int SysId { get; set; }
+    }
+    public partial class UpdateAddStaffLanguageDetail : StaffLanguageDetailAddRequest
+    {
+        public required int SysId { get; set; }
+    }
+    public partial class UpdateAddStaffEducationDetailAdd : StaffEducationDetailAddRequest
+    {
+        public required int SysId { get; set; }
+    }
+    public partial class UpdateStaffExperienceDetailAddRequest : StaffExperienceDetailAddRequest
+    {
+        public required int SysId { get; set; }
+    }
+    public class DocumentLibraryUpdate
+    {
+        public long Sysid { get; set; }
+        public required string FileName { get; set; }
+        public required string ContentType { get; set; }
+        public required byte[] Data { get; set; }
+        public required string ModifiedBy { get; set; }
+
+    }
+    public partial class UpdateStaffDetailsRequest
+    {
+        public int Sysid { get; set; }
+        public string StaffType { get; set; }
+        public string Title { get; set; }
+        public string Name { get; set; }
+        public string Initial { get; set; }
+        public string sex { get; set; }
+        public DateTime DOB { get; set; }
+        public DateTime DOR { get; set; }
+        public string PlaceOfBirth { get; set; }
+        public string MaritalStatus { get; set; }
+        public string Religion { get; set; }
+        public string PhysicalDisability { get; set; }
+        public string BloodGroup { get; set; }
+        public string Community { get; set; }
+        public string Caste { get; set; }
+        public string MobileNo { get; set; }
+        public string EmailID { get; set; }
+        public string AadharCardNo { get; set; }
+        public string Designation { get; set; }
+        public int DesignationCode { get; set; }
+        public DateTime DOJ { get; set; }
+        public string PermanentAddress1 { get; set; }
+        public string PermanentAddress2 { get; set; }
+        public string PermanentAddressPincode { get; set; }
+        public string PermanentAddressPostOffice { get; set; }
+        public string PermanentAddressDistrict { get; set; }
+        public string PermanentAddressState { get; set; }
+        public string CommunicationAddress1 { get; set; }
+        public string CommunicationAddress2 { get; set; }
+        public string CommunicationAddressPincode { get; set; }
+        public string CommunicationAddressPostOffice { get; set; }
+        public string CommunicationAddressDistrict { get; set; }
+        public string CommunicationAddressState { get; set; }
+        public string IFSCCode { get; set; }
+        public string BankName { get; set; }
+        public string BankAddress { get; set; }
+        public string AccountNumber { get; set; }
+        public string MICRCode { get; set; }
+        public string PANCardNo { get; set; }
+        public string MotherTongue { get; set; }
+        public string Status { get; set; }
+    }
+    public partial class StaffDetailsPasswordReset : StaffDetailsPK
+    {
+        public required string Password { get; set; }
     }
 }

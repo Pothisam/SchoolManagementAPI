@@ -67,12 +67,93 @@ namespace Repository.StaffRepository
             await _context.StaffLanguageDetails.AddAsync(request);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<StaffLanguageResponse>> GetStaffLanguageKnowByIDAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails)
+        {
+            List<StaffLanguageResponse>? response = await (from x in _context.StaffLanguageDetails
+                                                           where x.StaffFkid == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                                           select new StaffLanguageResponse
+                                                           {
+                                                               SysId = x.SysId,
+                                                               language = x.LanguageKnow,
+                                                               ReadLanguage = x.ReadLanguage,
+                                                               SpeakLanguage = x.SpeakLanguage,
+                                                               WriteLanguage = x.WriteLanguage
+                                                           }).ToListAsync();
+            return response;
+        }
+        public async Task DeleteStaffLanguageAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails)
+        {
+            var staffLanguage = await _context.StaffLanguageDetails
+                                              .SingleOrDefaultAsync(x => x.SysId == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+            _context.StaffLanguageDetails.Remove(staffLanguage);
+            await _context.SaveChangesAsync();
+        }
         #endregion
         #region Add Education
         public async Task AddStaffEducationDetail(StaffEducationDetail request)
         {
             await _context.StaffEducationDetails.AddAsync(request);
             await _context.SaveChangesAsync();
+        }
+        public async Task<List<StaffEducationResponse>> GetStaffEducationDetailsByIDAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails)
+        {
+            List<StaffEducationResponse>? response = await (from x in _context.StaffEducationDetails
+                                                            where x.StaffDetailsFkid == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                                            select new StaffEducationResponse
+                                                            {
+                                                                SysId = x.SysId,
+                                                                DegreeType = x.DegreeType,
+                                                                Degree = x.Degree,
+                                                                YearOfPassing = (int)x.YearOfpassing,
+                                                                UniversityName = x.UniversityName,
+                                                                InstitutionName = x.InstituionName,
+                                                                Mode = x.Mode,
+                                                                PassPercentage = x.PassPercentage,
+                                                                Specialization = x.Specialization
+                                                            }).OrderBy(x => x.YearOfPassing).ToListAsync();
+
+            return response;
+        }
+        public async Task<bool> CheckDuplicateStaffEducation(StaffEducationDetailAdd request)
+        {
+            var isDuplicate = await _context.StaffEducationDetails
+        .AnyAsync(x => x.StaffDetailsFkid == request.Id && x.DegreeType == request.DegreeType && x.Degree == request.Degree && x.InstitutionCode == request.InstitutionCode);
+
+            return !isDuplicate;
+        }
+        public async Task DeleteStaffEducationAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails)
+        {
+            var staffeducation = await _context.StaffEducationDetails
+                                              .SingleOrDefaultAsync(x => x.SysId == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+            _context.StaffEducationDetails.Remove(staffeducation);
+            await _context.SaveChangesAsync();
+        }
+        public async Task<bool> CheckDuplicateStaffEducationUpdate(UpdateAddStaffEducationDetailAdd request, APIRequestDetails apiRequestDetails)
+        {
+            var GetFKID = await _context.StaffEducationDetails.Where(x => x.SysId == request.SysId).Select(x => x.StaffDetailsFkid).SingleOrDefaultAsync();
+            var isDuplicate = await _context.StaffEducationDetails
+        .AnyAsync(x => x.SysId != request.SysId && x.StaffDetailsFkid == GetFKID && x.DegreeType == request.DegreeType && x.Degree == request.Degree && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+
+            return !isDuplicate;
+        }
+        public async Task UpdateStaffEducationDetail(UpdateAddStaffEducationDetailAdd request, APIRequestDetails apiRequestDetails)
+        {
+            var staffEducationDetail = await _context.StaffEducationDetails
+            .SingleOrDefaultAsync(x => x.SysId == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+
+            if (staffEducationDetail != null)
+            {
+                staffEducationDetail.DegreeType = request.DegreeType;
+                staffEducationDetail.Degree = request.Degree;
+                staffEducationDetail.YearOfpassing = request.YearOfpassing;
+                staffEducationDetail.UniversityName = request.UniversityName;
+                staffEducationDetail.InstituionName = request.InstitutionName;
+                staffEducationDetail.Mode = request.Mode;
+                staffEducationDetail.PassPercentage = request.PassPercentage;
+                staffEducationDetail.Specialization = request.Specialization;
+
+                await _context.SaveChangesAsync();
+            }
         }
         #endregion
         #region Expirence
@@ -81,7 +162,21 @@ namespace Repository.StaffRepository
             await _context.StaffExperiences.AddAsync(request);
             await _context.SaveChangesAsync();
         }
-
+        public async Task<List<StaffExperienceResponse>> GetStaffExperienceDetailsByIDAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails)
+        {
+            List<StaffExperienceResponse>? response = await (from x in _context.StaffExperiences
+                                                             where x.StaffDetailsFkid == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                                             select new StaffExperienceResponse
+                                                             {
+                                                                 SysId = x.Sysid,
+                                                                 InstitutionName = x.InstituionName,
+                                                                 Position = x.Position,
+                                                                 FromDate = x.FromDate,
+                                                                 ToDate = x.Todate,
+                                                                 Salary = (int)x.Salary
+                                                             }).ToListAsync();
+            return response;
+        }
         public async Task<List<AutoCompleteResponse>> GetStaffAutoComplete(StaffAutocompleteRequest request, APIRequestDetails apiRequestDetails)
         {
             var autoCompleteResponse = new List<AutoCompleteResponse>();
@@ -183,7 +278,29 @@ namespace Repository.StaffRepository
 
             return autoCompleteResponse;
         }
+        public async Task DeleteStaffExperienceAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails)
+        {
+            var staffexpirence = await _context.StaffExperiences
+                                              .SingleOrDefaultAsync(x => x.Sysid == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+            _context.StaffExperiences.Remove(staffexpirence);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateStaffExperienceDetailsAsync(UpdateStaffExperienceDetailAddRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var staffExperienceDetail = await _context.StaffExperiences
+            .SingleOrDefaultAsync(x => x.Sysid == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
 
+            if (staffExperienceDetail != null)
+            {
+                staffExperienceDetail.InstituionName = request.InstitutionName;
+                staffExperienceDetail.Position = request.Position;
+                staffExperienceDetail.FromDate = request.FromDate;
+                staffExperienceDetail.Todate = request.Todate;
+                staffExperienceDetail.Salary = request.Salary;
+
+                await _context.SaveChangesAsync();
+            }
+        }
         #endregion
         #region Staff View List
         public async Task<StaffCountResponse> GetStaffCountAsync(APIRequestDetails apiRequestDetails)
@@ -291,6 +408,156 @@ namespace Repository.StaffRepository
 
             return StaffMasterViewList;
         }
+
+        public async Task<StaffDetailResponse> GetStaffDetailByIDAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails)
+        {
+            StaffDetailResponse? result = await (from x in _context.StaffDetails
+                                                 let document = (from y in _context.DocumentLibraries
+                                                                 where y.Fkid == x.SysId
+                                                                 && y.Action == "Image-Upload"
+                                                                 && y.TableName == "StaffDetails"
+                                                                 && y.FileSize != 0
+                                                                 select y).FirstOrDefault()
+                                                 where x.SysId == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                                 select new StaffDetailResponse
+                                                 {
+                                                     StaffID = x.StaffId,
+                                                     StaffType = x.StaffType,
+                                                     EnteredBy = x.EnteredBy,
+                                                     EntryDate = x.EntryDate,
+                                                     ModifiedBy = x.ModifiedBy,
+                                                     ModifiedDate = x.ModifiedDate,
+                                                     Title = x.Title,
+                                                     Name = x.Name,
+                                                     Initial = x.Initial,
+                                                     Sex = x.Sex,
+                                                     BloodGroup = x.BloodGroup,
+                                                     DOB = x.Dob,
+                                                     PlaceOfBirth = x.PlaceOfBirth,
+                                                     MaritalStatus = x.MaritalStatus,
+                                                     Religion = x.Religion,
+                                                     PhysicalDisability = x.PhysicalDisablity,
+                                                     Community = x.Community,
+                                                     Caste = x.Cast,
+                                                     MobileNo = x.MobileNo,
+                                                     EmailId = x.Emailid,
+                                                     AadharCardNo = x.AadharCardNo,
+                                                     DesignationCode = x.DesignationCode,
+                                                     DOJ = x.Doj,
+
+                                                     PermanentAddress1 = x.ParmanentAddress1,
+                                                     PermanentAddress2 = x.ParmanentAddress2,
+                                                     PermanentAddressPincode = x.ParmanentAddressPincode,
+                                                     PermanentAddressPostOffice = x.ParmanentAddressPostOffice,
+                                                     PermanentAddressDistrict = x.ParmanentAddressDistrict,
+                                                     PermanentAddressState = x.ParmanentAddressState,
+
+                                                     CommunicationAddress1 = x.CommunicationAddress1,
+                                                     CommunicationAddress2 = x.CommunicationAddress2,
+                                                     CommunicationAddressPincode = x.CommunicationAddressPincode,
+                                                     CommunicationAddressPostOffice = x.CommunicationAddressPostOffice,
+                                                     CommunicationAddressDistrict = x.CommunicationAddressDistrict,
+                                                     CommunicationAddressState = x.CommunicationAddressState,
+
+                                                     Status = x.Status,
+                                                     MotherTongue = x.MotherTongue,
+                                                     IFSCCode = x.Ifsccode.ToUpper(),
+                                                     BankName = x.BankName.ToUpper(),
+                                                     BankAddress = x.BankAddress.ToUpper(),
+                                                     AccountNumber = x.AccountNumber.ToUpper(),
+                                                     MICRCode = x.Micrcode.ToUpper(),
+                                                     PANCardNo = x.PancardNo.ToUpper(),
+                                                     Guid = document != null ? document.Guid : null
+                                                 }).FirstOrDefaultAsync();
+            return result;
+        }
+
+
+
+
         #endregion
+        public async Task<bool> UpdateStaffDetailsAsync(UpdateStaffDetailsRequest request, APIRequestDetails apiRequestDetails)
+        {
+            try
+            {
+                var staffDetail = await _context.StaffDetails
+                    .SingleOrDefaultAsync(x => x.SysId == request.Sysid && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+
+                if (staffDetail == null) return false;
+
+                staffDetail.StaffType = request.StaffType.Trim();
+                staffDetail.Title = request.Title.Trim();
+                staffDetail.Name = request.Name.ToUpper().Trim();
+                staffDetail.Initial = request.Initial.ToUpper().Trim();
+                staffDetail.Sex = request.sex.Trim();
+                staffDetail.Dob = request.DOB;
+                staffDetail.PlaceOfBirth = request.PlaceOfBirth.Trim();
+                staffDetail.MaritalStatus = request.MaritalStatus.Trim();
+                staffDetail.Religion = request.Religion.Trim();
+                staffDetail.PhysicalDisablity = request.PhysicalDisability.Trim();
+                staffDetail.BloodGroup = request.BloodGroup;
+                staffDetail.Community = request.Community;
+                staffDetail.Cast = request.Caste.ToUpper();
+                staffDetail.MobileNo = request.MobileNo;
+                staffDetail.Emailid = request.EmailID;
+                staffDetail.AadharCardNo = request.AadharCardNo;
+                staffDetail.Designation = request.Designation;
+                staffDetail.DesignationCode = request.DesignationCode;
+                staffDetail.Doj = request.DOJ;
+                staffDetail.ParmanentAddress1 = request.PermanentAddress1;
+                staffDetail.ParmanentAddress2 = request.PermanentAddress2;
+                staffDetail.ParmanentAddressPincode = request.PermanentAddressPincode;
+                staffDetail.ParmanentAddressPostOffice = request.PermanentAddressPostOffice;
+                staffDetail.ParmanentAddressDistrict = request.PermanentAddressDistrict;
+                staffDetail.ParmanentAddressState = request.PermanentAddressState;
+                staffDetail.CommunicationAddress1 = request.CommunicationAddress1;
+                staffDetail.CommunicationAddress2 = request.CommunicationAddress2;
+                staffDetail.CommunicationAddressPincode = request.CommunicationAddressPincode;
+                staffDetail.CommunicationAddressPostOffice = request.CommunicationAddressPostOffice;
+                staffDetail.CommunicationAddressDistrict = request.CommunicationAddressDistrict;
+                staffDetail.CommunicationAddressState = request.CommunicationAddressState;
+                staffDetail.Ifsccode = request.IFSCCode.ToUpper();
+                staffDetail.BankName = request.BankName;
+                staffDetail.BankAddress = request.BankAddress;
+                staffDetail.AccountNumber = request.AccountNumber;
+                staffDetail.Micrcode = request.MICRCode;
+                staffDetail.PancardNo = request.PANCardNo.ToUpper();
+                staffDetail.MotherTongue = request.MotherTongue.ToUpper();
+                staffDetail.Status = request.Status;
+                staffDetail.ModifiedBy = apiRequestDetails.UserName;
+                staffDetail.Dor = request.DOR;
+                _context.StaffDetails.Update(staffDetail);
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> ResetStaffPasswordAsync(StaffDetailsPasswordReset request, APIRequestDetails apiRequestDetails)
+        {
+            var staffPassTable = await _context.StaffPassTables.SingleOrDefaultAsync(x => x.StaffDetailsFkid == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+            if (staffPassTable != null)
+            {
+                staffPassTable.Password = request.Password;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
+        public async Task<bool> UpdateStaffPasstableStatusAsync(int sysId, string status)
+        {
+            var staffPasstable = await _context.StaffPassTables.SingleOrDefaultAsync(x => x.StaffDetailsFkid == sysId);
+            if (staffPasstable != null)
+            {
+                staffPasstable.Status = status;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
+        }
     }
 }

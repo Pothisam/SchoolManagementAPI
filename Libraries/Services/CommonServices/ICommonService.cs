@@ -1,4 +1,4 @@
-﻿using Models.CommonModels;
+using Models.CommonModels;
 using Models.UserModels;
 using System;
 using System.Collections.Generic;
@@ -18,5 +18,6 @@ namespace Services.CommonServices
         Task<CommonResponse<InstitutionLogoResponse>> GetLogo(APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<RecordHistoryResponse>>> GetRecordHistory(GetRecordHistoryRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<PostOfficeResponse>>> GetPostOffice(PostOfficeRequest request);
+        TOutput TransformClass<TInput, TOutput>(TInput input) where TOutput : new();
     }
 }
