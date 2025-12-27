@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -18,5 +18,11 @@ namespace Models.CommonModels
     {
         [Required]
         public string pincode { get; set; }
+    }
+    public class AutoCompleteRequest
+    {
+        public required string TableName { get; set; }
+        public required string ColumnName { get; set; } = null!;
+        public string SearchParam { get; set; }
     }
 }

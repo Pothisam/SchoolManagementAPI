@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace Repository.Entity;
 
-public partial class StudentDetail
+public partial class StudentMasterView
 {
-    public int SysId { get; set; }
+    public int Sysid { get; set; }
 
     public string Stdid { get; set; } = null!;
 
@@ -15,9 +15,11 @@ public partial class StudentDetail
 
     public string? AdmissionSerialNumber { get; set; }
 
-    public string Name { get; set; } = null!;
-
     public string Initial { get; set; } = null!;
+
+    public string StudentName { get; set; } = null!;
+
+    public string Name { get; set; } = null!;
 
     public DateTime Dob { get; set; }
 
@@ -105,7 +107,25 @@ public partial class StudentDetail
 
     public string? ScholarShip { get; set; }
 
+    public string? Quota { get; set; }
+
     public string? ScholarShipType { get; set; }
+
+    public decimal? Concession { get; set; }
+
+    public string? Remark { get; set; }
+
+    public int InstitutionCode { get; set; }
+
+    public string Status { get; set; } = null!;
+
+    public string EnteredBy { get; set; } = null!;
+
+    public DateTime Entrydate { get; set; }
+
+    public string? ModifiedBy { get; set; }
+
+    public DateTime ModifiedDate { get; set; }
 
     public string? CharityScholarship { get; set; }
 
@@ -113,37 +133,23 @@ public partial class StudentDetail
 
     public string? ManagementScholarship { get; set; }
 
-    public string? Quota { get; set; }
-
-    public decimal? Concession { get; set; }
-
-    public string? Remark { get; set; }
-
     public string? Referredby { get; set; }
-
-    public DateTime? TcreceivedDate { get; set; }
 
     public string? DocumentEnclosed { get; set; }
 
     public string? DocumentNotEnclosed { get; set; }
 
-    public string Status { get; set; } = null!;
+    public string? RollNo { get; set; }
 
-    public DateTime? LastDate { get; set; }
+    public string? ExamRegisterNumber { get; set; }
 
-    public string? Reasonforleaving { get; set; }
+    public string Year { get; set; } = null!;
 
-    public int InstitutionCode { get; set; }
+    public string Class { get; set; } = null!;
 
-    public string EnteredBy { get; set; } = null!;
+    public string Section { get; set; } = null!;
 
-    public DateTime EntryDate { get; set; }
+    public string ClassSection { get; set; } = null!;
 
-    public string? ModifiedBy { get; set; }
-
-    public DateTime ModifiedDate { get; set; }
-
-    public virtual ICollection<StudentClassDetail> StudentClassDetails { get; set; } = new List<StudentClassDetail>();
-
-    public virtual ICollection<StudentPassTable> StudentPassTables { get; set; } = new List<StudentPassTable>();
+    public Guid? Guid { get; set; }
 }

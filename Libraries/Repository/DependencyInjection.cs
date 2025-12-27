@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Repository.AcademicYearRepository;
@@ -9,6 +9,7 @@ using Repository.DocumentLibraryRepository;
 using Repository.Entity;
 using Repository.InstitutionDetails;
 using Repository.StaffRepository;
+using Repository.StudentRepository;
 using Repository.UserRepository;
 
 namespace Repository
@@ -27,6 +28,7 @@ namespace Repository
             service.AddScoped<IAcademicYearRepo, AcademicYearRepo>();
             service.AddScoped<IStaffRepo, StaffRepo>();
             service.AddScoped<IDocumentLibraryRepo, DocumentLibraryRepo>();
+            service.AddScoped<IStudentRepo, StudentRepo>();
 
             return service;
         }

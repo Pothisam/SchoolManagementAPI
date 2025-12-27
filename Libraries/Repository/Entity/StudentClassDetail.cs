@@ -13,9 +13,9 @@ public partial class StudentClassDetail
 
     public int ClassSectionFkid { get; set; }
 
-    public string RollNo { get; set; } = null!;
+    public string? RollNo { get; set; }
 
-    public string ExamRegisterNumber { get; set; } = null!;
+    public string? ExamRegisterNumber { get; set; }
 
     public string Status { get; set; } = null!;
 
@@ -28,10 +28,6 @@ public partial class StudentClassDetail
     public string? ModifiedBy { get; set; }
 
     public DateTime ModifiedDate { get; set; }
-
-    public virtual AcademicYear AcademicYearFk { get; set; } = null!;
-
-    public virtual ClassSection ClassSectionFk { get; set; } = null!;
 
     public virtual StudentDetail StudentDetailsFk { get; set; } = null!;
 }

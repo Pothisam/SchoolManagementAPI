@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.DocumentLibraryModels;
 
 namespace Models.StaffModels
 {
@@ -131,18 +132,7 @@ namespace Models.StaffModels
         public int Id { get; set; }
         public int InstitutionCode { get; set; }
     }
-    public class DocumentLibraryBulkInsert
-    {
-        public required string FileName { get; set; }
-        public required string ContentType { get; set; }
-        public required string Data { get; set; }
-        public required string FileType { get; set; } = null!;
 
-    }
-    public partial class DocumentLibraryBulkInsertByFKID : DocumentLibraryBulkInsert
-    {
-        public required int FKID { get; set; }
-    }
     public class StaffSearchRequest
     {
         public required string ColumnName { get; set; } = null!;

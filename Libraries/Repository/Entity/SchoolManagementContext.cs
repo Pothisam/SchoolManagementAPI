@@ -47,6 +47,8 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<StudentDetail> StudentDetails { get; set; }
 
+    public virtual DbSet<StudentMasterView> StudentMasterViews { get; set; }
+
     public virtual DbSet<StudentPassTable> StudentPassTables { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -852,16 +854,6 @@ public partial class SchoolManagementContext : DbContext
                 .HasDefaultValueSql("('Active')");
             entity.Property(e => e.StudentDetailsFkid).HasColumnName("StudentDetailsFKID");
 
-            entity.HasOne(d => d.AcademicYearFk).WithMany(p => p.StudentClassDetails)
-                .HasForeignKey(d => d.AcademicYearFkid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StudentClassDetails_AcademicYear");
-
-            entity.HasOne(d => d.ClassSectionFk).WithMany(p => p.StudentClassDetails)
-                .HasForeignKey(d => d.ClassSectionFkid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StudentClassDetails_ClassSection");
-
             entity.HasOne(d => d.StudentDetailsFk).WithMany(p => p.StudentClassDetails)
                 .HasForeignKey(d => d.StudentDetailsFkid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -872,7 +864,11 @@ public partial class SchoolManagementContext : DbContext
         {
             entity.HasKey(e => e.SysId).HasName("PK_StudentDetails_SysId");
 
-            entity.ToTable(tb => tb.HasTrigger("StudentDetailsAudit"));
+            entity.ToTable(tb =>
+                {
+                    tb.HasTrigger("StudentDetailsAI");
+                    tb.HasTrigger("StudentDetailsAudit");
+                });
 
             entity.Property(e => e.AadharCardNo)
                 .HasMaxLength(12)
@@ -924,9 +920,6 @@ public partial class SchoolManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Concession).HasColumnType("numeric(8, 2)");
-            entity.Property(e => e.CourseType)
-                .HasMaxLength(10)
-                .IsUnicode(false);
             entity.Property(e => e.DateOfAdmission).HasColumnType("date");
             entity.Property(e => e.Dob)
                 .HasColumnType("date")
@@ -1060,13 +1053,216 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.Stdid)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.StudentMobileNumber)
-                .HasMaxLength(10)
-                .IsUnicode(false);
             entity.Property(e => e.TcreceivedDate)
                 .HasColumnType("date")
                 .HasColumnName("TCReceivedDate");
             entity.Property(e => e.Volunteers)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<StudentMasterView>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("StudentMasterView");
+
+            entity.Property(e => e.AadharCardNo)
+                .HasMaxLength(12)
+                .IsUnicode(false);
+            entity.Property(e => e.AdmissionNumber)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.AdmissionSerialNumber)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.ApplicationNumber)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.BloodGroup)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.BoardingPoint)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.BroSysStudyingStudied)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.Caste)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CharityAmount).HasColumnType("numeric(8, 2)");
+            entity.Property(e => e.CharityScholarship)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Class)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.ClassSection)
+                .HasMaxLength(108)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddress1)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddress2)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressDistrict)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressPincode)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressPostOffice)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CommunicationAddressState)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Community)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Concession).HasColumnType("numeric(8, 2)");
+            entity.Property(e => e.DateOfAdmission).HasColumnType("date");
+            entity.Property(e => e.Dob)
+                .HasColumnType("date")
+                .HasColumnName("DOB");
+            entity.Property(e => e.DocumentEnclosed)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.DocumentNotEnclosed)
+                .HasMaxLength(500)
+                .IsUnicode(false);
+            entity.Property(e => e.Emailid)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.EnteredBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Entrydate).HasColumnType("datetime");
+            entity.Property(e => e.ExamRegisterNumber)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.ExtraCurricularActivities)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FatherName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FatherOccupation)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.FirstLanguage)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Gender)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.GuardianName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Hostel)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Initial)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.ManagementScholarship)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MobileNo)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.MobileNo2)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ModeOftransport)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("ModeOFTransport");
+            entity.Property(e => e.ModifiedBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate).HasColumnType("datetime");
+            entity.Property(e => e.MotherName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MotherOccupation)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.MotherTongue)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Name)
+                .HasMaxLength(56)
+                .IsUnicode(false);
+            entity.Property(e => e.NameBroSys)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Parents)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddress1)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddress2)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressDistrict)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressPincode)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressPostOffice)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.ParmanentAddressState)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.PhysicalDisability)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.PlaceOfBirth)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Quota)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Referredby)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Religion)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Remark)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.RollNo)
+                .HasMaxLength(15)
+                .IsUnicode(false);
+            entity.Property(e => e.ScholarShip)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.ScholarShipType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Section)
+                .HasMaxLength(5)
+                .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Stdid)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.StudentName)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Volunteers)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.Year)
                 .HasMaxLength(10)
                 .IsUnicode(false);
         });
@@ -1098,7 +1294,8 @@ public partial class SchoolManagementContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Status)
                 .HasMaxLength(10)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
             entity.Property(e => e.StudentDetailsFkid).HasColumnName("StudentDetailsFKID");
             entity.Property(e => e.UserName)
                 .HasMaxLength(50)

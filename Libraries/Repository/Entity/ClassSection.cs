@@ -24,6 +24,4 @@ public partial class ClassSection
     public DateTime ModifiedDate { get; set; }
 
     public virtual Class ClassFk { get; set; } = null!;
-
-    public virtual ICollection<StudentClassDetail> StudentClassDetails { get; set; } = new List<StudentClassDetail>();
 }

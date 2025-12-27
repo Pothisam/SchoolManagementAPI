@@ -50,4 +50,5 @@ namespace Models.CommonModels
         public string? Column { get; set; }
     }
 
+
 }

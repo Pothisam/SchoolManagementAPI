@@ -34,5 +34,16 @@ namespace Models.DocumentLibraryModels
     {
         public required int SysId { get; set; }
     }
+    public class DocumentLibraryBulkInsert
+    {
+        public required string FileName { get; set; }
+        public required string ContentType { get; set; }
+        public required string Data { get; set; }
+        public required string FileType { get; set; } = null!;
 
+    }
+    public partial class DocumentLibraryBulkInsertByFKID : DocumentLibraryBulkInsert
+    {
+        public required int FKID { get; set; }
+    }
 }
