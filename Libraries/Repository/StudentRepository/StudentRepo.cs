@@ -72,6 +72,76 @@ namespace Repository.StudentRepository
                 return 0;
             }
         }
+        public async Task<List<AutoCompleteResponse>> GetStudentAutoComplete(AutoCompleteRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var autoCompleteResponse = new List<AutoCompleteResponse>();
+            if (request.TableName == "StudentDetails")
+            {
+                var query = request.ColumnName switch
+                {
+                    "PlaceOfBirth" => _context.StudentMasterViews
+                        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.PlaceOfBirth.StartsWith(request.SearchParam))
+            .OrderBy(x => x.RollNo)
+                        .Select(x => x.PlaceOfBirth)
+            .Distinct()
+                        .Take(5),
+
+                    "MotherTongue" => _context.StudentMasterViews
+                        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.MotherTongue.StartsWith(request.SearchParam))
+                        .OrderBy(x => x.RollNo)
+                        .Select(x => x.MotherTongue)
+                        .Distinct()
+                        .Take(5),
+
+                    "ExtraCurricularActivities" => _context.StudentMasterViews
+                        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.ExtraCurricularActivities.StartsWith(request.SearchParam))
+                        .OrderBy(x => x.RollNo)
+                        .Select(x => x.ExtraCurricularActivities)
+                        .Distinct()
+                        .Take(5),
+
+                    "Caste" => _context.StudentMasterViews
+                        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Caste.StartsWith(request.SearchParam))
+                        .OrderBy(x => x.RollNo)
+                        .Select(x => x.Caste)
+                        .Distinct()
+                        .Take(5),
+
+
+                    "BoardingPoint" => _context.StudentMasterViews
+                        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.BoardingPoint.StartsWith(request.SearchParam))
+                        .OrderBy(x => x.RollNo)
+                        .Select(x => x.BoardingPoint)
+                        .Distinct()
+                        .Take(5),
+
+                    "Name" => _context.StudentMasterViews
+                        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Name.StartsWith(request.SearchParam))
+                        .OrderBy(x => x.RollNo)
+                        .Select(x => x.Name)
+                        .Distinct()
+                        .Take(5),
+
+                    "RollNo" => _context.StudentMasterViews
+                        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.RollNo.StartsWith(request.SearchParam))
+                        .OrderBy(x => x.RollNo)
+                        .Select(x => x.RollNo)
+                        .Distinct()
+                        .Take(5),
+                    "AadharCardNo" => _context.StudentMasterViews
+                    .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.AadharCardNo.StartsWith(request.SearchParam))
+                    .OrderBy(x => x.RollNo)
+                    .Select(x => x.AadharCardNo)
+                    .Distinct()
+                    .Take(5),
+                    _ => throw new NotImplementedException($"Column '{request.ColumnName}' is not supported.")
+                };
+
+                var result = await query.ToListAsync();
+                autoCompleteResponse.AddRange(result.Select(value => new AutoCompleteResponse { Column = value }));
+            }
+            return autoCompleteResponse;
+        }
         #endregion
 
     }

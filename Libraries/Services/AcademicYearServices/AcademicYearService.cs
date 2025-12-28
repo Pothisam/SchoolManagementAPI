@@ -1,4 +1,4 @@
-﻿using Models.AcademicYearModels;
+using Models.AcademicYearModels;
 using Models.CommonModels;
 using Repository.AcademicYearRepository;
 using Repository.Entity;
@@ -49,6 +49,17 @@ namespace Services.AcademicYearServices
         public async Task<CommonResponse<List<AcademicYearResponse>>> GetAcademicYearListAsync(APIRequestDetails apiRequestDetails)
         {
             var result = await _academicYearRepo.GetAcademicYearListAsync(apiRequestDetails);
+
+            return new CommonResponse<List<AcademicYearResponse>>
+            {
+                Status = Status.Success,
+                Data = result
+            };
+        }
+
+        public async Task<CommonResponse<List<AcademicYearResponse>>> GetActiveAcademicYearListAsync(APIRequestDetails apiRequestDetails)
+        {
+            var result = await _academicYearRepo.GetActiveAcademicYearListAsync(apiRequestDetails);
 
             return new CommonResponse<List<AcademicYearResponse>>
             {

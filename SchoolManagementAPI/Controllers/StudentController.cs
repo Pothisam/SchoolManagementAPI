@@ -2,6 +2,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Models.CommonModels;
 using Models.StudentModels;
 using Services.CommonServices;
 using Services.StudentServices;
@@ -26,6 +27,13 @@ namespace CMS.API.Controllers
         {
             var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
             var result = await _IStudentService.AddStudent(request, apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("GetStudentAutoComplete")]
+        public async Task<IActionResult> GetStudentAutoComplete(AutoCompleteRequest request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.GetStudentAutoComplete(request, apirequestdetails);
             return Ok(result);
         }
         #endregion

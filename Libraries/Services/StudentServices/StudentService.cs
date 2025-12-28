@@ -78,7 +78,13 @@ namespace Services.StudentServices
                 CommunicationAddressPostOffice = request.studentdetails.CommunicationAddressPostOffice,
                 CommunicationAddressDistrict = request.studentdetails.CommunicationAddressDistrict,
                 CommunicationAddressState = request.studentdetails.CommunicationAddressState,
-                
+                Remark = request.studentdetails.Remark,
+                DateOfAdmission = request.studentdetails.DateOfAdmission,
+                BroSysStudyingStudied = request.studentdetails.BroSysStudyingStudied,
+                NameBroSys = request.studentdetails.NameBroSys,
+                ModeOftransport = request.studentdetails.ModeOftransport,
+                BoardingPoint = request.studentdetails.BoardingPoint,
+                Hostel = request.studentdetails.Hostel,
                 
                 InstitutionCode = apiRequestDetails.InstitutionCode,              
                 Referredby = request.studentdetails.Referredby,
@@ -99,6 +105,7 @@ namespace Services.StudentServices
                 AcademicYearFkid = request.studentdetails.AcadamicYear,
                 ClassSectionFkid = request.studentdetails.ClassSection,
                 InstitutionCode = apiRequestDetails.InstitutionCode,
+                StudentType = request.studentdetails.StudentType,
                 EnteredBy = apiRequestDetails.UserName
 
             };
@@ -153,6 +160,37 @@ namespace Services.StudentServices
                    ? "Student details saved successfully."
                    : "Unable to add Student"
             };
+        }
+        public async Task<CommonResponse<List<AutoCompleteResponse>>> GetStudentAutoComplete(AutoCompleteRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<AutoCompleteResponse>>();
+            List<AutoCompleteResponse> result = new List<AutoCompleteResponse>();
+            if (request.ColumnName == "NameRollNoAadhar")
+            {
+                AutoCompleteRequest Name = new AutoCompleteRequest { TableName = request.TableName, ColumnName = "Name", SearchParam = request.SearchParam };
+                var L1 = await _IStudentRepo.GetStudentAutoComplete(Name, apiRequestDetails);
+                AutoCompleteRequest RollNo = new AutoCompleteRequest { TableName = request.TableName, ColumnName = "RollNo", SearchParam = request.SearchParam };
+                var L2 = await _IStudentRepo.GetStudentAutoComplete(RollNo, apiRequestDetails);
+                AutoCompleteRequest AadharCardNo = new AutoCompleteRequest { TableName = request.TableName, ColumnName = "AadharCardNo", SearchParam = request.SearchParam };
+                var L3 = await _IStudentRepo.GetStudentAutoComplete(AadharCardNo, apiRequestDetails);
+                result = L1.Union(L2).Union(L3).Take(5).ToList();
+            }
+            else
+            {
+                result = await _IStudentRepo.GetStudentAutoComplete(request, apiRequestDetails);
+            }
+            if (result == null)
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+            }
+            else
+            {
+                response.Status = Status.Success;
+                response.Message = "";
+                response.Data = result;
+            }
+            return response;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.AcademicYearModels;
 using Services.AcademicYearServices;
@@ -31,6 +31,13 @@ namespace SchoolManagementAPI.Controllers
         {
             var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
             var result = await _academicYearService.GetAcademicYearListAsync(apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetActiveAcademicYearList")]
+        public async Task<IActionResult> GetActiveAcademicYearList()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _academicYearService.GetActiveAcademicYearListAsync(apiRequestDetails);
             return Ok(result);
         }
         [HttpPost("UpdateAcademicYearStatus")]

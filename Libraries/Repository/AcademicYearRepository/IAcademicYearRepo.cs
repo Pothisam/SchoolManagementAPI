@@ -1,4 +1,4 @@
-﻿using Models.AcademicYearModels;
+using Models.AcademicYearModels;
 using Models.CommonModels;
 using Repository.Entity;
 using System;
@@ -14,6 +14,7 @@ namespace Repository.AcademicYearRepository
         Task<bool> IsAcademicYearExistsAsync(AddAcademicYearRequest request, APIRequestDetails apiRequestDetails);
         Task<bool> AddAcademicYearAsync(AddAcademicYearRequest request,APIRequestDetails apiRequestDetails);
         Task<List<AcademicYearResponse>> GetAcademicYearListAsync(APIRequestDetails apiRequestDetails);
+        Task<List<AcademicYearResponse>>  GetActiveAcademicYearListAsync(APIRequestDetails apiRequestDetails);
         Task<bool> UpdateAcademicYearStatusAsync(UpdateAcademicYear request, APIRequestDetails apiRequestDetails);
     }
 }

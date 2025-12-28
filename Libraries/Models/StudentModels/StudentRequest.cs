@@ -21,6 +21,7 @@ namespace Models.StudentModels
         public string AdmissionNumber { get; set; } = null!;
 
         public string? AdmissionSerialNumber { get; set; }
+        public string StudentType { get; set; } = null!;
 
         public string Name { get; set; } = null!;
 
@@ -109,20 +110,6 @@ namespace Models.StudentModels
         public string? BoardingPoint { get; set; }
 
         public string? Hostel { get; set; }
-
-        public string? ScholarShip { get; set; }
-
-        public string? ScholarShipType { get; set; }
-
-        public string? CharityScholarship { get; set; }
-
-        public decimal CharityAmount { get; set; }
-
-        public string? ManagementScholarship { get; set; }
-
-        public string? Quota { get; set; }
-
-        public decimal? Concession { get; set; }
 
         public string? Remark { get; set; }
 

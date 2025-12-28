@@ -13,6 +13,8 @@ public partial class StudentClassDetail
 
     public int ClassSectionFkid { get; set; }
 
+    public string? StudentType { get; set; }
+
     public string? RollNo { get; set; }
 
     public string? ExamRegisterNumber { get; set; }

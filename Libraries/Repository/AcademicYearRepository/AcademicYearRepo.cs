@@ -54,7 +54,21 @@ namespace Repository.AcademicYearRepository
                               ModifiedDate = x.ModifiedDate
                           }).OrderByDescending(x => x.YearDate).ToListAsync();
         }
-
+        public async Task<List<AcademicYearResponse>> GetActiveAcademicYearListAsync(APIRequestDetails apiRequestDetails)
+        {
+            return await _context.AcademicYears.Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Status== "Active")
+                          .Select(x => new AcademicYearResponse
+                          {
+                              SysId = x.SysId,
+                              YearDate = x.YearDate,
+                              Year = x.Year,
+                              Status = x.Status,
+                              EnteredBy = x.EnteredBy,
+                              EntryDate = x.EntryDate,
+                              ModifiedBy = x.ModifiedBy,
+                              ModifiedDate = x.ModifiedDate
+                          }).OrderByDescending(x => x.YearDate).ToListAsync();
+        }
         public async Task<bool> UpdateAcademicYearStatusAsync(UpdateAcademicYear request, APIRequestDetails apiRequestDetails)
         {
             try
@@ -76,5 +90,7 @@ namespace Repository.AcademicYearRepository
                 return false;
             }
         }
+
+        
     }
 }

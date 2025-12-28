@@ -103,20 +103,6 @@ public partial class StudentDetail
 
     public string? Hostel { get; set; }
 
-    public string? ScholarShip { get; set; }
-
-    public string? ScholarShipType { get; set; }
-
-    public string? CharityScholarship { get; set; }
-
-    public decimal CharityAmount { get; set; }
-
-    public string? ManagementScholarship { get; set; }
-
-    public string? Quota { get; set; }
-
-    public decimal? Concession { get; set; }
-
     public string? Remark { get; set; }
 
     public string? Referredby { get; set; }

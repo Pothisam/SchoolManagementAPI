@@ -11,6 +11,7 @@ namespace Repository.StudentRepository
         Task<bool> IsDuplicateAadharAsync(string AadharCardNo, APIRequestDetails apiRequestDetails);
         Task<string> GenerateStudentIdAsync(APIRequestDetails apiRequestDetails);
         Task<int> AddStudent(StudentDetail request, StudentPassTable passTable, StudentClassDetail StudentClassDetails);
+        Task<List<AutoCompleteResponse>> GetStudentAutoComplete(AutoCompleteRequest request, APIRequestDetails apiRequestDetails);
         #endregion
     }
 }

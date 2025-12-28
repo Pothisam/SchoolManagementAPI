@@ -7,6 +7,7 @@ namespace Services.StudentServices
     {
         #region Add Student
         Task<CommonResponse<string>> AddStudent(AddStudentRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<AutoCompleteResponse>>> GetStudentAutoComplete(AutoCompleteRequest request, APIRequestDetails apiRequestDetails);
         #endregion
     }
 }
