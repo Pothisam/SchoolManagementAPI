@@ -129,9 +129,15 @@ public partial class StudentMasterView
 
     public string? ExamRegisterNumber { get; set; }
 
+    public int AcademicYearSysId { get; set; }
+
     public string Year { get; set; } = null!;
 
+    public int ClassSysId { get; set; }
+
     public string Class { get; set; } = null!;
+
+    public int ClassSectionSysId { get; set; }
 
     public string Section { get; set; } = null!;
 

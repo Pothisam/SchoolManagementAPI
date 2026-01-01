@@ -23,7 +23,7 @@ namespace Services.StudentServices
             _ICommonService = CommonService;
             _IDocumentLibraryRepo = DocumentLibraryRepo;
         }
-
+        #region Add Student
         public async Task<CommonResponse<string>> AddStudent(AddStudentRequest request, APIRequestDetails apiRequestDetails)
         {
             if (!await _IStudentRepo.IsDuplicateAadharAsync(request.studentdetails.AadharCardNo, apiRequestDetails))
@@ -192,5 +192,61 @@ namespace Services.StudentServices
             }
             return response;
         }
+
+        #endregion
+        #region View Student List
+        public async Task<CommonResponse<StudentCountResponse>> GetStudentCountAsync(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<StudentCountResponse>();
+            var result = await _IStudentRepo.GetStudentCountAsync(apiRequestDetails);
+
+            if (result != null)
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+            }
+
+            return response;
+        }
+
+        public async Task<CommonResponse<List<StudentDetailsShortResponse>>> GetStudentDetailsShortAsync(StudentShortRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StudentDetailsShortResponse>>();
+            var result = await _IStudentRepo.GetStudentDetailsShortAsync(request, apiRequestDetails);
+
+            if (result.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+            }
+
+            return response;
+        }
+        public async Task<CommonResponse<List<StudentDetailsShortResponse>>> GetStudentDetailsShortAsync(StudentSearchRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StudentDetailsShortResponse>>();
+            var result = await _IStudentRepo.GetStudentDetailsShortAsync(request, apiRequestDetails);
+
+            if (result.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+            }
+
+            return response;
+        }
+        #endregion
     }
 }

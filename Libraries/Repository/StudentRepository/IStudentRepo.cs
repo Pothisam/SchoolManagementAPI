@@ -13,5 +13,10 @@ namespace Repository.StudentRepository
         Task<int> AddStudent(StudentDetail request, StudentPassTable passTable, StudentClassDetail StudentClassDetails);
         Task<List<AutoCompleteResponse>> GetStudentAutoComplete(AutoCompleteRequest request, APIRequestDetails apiRequestDetails);
         #endregion
+        #region View Student List
+        Task<StudentCountResponse> GetStudentCountAsync(APIRequestDetails apiRequestDetails);
+        Task<List<StudentDetailsShortResponse>> GetStudentDetailsShortAsync(StudentShortRequest request, APIRequestDetails apiRequestDetails);
+        Task<List<StudentDetailsShortResponse>> GetStudentDetailsShortAsync(StudentSearchRequest request, APIRequestDetails apiRequestDetails);
+        #endregion
     }
 }

@@ -164,4 +164,35 @@ namespace Models.StudentModels
 
         public DateTime ModifiedDate { get; set; }
     }
+    public class StudentCountResponse
+    {
+        public int TotalStudent { get; set; }
+        public int Male { get; set; }
+        public int Female { get; set; }
+    }
+    public class StudentDetailsShortResponse
+    {
+        public int SysId { get; set; }
+        public string Name { get; set; }
+        public string CourseSection { get; set; }
+        public string AcadamicYear { get; set; }
+        public string gender { get; set; }
+        public string RollNo { get; set; }
+        public DateTime? DOB { get; set; }
+        public string EnteredBy { get; set; }
+        public DateTime? EntryDate { get; set; }
+        public string ModifiedBy { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public Guid? Guid { get; set; }
+    }
+    public class StudentShortRequest
+    {
+        public required int CourseSysid { get; set; }
+        
+    }
+    public class StudentSearchRequest
+    {
+        public required string ColumnName { get; set; } = null!;
+        public string SearchParam { get; set; }
+    }
 }

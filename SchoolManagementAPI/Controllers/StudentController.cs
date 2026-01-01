@@ -37,5 +37,28 @@ namespace CMS.API.Controllers
             return Ok(result);
         }
         #endregion
+        #region View Student List
+        [HttpPost("GetStudentCount")]
+        public async Task<IActionResult> GetStudentCount()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.GetStudentCountAsync(apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetStudentDetailsShort")]
+        public async Task<IActionResult> GetStudentDetailsShort(StudentShortRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.GetStudentDetailsShortAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetStudentDetailsShortAC")]
+        public async Task<IActionResult> GetStudentDetailsShortAC(StudentSearchRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.GetStudentDetailsShortAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        #endregion
     }
 }
