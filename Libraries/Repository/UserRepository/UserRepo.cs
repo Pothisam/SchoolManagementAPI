@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Models.CommonModels;
 using Models.UserModels;
 using Repository.Entity;
 using System;
@@ -31,6 +32,19 @@ namespace Repository.UserRepository
                                                  InstitutionType = y.InstitutionType,
                                              }).FirstOrDefaultAsync();
             return response ?? new LoginResponse();
+        }
+
+        public async Task<bool> UpdateAdminPasswordAsync(ChangePasswordRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var adminAccount = await _context.SmspassTables
+       .FirstOrDefaultAsync(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Password == request.OldPassword);
+
+            if (adminAccount == null)
+                return false;
+
+            adminAccount.Password = request.NewPassword;
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

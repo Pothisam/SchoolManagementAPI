@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Models.UserModels;
+using Services.CommonServices;
 using Services.UserServices;
 
 namespace SchoolManagementAPI.Controllers
@@ -8,9 +9,11 @@ namespace SchoolManagementAPI.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _IUserServices;
-        public UserController(IUserService IUserServices)
+        private readonly ICommonService _ICommonService;
+        public UserController(IUserService IUserServices, ICommonService ICommonService)
         {
             _IUserServices = IUserServices;
+            _ICommonService = ICommonService;
         }
         [HttpPost("SMS/login")]
         public async Task<IActionResult> LoginAsync(LoginRequest request)
@@ -24,6 +27,13 @@ namespace SchoolManagementAPI.Controllers
             };
             var response = await _IUserServices.SMSLoginAsync(requestWithIP);
             return Ok(response);
+        }
+        [HttpPost("SMS/ChangePassword")]
+        public async Task<IActionResult> ChangeAdminPassword(ChangePasswordRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IUserServices.ChangeAdminPasswordAsync(request, apiRequestDetails);
+            return Ok(result);
         }
     }
 }

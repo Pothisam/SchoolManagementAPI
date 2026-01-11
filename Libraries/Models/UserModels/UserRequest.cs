@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +19,11 @@ namespace Models.UserModels
         public required string UserName { get; set; }
         public required string Password { get; set; }
         public required string IPAddress { get; set; }
+    }
+    public class ChangePasswordRequest
+    {
+        public required string OldPassword { get; set; }
+        public required string NewPassword { get; set; }
+        public required string ConfirmPassword { get; set; }
     }
 }

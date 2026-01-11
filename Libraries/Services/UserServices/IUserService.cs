@@ -1,4 +1,4 @@
-﻿using Models.CommonModels;
+using Models.CommonModels;
 using Models.UserModels;
 using System;
 using System.Collections.Generic;
@@ -11,5 +11,6 @@ namespace Services.UserServices
     public interface IUserService
     {
         Task<CommonResponse<LoginResponse>> SMSLoginAsync(LoginRequestwithIP request);
+        Task<CommonResponse<string>> ChangeAdminPasswordAsync(ChangePasswordRequest request, APIRequestDetails apiRequestDetails);
     }
 }
