@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models.CommonModels;
 using Models.InstitutionDetailsModels;
 using Repository.Entity;
@@ -130,7 +130,7 @@ namespace Repository.InstitutionDetails
 
             inst.LogoFileName = request.LogoFileName;
             inst.LogoContentType = request.LogoContentType;
-            inst.LogoData = request.LogoData;
+            inst.LogoData = Convert.FromBase64String(request.LogoData.Split(',')[1].Trim());
 
             inst.ModifiedBy = apiRequestDetails.UserName;
             _context.InstitutionDetails.Update(inst);
@@ -149,7 +149,7 @@ namespace Repository.InstitutionDetails
 
             inst.FaviconFileName = request.FaviconFileName;
             inst.FaviconContentType = request.FaviconContentType;
-            inst.FaviconData = request.FaviconData;
+            inst.FaviconData = Convert.FromBase64String(request.FaviconData.Split(',')[1].Trim());
 
             inst.ModifiedBy = apiRequestDetails.UserName;
             _context.InstitutionDetails.Update(inst);
@@ -167,7 +167,7 @@ namespace Repository.InstitutionDetails
 
             inst.LogoWithTextFileName = request.LogoWithTextFileName;
             inst.LogoWithTextContentType = request.LogoWithTextContentType;
-            inst.LogoWithTextData = request.LogoWithTextData;
+            inst.LogoWithTextData = Convert.FromBase64String(request.LogoWithTextData.Split(',')[1].Trim());
 
             inst.ModifiedBy = apiRequestDetails.UserName;
 

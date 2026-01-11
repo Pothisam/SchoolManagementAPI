@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +37,7 @@ namespace Models.InstitutionDetailsModels
 
         public string? LogoFileName { get; set; }
         public string? LogoContentType { get; set; }
-        public byte[]? LogoData { get; set; }
+        public string LogoData { get; set; }
     }
     public class UpdateInstitutionFaviconRequest
     {
@@ -45,7 +45,7 @@ namespace Models.InstitutionDetailsModels
 
         public string? FaviconFileName { get; set; }
         public string? FaviconContentType { get; set; }
-        public byte[]? FaviconData { get; set; }
+        public string FaviconData { get; set; }
     }
     public class UpdateInstitutionLogoWithTextRequest
     {
@@ -53,6 +53,6 @@ namespace Models.InstitutionDetailsModels
 
         public string? LogoWithTextFileName { get; set; }
         public string? LogoWithTextContentType { get; set; }
-        public byte[]? LogoWithTextData { get; set; }
+        public string LogoWithTextData { get; set; }
     }
 }
