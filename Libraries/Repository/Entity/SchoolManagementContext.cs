@@ -1250,6 +1250,9 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.StudentName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.StudentType)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Volunteers)
                 .HasMaxLength(10)
                 .IsUnicode(false);

@@ -50,7 +50,7 @@ namespace Repository.StudentRepository
             {
                 _context.StudentDetails.Add(request);
                 await _context.SaveChangesAsync();
-                if(request.SysId == 0)
+                if (request.SysId == 0)
                 {
                     return 0;
                 }
@@ -218,7 +218,7 @@ namespace Repository.StudentRepository
             {
                 query = query.Where(x => x.Gender == request.SearchParam);
             }
-           
+
             var documentQuery = _context.DocumentLibraries
                 .Where(d => d.Action == "Image-Upload"
                             && d.TableName == "StudentDetails"
@@ -245,6 +245,135 @@ namespace Repository.StudentRepository
                                            }).ToListAsync();
 
             return StudentMasterViewList;
+        }
+
+
+        #endregion
+        #region View Student Details
+        public async Task<StudentMasterViewResponse> GetStudentDetailBySysid(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            StudentMasterViewResponse? StudentMasterView = await (from x in _context.StudentMasterViews 
+                                                                  where x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Sysid == request.Sysid
+                                                                  select new StudentMasterViewResponse
+                                                                  {
+                                                                      Sysid = x.Sysid,
+                                                                      Stdid = x.Stdid,
+                                                                      StudentType = x.StudentType,
+                                                                      ApplicationNumber = x.ApplicationNumber,
+                                                                      AdmissionNumber = x.AdmissionNumber,
+                                                                      AdmissionSerialNumber = x.AdmissionSerialNumber,
+                                                                      Initial = x.Initial,
+                                                                      StudentName = x.StudentName,
+                                                                      Name = x.Name,
+                                                                      Dob = x.Dob,
+                                                                      PlaceOfBirth = x.PlaceOfBirth,
+                                                                      MotherTongue = x.MotherTongue,
+                                                                      FatherName = x.FatherName,
+                                                                      FatherOccupation = x.FatherOccupation,
+                                                                      FatherIncome = x.FatherIncome,
+                                                                      BloodGroup = x.BloodGroup,
+                                                                      MotherName = x.MotherName,
+                                                                      MotherOccupation = x.MotherOccupation,
+                                                                      MotherIncome = x.MotherIncome,
+                                                                      AadharCardNo = x.AadharCardNo,
+                                                                      MobileNo = x.MobileNo,
+                                                                      MobileNo2 = x.MobileNo2,
+                                                                      Emailid = x.Emailid,
+                                                                      FirstLanguage = x.FirstLanguage,
+                                                                      Parents = x.Parents,
+                                                                      Religion = x.Religion,
+                                                                      Community = x.Community,
+                                                                      Caste = x.Caste,
+                                                                      GuardianName = x.GuardianName,
+                                                                      ExtraCurricularActivities = x.ExtraCurricularActivities,
+                                                                      PhysicalDisability = x.PhysicalDisability,
+                                                                      Volunteers = x.Volunteers,
+                                                                      Gender = x.Gender,
+                                                                      ParmanentAddress1 = x.ParmanentAddress1,
+                                                                      ParmanentAddress2 = x.ParmanentAddress2,
+                                                                      ParmanentAddressPincode = x.ParmanentAddressPincode,
+                                                                      ParmanentAddressPostOffice = x.ParmanentAddressPostOffice,
+                                                                      ParmanentAddressDistrict = x.ParmanentAddressDistrict,
+                                                                      ParmanentAddressState = x.ParmanentAddressState,
+                                                                      CommunicationAddress1 = x.CommunicationAddress1,
+                                                                      CommunicationAddress2 = x.CommunicationAddress2,
+                                                                      CommunicationAddressPincode = x.CommunicationAddressPincode,
+                                                                      CommunicationAddressPostOffice = x.CommunicationAddressPostOffice,
+                                                                      CommunicationAddressDistrict = x.CommunicationAddressDistrict,
+                                                                      CommunicationAddressState = x.CommunicationAddressState,
+                                                                      DateOfAdmission = x.DateOfAdmission,
+                                                                      BroSysStudyingStudied = x.BroSysStudyingStudied,
+                                                                      NameBroSys = x.NameBroSys,
+                                                                      ModeOftransport = x.ModeOftransport,
+                                                                      BoardingPoint = x.BoardingPoint,
+                                                                      Hostel = x.Hostel,
+                                                                      Remark = x.Remark,
+                                                                      InstitutionCode = x.InstitutionCode,
+                                                                      Status = x.Status,
+                                                                      EnteredBy = x.EnteredBy,
+                                                                      Entrydate = x.Entrydate,
+                                                                      ModifiedBy = x.ModifiedBy,
+                                                                      ModifiedDate = x.ModifiedDate,
+                                                                      Referredby = x.Referredby,
+                                                                      DocumentEnclosed = x.DocumentEnclosed,
+                                                                      DocumentNotEnclosed = x.DocumentNotEnclosed,
+                                                                      RollNo = x.RollNo,
+                                                                      ExamRegisterNumber = x.ExamRegisterNumber,
+                                                                      AcademicYearSysId = x.AcademicYearSysId,
+                                                                      Year = x.Year,
+                                                                      ClassSysId = x.ClassSysId,
+                                                                      Class = x.Class,
+                                                                      ClassSectionSysId = x.ClassSectionSysId,
+                                                                      Section = x.Section,
+                                                                      ClassSection = x.ClassSection,
+                                                                      Guid = x.Guid
+                                                                  }).FirstOrDefaultAsync();
+            return StudentMasterView ?? new StudentMasterViewResponse();
+        }
+
+        public async Task<StudentDetail?> GetStudentByIdAsync(UpdateStudentDetailRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StudentDetails.FirstOrDefaultAsync(x =>x.SysId == request.Sysid && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+        }
+
+        public async Task<bool> UpdateAsync(StudentDetail student, StudentClassDetail? classDetail)
+        {
+            try
+            {
+                _context.StudentDetails.Update(student);
+
+                if (classDetail != null)
+                {
+                    _context.StudentClassDetails.Update(classDetail);
+                }
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<StudentClassDetail?> GetActiveStudentClassAsync(UpdateStudentDetailRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StudentClassDetails.FirstOrDefaultAsync(x => x.StudentDetailsFkid == request.Sysid && x.AcademicYearFkid == request.AcademicYearSysId && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+        }
+
+        public async Task<bool> ResetStudentPasswordAsync(StudentPassword request, APIRequestDetails apiRequestDetails)
+        {
+            var studentLogin = await _context.StudentPassTables.SingleOrDefaultAsync(x => x.StudentDetailsFkid == request.Sysid
+                                && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+
+            if (studentLogin != null)
+            {
+                studentLogin.Password = request.Password;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
         #endregion
     }

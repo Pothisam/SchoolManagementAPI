@@ -12,5 +12,9 @@ namespace Services.DocumentLibraryServices
     {
         Task InsertDocumentLibrary(DocumentLibraryInsertRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<DocumentLibraryImageExportResponse>> GetProfileImagebyID(DocumentLibraryGuid request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> UpdateDocumentAsync(DocumentLibraryBulkInsertByFKID request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<DocumentLibraryDetailsDownloadResponse>> DownloadFileAsync(DocumentLibrarySysid request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> DeleteDocumentAsync(DocumentLibrarySysid request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> InsertandUpdateProfileImage(InsertorUpdateProfileRequest request, APIRequestDetails apiRequestDetails);
     }
 }

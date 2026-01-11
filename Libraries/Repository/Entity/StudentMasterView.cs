@@ -9,6 +9,8 @@ public partial class StudentMasterView
 
     public string Stdid { get; set; } = null!;
 
+    public string? StudentType { get; set; }
+
     public string ApplicationNumber { get; set; } = null!;
 
     public string AdmissionNumber { get; set; } = null!;

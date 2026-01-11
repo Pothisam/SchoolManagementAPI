@@ -85,5 +85,23 @@ namespace Repository.DocumentLibraryRepository
             Col.Status = "Active";
             await _context.SaveChangesAsync();
         }
+
+        public async Task<DocumentLibraryDetailsDownloadResponse> DownloadFileAsync(DocumentLibrarySysid request, APIRequestDetails apiRequestDetails)
+        {
+            DocumentLibraryDetailsDownloadResponse response = await (from x in _context.DocumentLibraries
+                                                                     where x.Sysid == request.SysId && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                                                                     select new DocumentLibraryDetailsDownloadResponse
+                                                                     {
+                                                                         FileName = x.FileName,
+                                                                         FileType = x.FileType,
+                                                                         Data = x.Data,
+                                                                     }).FirstAsync();
+            return response;
+        }
+
+        public async Task<long> GetDocumentLibrarySysid(DocumentLibraryGetRequest request)
+        {
+            return await _context.DocumentLibraries.Where(x => x.Fkid == request.FKID && x.TableName == request.TableName && x.FileType == request.FileType && x.Action == request.Action).Select(x => x.Sysid).FirstAsync();
+        }
     }
 }

@@ -3,6 +3,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.CommonModels;
+using Models.DocumentLibraryModels;
 using Models.StudentModels;
 using Services.CommonServices;
 using Services.StudentServices;
@@ -57,6 +58,45 @@ namespace CMS.API.Controllers
         {
             var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
             var result = await _IStudentService.GetStudentDetailsShortAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        #endregion
+        #region View Student Details
+        [HttpPost("GetStudentDetailBySysid")]
+        public async Task<IActionResult> GetStudentDetailBySysid(StudentDetailsViewRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.GetStudentDetailBySysid(request, apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("UpdateStudent")]
+        public async Task<IActionResult> UpdateStudent(UpdateStudentDetailRequest request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.UpdateStudent(request, apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("ResetStudentPassword")]
+        public async Task<IActionResult> ResetStudentPassword(StudentDetailsViewRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.ResetStudentPasswordAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        #endregion
+        #region Document Library
+        [HttpPost("AddStudentDocument")]
+        public async Task<IActionResult> AddStudentDocument(DocumentLibraryBulkInsertByFKID request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.AddStudentDocumentAsync(request, apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("GetStudentDocument")]
+        public async Task<IActionResult> GetStudentDocument(StudentDetailsViewRequest request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.GetStudentDocumentAsync(request, apirequestdetails);
             return Ok(result);
         }
         #endregion

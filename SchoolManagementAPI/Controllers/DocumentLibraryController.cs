@@ -27,5 +27,33 @@ namespace SchoolManagementAPI.Controllers
             var result = await _IDocumentLibraryServices.GetProfileImagebyID(request, apirequestdetails);
             return Ok(result);
         }
+        [HttpPost("UpdateDocumentbyFkid")]
+        public async Task<IActionResult> DeleteDocumentAsync(DocumentLibraryBulkInsertByFKID request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IDocumentLibraryServices.UpdateDocumentAsync(request, apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("DownloadFile")]
+        public async Task<IActionResult> DownloadFile(DocumentLibrarySysid request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IDocumentLibraryServices.DownloadFileAsync(request, apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("DeleteDocument")]
+        public async Task<IActionResult> DeleteDocument(DocumentLibrarySysid request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IDocumentLibraryServices.DeleteDocumentAsync(request, apirequestdetails);
+            return Ok(result);
+        }
+        [HttpPost("InsertorUpdateProfileImage")]
+        public async Task<IActionResult> InsertorUpdateProfileImage(InsertorUpdateProfileRequest request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IDocumentLibraryServices.InsertandUpdateProfileImage(request, apirequestdetails);
+            return Ok(result);
+        }
     }
 }

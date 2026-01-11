@@ -18,5 +18,12 @@ namespace Repository.StudentRepository
         Task<List<StudentDetailsShortResponse>> GetStudentDetailsShortAsync(StudentShortRequest request, APIRequestDetails apiRequestDetails);
         Task<List<StudentDetailsShortResponse>> GetStudentDetailsShortAsync(StudentSearchRequest request, APIRequestDetails apiRequestDetails);
         #endregion
+        #region View Student Details
+        Task<StudentMasterViewResponse> GetStudentDetailBySysid(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails);
+        Task<StudentDetail?> GetStudentByIdAsync(UpdateStudentDetailRequest request, APIRequestDetails apiRequestDetails);
+        Task<StudentClassDetail?> GetActiveStudentClassAsync(UpdateStudentDetailRequest request, APIRequestDetails apiRequestDetails);
+        Task<bool> UpdateAsync(StudentDetail student, StudentClassDetail? classDetail);
+        Task<bool> ResetStudentPasswordAsync(StudentPassword request, APIRequestDetails apiRequestDetails);
+        #endregion
     }
 }

@@ -19,5 +19,7 @@ namespace Repository.DocumentLibraryRepository
         Task<List<DocumentLibraryDetailsResponse>> GetDocumentLibrary(DocumentLibraryListRequest request, APIRequestDetails apiRequestDetails);
         Task DeleteDocumentLibrary(DocumentLibrarySysid request, APIRequestDetails apiRequestDetails);
         Task UpdateDocumentLibrary(DocumentLibraryUpdate request);
+        Task<DocumentLibraryDetailsDownloadResponse> DownloadFileAsync(DocumentLibrarySysid request, APIRequestDetails apiRequestDetails);
+        Task<long> GetDocumentLibrarySysid(DocumentLibraryGetRequest request);
     }
 }

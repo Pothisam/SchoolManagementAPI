@@ -192,7 +192,35 @@ namespace Services.StudentServices
             }
             return response;
         }
-
+        public async Task<CommonResponse<string>> ResetStudentPasswordAsync(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<string>();
+            var result = await _IStudentRepo.GetStudentDetailBySysid(request, apiRequestDetails);
+            if (result == null)
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+                return response;
+            }
+            var password = await _ICommonService.Encrypt(result.Dob.ToString("dd/MM/yyyy").Replace('-', '/') ?? string.Empty);
+            var passwordRequest = new StudentPassword
+            {
+                Sysid = request.Sysid,
+                Password = password
+            };
+            var isReset = await _IStudentRepo.ResetStudentPasswordAsync(passwordRequest, apiRequestDetails);
+            if (isReset)
+            {
+                response.Status = Status.Success;
+                response.Message = "Password reset successfully.";
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "Could not reset password.";
+            }
+            return response;
+        }
         #endregion
         #region View Student List
         public async Task<CommonResponse<StudentCountResponse>> GetStudentCountAsync(APIRequestDetails apiRequestDetails)
@@ -247,6 +275,197 @@ namespace Services.StudentServices
 
             return response;
         }
+        #endregion
+        #region View Student Details
+        public async Task<CommonResponse<StudentDetailsResponse>> GetStudentDetailBySysid(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<StudentDetailsResponse>
+            {
+                Data = new StudentDetailsResponse
+                {
+                    StudentDetail = new StudentMasterViewResponse(),
+                    StudentDocument = new List<DocumentLibraryDetailsResponse>()
+                }
+            };
+
+            var result = await _IStudentRepo.GetStudentDetailBySysid(request, apiRequestDetails);
+
+            if (result == null)
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+                return response;
+            }
+
+            var documentRequest = new DocumentLibraryListRequest
+            {
+                FKID = request.Sysid,
+                TableName = "StudentDetails",
+                Action = "Document-Upload"
+            };
+
+            var studentDocument = await _IDocumentLibraryRepo.GetDocumentLibrary(documentRequest, apiRequestDetails);
+
+            response.Status = Status.Success;
+            response.Message = string.Empty;
+            response.Data.StudentDetail = result;
+            response.Data.StudentDocument = studentDocument;
+
+            return response;
+        }
+
+        public async Task<CommonResponse<string>> UpdateStudent(UpdateStudentDetailRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var student = await _IStudentRepo.GetStudentByIdAsync(request,apiRequestDetails);
+            if (student == null)
+            {
+                return new CommonResponse<string>
+                {
+                    Status = Status.Failed,
+                    Message = "Student not found"
+                };
+            }
+            student.ApplicationNumber = request.ApplicationNumber;
+            student.AdmissionNumber = request.AdmissionNumber;
+            student.AdmissionSerialNumber = request.AdmissionSerialNumber;
+            student.Initial = request.Initial;
+            student.Name = request.StudentName;
+            student.Dob = request.Dob;
+            student.PlaceOfBirth = request.PlaceOfBirth;
+            student.MotherTongue = request.MotherTongue;
+            student.FatherName = request.FatherName;
+            student.FatherOccupation = request.FatherOccupation;
+            student.FatherIncome = request.FatherIncome;
+            student.BloodGroup = request.BloodGroup;
+            student.MotherName = request.MotherName;
+            student.MotherOccupation = request.MotherOccupation;
+            student.MotherIncome = request.MotherIncome;
+            student.AadharCardNo = request.AadharCardNo;
+            student.MobileNo = request.MobileNo;
+            student.MobileNo2 = request.MobileNo2;
+            student.Emailid = request.Emailid;
+            student.FirstLanguage = request.FirstLanguage;
+            student.Parents = request.Parents;
+            student.Religion = request.Religion;
+            student.Community = request.Community;
+            student.Caste = request.Caste;
+            student.GuardianName = request.GuardianName;
+            student.ExtraCurricularActivities = request.ExtraCurricularActivities;
+            student.PhysicalDisability = request.PhysicalDisability;
+            student.Volunteers = request.Volunteers;
+            student.Gender = request.Gender;
+
+            student.ParmanentAddress1 = request.ParmanentAddress1;
+            student.ParmanentAddress2 = request.ParmanentAddress2;
+            student.ParmanentAddressPincode = request.ParmanentAddressPincode;
+            student.ParmanentAddressPostOffice = request.ParmanentAddressPostOffice;
+            student.ParmanentAddressDistrict = request.ParmanentAddressDistrict;
+            student.ParmanentAddressState = request.ParmanentAddressState;
+
+            student.CommunicationAddress1 = request.CommunicationAddress1;
+            student.CommunicationAddress2 = request.CommunicationAddress2;
+            student.CommunicationAddressPincode = request.CommunicationAddressPincode;
+            student.CommunicationAddressPostOffice = request.CommunicationAddressPostOffice;
+            student.CommunicationAddressDistrict = request.CommunicationAddressDistrict;
+            student.CommunicationAddressState = request.CommunicationAddressState;
+
+            student.DateOfAdmission = request.DateOfAdmission;
+            student.Remark = request.Remark;
+            student.Status = request.Status;
+            student.Referredby = request.Referredby;
+            student.DocumentEnclosed = request.DocumentEnclosed;
+            student.DocumentNotEnclosed = request.DocumentNotEnclosed;
+
+            // 🔐 Audit
+            student.ModifiedBy = apiRequestDetails.UserName;
+
+            var classDetail = await _IStudentRepo.GetActiveStudentClassAsync(request, apiRequestDetails);
+
+            if (classDetail != null)
+            {
+                classDetail.ClassSectionFkid = request.ClassSectionSysId;
+                classDetail.StudentType = request.StudentType;
+                classDetail.RollNo = request.RollNo;
+                classDetail.ExamRegisterNumber = request.ExamRegisterNumber;
+                classDetail.ModifiedBy = apiRequestDetails.UserName;
+            }
+
+            var result = await _IStudentRepo.UpdateAsync(student, classDetail);
+            return new CommonResponse<string>
+            {
+                Status = result ? Status.Success : Status.Failed,
+                Message = result
+                ? "Student details updated successfully"
+                : "Unable to update student details"
+            };
+        }
+        #endregion
+        #region Document Library
+        public async Task<CommonResponse<string>> AddStudentDocumentAsync(DocumentLibraryBulkInsertByFKID request, APIRequestDetails apiRequestDetails)
+        {
+            var checkExistsRequest = new DocumentLibraryGetRequest
+            {
+                FKID = request.FKID,
+                TableName = "StudentDetails",
+                FileType = request.FileType,
+                Action = "Document-Upload"
+            };
+            bool documentExists = await _IDocumentLibraryRepo.DocumentLibraryExists(checkExistsRequest);
+            var response = new CommonResponse<string>();
+            if (documentExists)
+            {
+                response.Status = Status.Failed;
+                response.Message = "Document Type Already Exists. Can't insert duplicate record.";
+            }
+            else
+            {
+                var document = new DocumentLibrary
+                {
+                    Fkid = request.FKID,
+                    InstitutionCode = apiRequestDetails.InstitutionCode,
+                    TableName = "StudentDetails",
+                    Action = "Document-Upload",
+                    FileType = request.FileType,
+                    FileName = request.FileName,
+                    FileSize = (int)Math.Ceiling(request.Data.Length / 1024.0),
+                    ContentType = request.ContentType,
+                    Data = Convert.FromBase64String(request.Data.Split(',')[1].Trim()),
+                    EnteredBy = apiRequestDetails.UserName,
+                };
+                // documents
+                await _IDocumentLibraryRepo.InsertDocumentLibrary(document);
+                response.Status = Status.Success;
+                response.Message = $"Document Type {request.FileType} inserted successfully.";
+            }
+            return response;
+        }
+
+        public async Task<CommonResponse<List<DocumentLibraryDetailsResponse>>> GetStudentDocumentAsync(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var DocumentRequest = new DocumentLibraryListRequest
+            {
+                FKID = request.Sysid,
+                TableName = "StudentDetails",
+                Action = "Document-Upload"
+            };
+            var response = new CommonResponse<List<DocumentLibraryDetailsResponse>>();
+            var StafDocument = await _IDocumentLibraryRepo.GetDocumentLibrary(DocumentRequest, apiRequestDetails);
+            if (StafDocument.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = StafDocument;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "";
+            }
+            return response;
+        }
+
+        
+
+
         #endregion
     }
 }

@@ -27,4 +27,11 @@ namespace Models.DocumentLibraryModels
         public required DateTime ModifiedDate { get; set; }
 
     }
+    public class DocumentLibraryDetailsDownloadResponse
+    {
+        public required string FileName { get; set; }
+        public required string FileType { get; set; }
+        public required byte[] Data { get; set; }
+
+    }
 }
