@@ -1,19 +1,29 @@
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Models.ConfigurationModels;
 using Repository;
-using Services;
-using System.Text;
 using SchoolManagementAPI.Middleware;
+using Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 var configbuilder = builder.Configuration;
+
+// Configure logging to ensure it works in production
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+builder.Logging.AddEventLog(); // For Windows Event Log in production
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
 builder.Services.AddSwaggerGen();
 builder.Services.Configure<AppKeyConfig>(configbuilder.GetSection("AppKeyConfig"));
 builder.Services.Configure<JwtConfig>(configbuilder.GetSection("JWTConfig"));
@@ -50,6 +60,11 @@ if (app.Environment.IsDevelopment())
         options.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None); // Collapse controllers by default
     });
 }
+else
+{
+    // Add global exception handler for production
+    app.UseExceptionHandler("/error");
+}
 
 // Add error logging middleware early in the pipeline to capture unhandled exceptions
 app.UseMiddleware<ErrorLoggingMiddleware>();
@@ -62,6 +77,21 @@ app.UseCors(option =>
     option.AllowAnyOrigin();
 });
 app.UseAuthorization();
+
+// Global error handling endpoint
+app.Map("/error", (HttpContext context) =>
+{
+    var exceptionFeature = context.Features.Get<IExceptionHandlerFeature>();
+    var exception = exceptionFeature?.Error;
+    
+    var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
+    logger.LogError(exception, "Unhandled exception occurred");
+    
+    return Results.Problem(
+        title: "An error occurred",
+        statusCode: StatusCodes.Status500InternalServerError
+    );
+});
 
 app.MapControllers();
 
