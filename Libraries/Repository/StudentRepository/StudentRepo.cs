@@ -159,19 +159,23 @@ namespace Repository.StudentRepository
         }
         public async Task<List<StudentDetailsShortResponse>> GetStudentDetailsShortAsync(StudentShortRequest request, APIRequestDetails apiRequestDetails)
         {
-            bool isDefaultRequest = request.CourseSysid <= 0;
+            int courseSysId = 0;
+            if (!string.IsNullOrWhiteSpace(request.CourseSysid) && int.TryParse(request.CourseSysid, out int parsedValue))
+            {
+                courseSysId = parsedValue;
+            }
 
             IQueryable<StudentMasterView> studentQuery = _context.StudentMasterViews
                 .AsNoTracking()
                 .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode);
 
-            if (!isDefaultRequest)
+            if (courseSysId > 0)
             {
                 studentQuery = studentQuery
-                    .Where(x => x.ClassSysId == request.CourseSysid);
+                    .Where(x => x.ClassSysId == courseSysId);
             }
 
-            studentQuery = isDefaultRequest
+            studentQuery = courseSysId == 0
                 ? studentQuery.OrderByDescending(x => x.ModifiedDate).Take(10)
                 : studentQuery.OrderBy(x => x.RollNo);
 
@@ -252,7 +256,7 @@ namespace Repository.StudentRepository
         #region View Student Details
         public async Task<StudentMasterViewResponse> GetStudentDetailBySysid(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails)
         {
-            StudentMasterViewResponse? StudentMasterView = await (from x in _context.StudentMasterViews 
+            StudentMasterViewResponse? StudentMasterView = await (from x in _context.StudentMasterViews
                                                                   where x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Sysid == request.Sysid
                                                                   select new StudentMasterViewResponse
                                                                   {
@@ -333,7 +337,7 @@ namespace Repository.StudentRepository
 
         public async Task<StudentDetail?> GetStudentByIdAsync(UpdateStudentDetailRequest request, APIRequestDetails apiRequestDetails)
         {
-            return await _context.StudentDetails.FirstOrDefaultAsync(x =>x.SysId == request.Sysid && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+            return await _context.StudentDetails.FirstOrDefaultAsync(x => x.SysId == request.Sysid && x.InstitutionCode == apiRequestDetails.InstitutionCode);
         }
 
         public async Task<bool> UpdateAsync(StudentDetail student, StudentClassDetail? classDetail)

@@ -174,8 +174,8 @@ namespace Models.StudentModels
     }
     public class StudentShortRequest
     {
-        public required int CourseSysid { get; set; }
-        
+        public string CourseSysid { get; set; }
+
     }
     public class StudentSearchRequest
     {
