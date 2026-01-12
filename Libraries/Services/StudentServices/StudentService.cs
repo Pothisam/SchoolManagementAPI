@@ -132,7 +132,8 @@ namespace Services.StudentServices
                         ContentType = request.studentdetails.ImageContentType ?? null,
                         Data = Convert.FromBase64String(request.studentdetails.ImageData.Split(',')[1].Trim()),
                         InstitutionCode = apiRequestDetails.InstitutionCode,
-                        EnteredBy = apiRequestDetails.UserName
+                        EnteredBy = apiRequestDetails.UserName,
+                        FileSize = (int)Math.Ceiling(request.studentdetails.ImageData.Length / 1024.0),
                     });
                 }
                 foreach (var documnetRequest in request.documentrequests)
@@ -148,6 +149,7 @@ namespace Services.StudentServices
                         ContentType = documnetRequest.ContentType,
                         Data = Convert.FromBase64String(documnetRequest.Data.Split(',')[1].Trim()),
                         EnteredBy = apiRequestDetails.UserName,
+                        FileSize = (int)Math.Ceiling(documnetRequest.Data.Length / 1024.0),
                     };
                     // documents
                     await _IDocumentLibraryRepo.InsertDocumentLibrary(document);
