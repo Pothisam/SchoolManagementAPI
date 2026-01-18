@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Models.CommonModels;
 using Models.DocumentLibraryModels;
 using Models.StaffModels;
+using Models.StudentModels;
 using Repository.Entity;
 
 namespace Services.StaffServices
@@ -48,5 +49,6 @@ namespace Services.StaffServices
         #endregion
         Task<CommonResponse<string>> UpdateStaffDetailsAsync(UpdateStaffDetailsRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> ResetStaffPasswordAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails);
+        
     }
 }

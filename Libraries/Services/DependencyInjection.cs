@@ -12,6 +12,7 @@ using Services.ClassServices;
 using Services.CommonServices;
 using Services.DocumentLibraryServices;
 using Services.InstitutionDetailsServices;
+using Services.ReportServices;
 using Services.StaffServices;
 using Services.StudentServices;
 using Services.UserServices;
@@ -32,6 +33,7 @@ namespace Services
             service.AddScoped<IStaffService, StaffService>();
             service.AddScoped<IDocumentLibraryServices, DocumentLibraryService>();
             service.AddScoped<IStudentService, StudentService>();
+            service.AddScoped<IReportService, ReportService>();
             return service;
         }
     }

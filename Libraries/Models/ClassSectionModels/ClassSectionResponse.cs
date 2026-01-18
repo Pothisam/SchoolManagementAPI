@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +19,13 @@ namespace Models.ClassSectionModels
         public string? ModifiedBy { get; set; }
 
         public DateTime ModifiedDate { get; set; }
+    }
+    public class ClassAndSectionResponse
+    {
+        public int SysId { get; set; }
+        public string ClassName { get; set; } = null!;
+        public string SectionName { get; set; } = null!;
+
+        public string ClassNameAndSection { get; set; } = null!;
     }
 }

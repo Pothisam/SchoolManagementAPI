@@ -1,12 +1,13 @@
-using Models.ClassSectionModels;
-using Models.CommonModels;
-using Repository.ClassSectionRepository;
-using Repository.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Core;
+using Models.ClassSectionModels;
+using Models.CommonModels;
+using Repository.ClassSectionRepository;
+using Repository.Entity;
 
 namespace Services.ClassSectionServices
 {
@@ -89,6 +90,8 @@ namespace Services.ClassSectionServices
             };
         }
 
+       
+
         public async Task<CommonResponse<string>> RemoveLastSectionAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails)
         {
             var sections = await _classSectionRepo.GetSectionsAsync(request, apiRequestDetails);
@@ -110,6 +113,16 @@ namespace Services.ClassSectionServices
             {
                 Status = result ? Status.Success : Status.Failed,
                 Message = result ? $"Section {lastSection.SectionName} removed successfully" : "Unable to remove section"
+            };
+        }
+        public async Task<CommonResponse<List<ClassAndSectionResponse>>> GetClassAndSectionsAsync(APIRequestDetails apiRequestDetails)
+        {
+            var result = await _classSectionRepo.GetClassAndSectionsAsync(apiRequestDetails);
+
+            return new CommonResponse<List<ClassAndSectionResponse>>
+            {
+                Status = Status.Success,
+                Data = result
             };
         }
     }

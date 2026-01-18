@@ -12,6 +12,7 @@ namespace Services.ClassSectionServices
     {
         Task<CommonResponse<string>> AddClassSectionAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> RemoveLastSectionAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails);
-        Task<CommonResponse<List<ClassSectionResponse>>> GetActiveSectionsAsync(ClassSectionRequest request,APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<ClassSectionResponse>>> GetActiveSectionsAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<ClassAndSectionResponse>>> GetClassAndSectionsAsync(APIRequestDetails apiRequestDetails);
     }
 }

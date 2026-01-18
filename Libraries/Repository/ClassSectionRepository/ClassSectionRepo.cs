@@ -1,12 +1,13 @@
-using Microsoft.EntityFrameworkCore;
-using Models.ClassSectionModels;
-using Models.CommonModels;
-using Repository.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Core;
+using Microsoft.EntityFrameworkCore;
+using Models.ClassSectionModels;
+using Models.CommonModels;
+using Repository.Entity;
 
 namespace Repository.ClassSectionRepository
 {
@@ -46,6 +47,20 @@ namespace Repository.ClassSectionRepository
                           ClassName = s.ClassFk.ClassName,
                           SectionName = s.SectionName
                       }).OrderBy(x => x.ClassName).ThenBy(x => x.SectionName).ToListAsync();
+        }
+
+        public async Task<List<ClassAndSectionResponse>> GetClassAndSectionsAsync(APIRequestDetails apiRequestDetails)
+        {
+            return await (from x in _context.ClassSections
+                         join y in _context.Classes on x.ClassFkid equals y.SysId
+                         where x.InstitutionCode == apiRequestDetails.InstitutionCode
+                         select new ClassAndSectionResponse
+                         {
+                             SysId = x.SysId,
+                             ClassName = y.ClassName,
+                             SectionName = x.SectionName,
+                             ClassNameAndSection = $"{y.ClassName} ({x.SectionName})"
+                         }).Distinct().OrderBy(x=> x.ClassName).ThenBy(x=> x.SectionName).ToListAsync();
         }
 
         public async Task<List<ClassSection>> GetSectionsAsync(ClassSectionRequest request, APIRequestDetails apiRequestDetails)

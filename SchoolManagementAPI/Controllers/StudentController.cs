@@ -100,5 +100,13 @@ namespace CMS.API.Controllers
             return Ok(result);
         }
         #endregion
+        [HttpPost("AddStudentClassDetails")]
+        public async Task<IActionResult> AddStudentClassDetails(AddStudentClassDetailRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.AddStudentClassDetailsAsync(request, apiRequestDetails);
+
+            return Ok(result);
+        }
     }
 }

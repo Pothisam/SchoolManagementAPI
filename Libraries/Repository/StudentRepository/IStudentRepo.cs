@@ -25,5 +25,7 @@ namespace Repository.StudentRepository
         Task<bool> UpdateAsync(StudentDetail student, StudentClassDetail? classDetail);
         Task<bool> ResetStudentPasswordAsync(StudentPassword request, APIRequestDetails apiRequestDetails);
         #endregion
+        Task<bool> InsertStudentClassDetailAsync(StudentClassDetail request);
+        Task<bool> IsStudentClassDetailExistsAsync(int StudentId,AddStudentClassDetailRequest request, APIRequestDetails apiRequestDetails);
     }
 }

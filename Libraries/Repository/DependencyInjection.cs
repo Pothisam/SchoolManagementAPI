@@ -8,6 +8,7 @@ using Repository.CommonRepository;
 using Repository.DocumentLibraryRepository;
 using Repository.Entity;
 using Repository.InstitutionDetails;
+using Repository.ReportRepository;
 using Repository.StaffRepository;
 using Repository.StudentRepository;
 using Repository.UserRepository;
@@ -29,7 +30,7 @@ namespace Repository
             service.AddScoped<IStaffRepo, StaffRepo>();
             service.AddScoped<IDocumentLibraryRepo, DocumentLibraryRepo>();
             service.AddScoped<IStudentRepo, StudentRepo>();
-
+            service.AddScoped<IReportRepo, ReportRepo>();
             return service;
         }
     }

@@ -465,9 +465,48 @@ namespace Services.StudentServices
             return response;
         }
 
-        
+
+
+
 
 
         #endregion
+        public async Task<CommonResponse<string>> AddStudentClassDetailsAsync(AddStudentClassDetailRequest request, APIRequestDetails apiRequestDetails)
+        {
+            int insertedCount = 0;
+            int skippedCount = 0;
+
+            foreach (var studentId in request.StudentDetailsFkid)
+            {
+                var exists = await _IStudentRepo.IsStudentClassDetailExistsAsync(studentId, request, apiRequestDetails);
+
+                if (exists)
+                {
+                    skippedCount++;
+                    continue; // ❗ skip only this record
+                }
+
+                var entity = new StudentClassDetail
+                {
+                    StudentDetailsFkid = studentId,
+                    AcademicYearFkid = request.AcademicYearFkid,
+                    ClassSectionFkid = request.ClassSectionFkid,
+                    Status = "Active",
+                    InstitutionCode = apiRequestDetails.InstitutionCode,
+                    EnteredBy = apiRequestDetails.UserName,
+                };
+
+                var inserted = await _IStudentRepo.InsertStudentClassDetailAsync(entity);
+
+                if (inserted)
+                    insertedCount++;
+            }
+
+            return new CommonResponse<string>
+            {
+                Status = insertedCount > 0 ? Status.Success : Status.Failed,
+                Message = $"Inserted: {insertedCount}, Skipped: {skippedCount}"
+            };
+        }
     }
 }

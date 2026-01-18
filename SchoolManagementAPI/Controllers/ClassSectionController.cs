@@ -37,7 +37,14 @@ namespace SchoolManagementAPI.Controllers
         public async Task<IActionResult> GetActiveSections(ClassSectionRequest request)
         {
             var apiRequestDetails = _commonService.GetAPIRequestDetails(User);
-            var result = await _classSectionService.GetActiveSectionsAsync(request,apiRequestDetails);
+            var result = await _classSectionService.GetActiveSectionsAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetClassSection")]
+        public async Task<IActionResult> GetClassSection()
+        {
+            var apiRequestDetails = _commonService.GetAPIRequestDetails(User);
+            var result = await _classSectionService.GetClassAndSectionsAsync(apiRequestDetails);
             return Ok(result);
         }
     }

@@ -325,5 +325,11 @@ namespace Models.StudentModels
 
         public Guid? Guid { get; set; }
     }
+    public class AddStudentClassDetailRequest
+    {
+        public int[] StudentDetailsFkid { get; set; } = Array.Empty<int>();
+        public int AcademicYearFkid { get; set; }
+        public int ClassSectionFkid { get; set; }
+    }
 
 }

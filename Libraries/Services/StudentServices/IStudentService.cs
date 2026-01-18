@@ -24,5 +24,6 @@ namespace Services.StudentServices
         Task<CommonResponse<string>> AddStudentDocumentAsync(DocumentLibraryBulkInsertByFKID request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<DocumentLibraryDetailsResponse>>> GetStudentDocumentAsync(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails);
         #endregion
+        Task<CommonResponse<string>> AddStudentClassDetailsAsync(AddStudentClassDetailRequest request, APIRequestDetails apiRequestDetails);
     }
 }

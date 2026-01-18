@@ -380,5 +380,25 @@ namespace Repository.StudentRepository
             return false;
         }
         #endregion
+        public async Task<bool> InsertStudentClassDetailAsync(StudentClassDetail request)
+        {
+            _context.StudentClassDetails.AddAsync(request);
+            await _context.SaveChangesAsync();
+            if (request.SysId == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public async Task<bool> IsStudentClassDetailExistsAsync(int StudentId, AddStudentClassDetailRequest request, APIRequestDetails apiRequestDetails)
+        {
+            bool alreadyExists = await _context.StudentClassDetails.AnyAsync(x =>
+                x.StudentDetailsFkid == StudentId &&
+                x.AcademicYearFkid == request.AcademicYearFkid &&
+                x.ClassSectionFkid == request.ClassSectionFkid &&
+                x.InstitutionCode == apiRequestDetails.InstitutionCode);
+            return alreadyExists;
+        }
     }
 }
