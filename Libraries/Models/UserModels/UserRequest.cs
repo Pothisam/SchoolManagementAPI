@@ -26,4 +26,22 @@ namespace Models.UserModels
         public required string NewPassword { get; set; }
         public required string ConfirmPassword { get; set; }
     }
+    public class AddAdminUserRequest
+    {
+        public int FID { get; set; }
+
+        private string allowLogin;
+        public string AllowLogin
+        {
+            get => allowLogin;
+            set
+            {
+                if (value != "Yes" && value != "No")
+                    throw new ArgumentException("AllowLogin must be either 'Yes' or 'No'.");
+                allowLogin = value;
+            }
+        }
+
+        public string OtherSettings { get; set; }
+    }
 }

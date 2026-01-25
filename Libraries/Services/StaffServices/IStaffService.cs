@@ -49,6 +49,8 @@ namespace Services.StaffServices
         #endregion
         Task<CommonResponse<string>> UpdateStaffDetailsAsync(UpdateStaffDetailsRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> ResetStaffPasswordAsync(StaffDetailsPK request, APIRequestDetails apiRequestDetails);
-        
+
+        Task<CommonResponse<List<StaffNameAndSysidResponse>>> GetStaffNameList(APIRequestDetails apiRequestDetails);
+
     }
 }

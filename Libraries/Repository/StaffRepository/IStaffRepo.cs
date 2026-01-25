@@ -44,5 +44,6 @@ namespace Repository.StaffRepository
 
         Task<bool> ResetStaffPasswordAsync(StaffDetailsPasswordReset request, APIRequestDetails apiRequestDetails);
         Task<bool> UpdateStaffPasstableStatusAsync(int sysId, string status);
+        Task<List<StaffNameAndSysidResponse>> GetStaffNameListAsync(APIRequestDetails apiRequestDetails);
     }
 }

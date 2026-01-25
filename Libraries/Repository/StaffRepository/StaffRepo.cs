@@ -559,5 +559,17 @@ namespace Repository.StaffRepository
             }
             return false;
         }
+        public async Task<List<StaffNameAndSysidResponse>> GetStaffNameListAsync(APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StaffMasterViews
+                .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode)
+                .OrderBy(x => x.Staffname)
+                .Select(x => new StaffNameAndSysidResponse
+                {
+                    Sysid = x.Sysid,
+                    Name = x.Name,
+                    Staffname = x.Staffname
+                }).ToListAsync();
+        }
     }
 }

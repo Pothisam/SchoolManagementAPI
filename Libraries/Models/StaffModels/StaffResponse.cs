@@ -126,4 +126,11 @@ namespace Models.StaffModels
         public DateTime ToDate { get; set; }
         public int Salary { get; set; }
     }
+    public class StaffNameAndSysidResponse
+    {
+        public int Sysid { get; set; }
+        public string Name { get; set; } = null!;
+        public string Staffname { get; set; } = null!;
+
+    }
 }

@@ -99,6 +99,8 @@ public partial class StaffDetail
 
     public DateTime ModifiedDate { get; set; }
 
+    public virtual ICollection<AdminUser> AdminUsers { get; set; } = new List<AdminUser>();
+
     public virtual ICollection<StaffEducationDetail> StaffEducationDetails { get; set; } = new List<StaffEducationDetail>();
 
     public virtual ICollection<StaffExperience> StaffExperiences { get; set; } = new List<StaffExperience>();

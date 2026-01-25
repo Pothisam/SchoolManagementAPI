@@ -1,12 +1,13 @@
-using Models.CommonModels;
-using Models.UserModels;
-using Repository.UserRepository;
-using Services.CommonServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.CommonModels;
+using Models.UserModels;
+using Repository.Entity;
+using Repository.UserRepository;
+using Services.CommonServices;
 
 namespace Services.UserServices
 {
@@ -63,5 +64,65 @@ namespace Services.UserServices
 
             return response;
         }
+
+        #region Admin User
+        public async Task<CommonResponse<List<AdminUserResponse>>> GetAdminUsersAsync(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<AdminUserResponse>>();
+            var result = await _userRepo.GetAdminUsersAsync(apiRequestDetails);
+
+            if (!result.Any())
+            {
+                response.Status = Status.Failed;
+            }
+            else
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            return response;
+        }
+
+        public async Task<CommonResponse<string>> AddOrUpdateAdminUserAsync(AddAdminUserRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<string>();
+            var existingUser = await _userRepo.GetAdminUserByFIDAsync(request.FID);
+
+            if (existingUser == null)
+            {
+                var newUser = new AdminUser
+                {
+                    StaffFkid = request.FID,
+                    Name = "",
+                    AllowLogin = request.AllowLogin,
+                    OtherSettings = request.OtherSettings,
+                    EnteredBy = apiRequestDetails.UserName,
+                    InstitutionCode = apiRequestDetails.InstitutionCode
+                };
+                await _userRepo.AddAdminUserAsync(newUser);
+                response.Status = Status.Success;
+                response.Message = "User details added successfully.";
+            }
+            else
+            {
+                existingUser.ModifiedBy = apiRequestDetails.UserName;
+                existingUser.AllowLogin = request.AllowLogin;
+                existingUser.OtherSettings = request.OtherSettings;
+                await _userRepo.UpdateAdminUserAsync(existingUser);
+                response.Status = Status.Success;
+                response.Message = "User details updated successfully.";
+            }
+            return response;
+        }
+        public async Task<CommonResponse<Dictionary<string, bool>>> GetSettingsByFIDAsync(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<Dictionary<string, bool>>();
+
+            var result = await _userRepo.GetSettingsByFIDAsync(apiRequestDetails);
+            response.Status = Status.Success;
+            response.Data = result;
+            return response;
+        }
+        #endregion
     }
 }

@@ -630,7 +630,22 @@ namespace Services.StaffServices
             }
             return response;
         }
+        public async Task<CommonResponse<List<StaffNameAndSysidResponse>>> GetStaffNameList(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StaffNameAndSysidResponse>>();
+            var result = await _staffRepo.GetStaffNameListAsync(apiRequestDetails);
 
-       
+            if (result.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+            }
+            return response;
+        }
+
     }
 }

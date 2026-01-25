@@ -196,6 +196,13 @@ namespace SchoolManagementAPI.Controllers
             var result = await _staffService.ResetStaffPasswordAsync(request, apirequestdetails);
             return Ok(result);
         }
+        [HttpPost("GetStaffNameList")]
+        public async Task<IActionResult> GetStaffNameListByDepartmentCode()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _staffService.GetStaffNameList(apiRequestDetails);
+            return Ok(result);
+        }
         #endregion
     }
 }

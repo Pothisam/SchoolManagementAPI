@@ -17,6 +17,8 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<AcademicYear> AcademicYears { get; set; }
 
+    public virtual DbSet<AdminUser> AdminUsers { get; set; }
+
     public virtual DbSet<AllIndiaPincodeDatum> AllIndiaPincodeData { get; set; }
 
     public virtual DbSet<AuditTable> AuditTables { get; set; }
@@ -84,6 +86,37 @@ public partial class SchoolManagementContext : DbContext
                 .HasMaxLength(10)
                 .IsUnicode(false);
             entity.Property(e => e.YearDate).HasColumnType("date");
+        });
+
+        modelBuilder.Entity<AdminUser>(entity =>
+        {
+            entity.HasKey(e => e.SysId);
+
+            entity.Property(e => e.AllowLogin)
+                .HasMaxLength(10)
+                .IsUnicode(false);
+            entity.Property(e => e.EnteredBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.EntryDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.ModifiedBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.OtherSettings).IsUnicode(false);
+            entity.Property(e => e.StaffFkid).HasColumnName("StaffFKID");
+
+            entity.HasOne(d => d.StaffFk).WithMany(p => p.AdminUsers)
+                .HasForeignKey(d => d.StaffFkid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_AdminUsers_StaffDetails");
         });
 
         modelBuilder.Entity<AllIndiaPincodeDatum>(entity =>

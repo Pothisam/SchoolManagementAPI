@@ -35,5 +35,29 @@ namespace SchoolManagementAPI.Controllers
             var result = await _IUserServices.ChangeAdminPasswordAsync(request, apiRequestDetails);
             return Ok(result);
         }
+        #region Admin User
+        [HttpPost("SMS/GetAdminUsers")]
+        public async Task<IActionResult> GetAdminUsers()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IUserServices.GetAdminUsersAsync(apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("SMS/AddOrUpdateAdminUser")]
+        public async Task<IActionResult> AddOrUpdateAdminUser(AddAdminUserRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IUserServices.AddOrUpdateAdminUserAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+
+        [HttpPost("SMS/GetAccessSettings")]
+        public async Task<IActionResult> GetAccessSettings()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IUserServices.GetSettingsByFIDAsync(apiRequestDetails);
+            return Ok(result);
+        }
+        #endregion
     }
 }

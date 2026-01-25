@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,5 +17,20 @@ namespace Models.UserModels
         public int InstitutionCode { get; set; }
         public Guid? Guid { get; set; }
         public bool IsPrincipal { get; set; } = false;
+    }
+    public class AdminUserResponse
+    {
+        public int Sysid { get; set; }
+        public int Fidstaff { get; set; }
+        public string Name { get; set; } = null!;
+        public string OtherSettings { get; set; } = null!;
+        public string AllowLogin { get; set; } = null!;
+        public int InstitutionCode { get; set; }
+        public string EnteredBy { get; set; } = null!;
+        public DateTime Entrydate { get; set; }
+        public string? ModifiedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public string DepartmentCode { get; set; } = null!;
+        public Guid? Guid { get; set; }
     }
 }
