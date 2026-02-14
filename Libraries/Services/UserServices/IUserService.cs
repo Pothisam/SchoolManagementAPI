@@ -17,5 +17,8 @@ namespace Services.UserServices
         Task<CommonResponse<string>> AddOrUpdateAdminUserAsync(AddAdminUserRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<Dictionary<string, bool>>> GetSettingsByFIDAsync(APIRequestDetails apiRequestDetails);
         #endregion
+        #region Fees Login
+        Task<CommonResponse<LoginResponse>> FeesLoginAsync(LoginRequestwithIP request);
+        #endregion
     }
 }

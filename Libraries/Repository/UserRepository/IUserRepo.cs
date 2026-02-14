@@ -20,5 +20,10 @@ namespace Repository.UserRepository
         Task<bool> UpdateAdminUserAsync(AdminUser adminUser);
         Task<Dictionary<string, bool>> GetSettingsByFIDAsync(APIRequestDetails apirequestdetails);
         #endregion
+        Task<LoginResponse> SMSStaffLoginAsync(LoginRequestwithIP login);
+        #region Fees Login
+        Task<int> ValidateAccountantlogin(LoginRequestwithIP login);
+        Task<Boolean> Checkdesignation(LoginRequestwithIP login);
+        #endregion
     }
 }

@@ -59,5 +59,20 @@ namespace SchoolManagementAPI.Controllers
             return Ok(result);
         }
         #endregion
+        #region Fees
+        [HttpPost("Fees/login")]
+        public async Task<IActionResult> FeesLoginAsync(LoginRequest request)
+        {
+            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "0.0.0.0";
+            var requestWithIP = new LoginRequestwithIP
+            {
+                UserName = request.UserName,
+                Password = request.Password,
+                IPAddress = ipAddress
+            };
+            var response = await _IUserServices.SMSLoginAsync(requestWithIP);
+            return Ok(response);
+        }
+        #endregion
     }
 }

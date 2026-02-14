@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Models.CommonModels;
@@ -18,7 +19,7 @@ namespace Services.UserServices
         public UserService(IUserRepo IUserRepo, ICommonService ICommonService)
         {
             _commonService = ICommonService;
-            _userRepo = IUserRepo;  
+            _userRepo = IUserRepo;
         }
         public async Task<CommonResponse<LoginResponse>> SMSLoginAsync(LoginRequestwithIP request)
         {
@@ -27,13 +28,21 @@ namespace Services.UserServices
             var result = await _userRepo.AdminLoginAsync(request);
             if (result.InstitutionCode == 0)
             {
-                response.Status = Status.Failed;
-                response.Message = "Invalid User Name or Password";
+                result = await _userRepo.SMSStaffLoginAsync(request);
+                if (result.InstitutionCode == 0)
+                {
+                    response.Status = Status.Failed;
+                    response.Message = "Invalid User Name or Password";
+                }
+                else
+                {
+                    await _commonService.CreateJWTToken(response, result, request);
+                }
             }
             else
             {
                 await _commonService.CreateJWTToken(response, result, request);
-                
+
             }
             return response;
         }
@@ -121,6 +130,40 @@ namespace Services.UserServices
             var result = await _userRepo.GetSettingsByFIDAsync(apiRequestDetails);
             response.Status = Status.Success;
             response.Data = result;
+            return response;
+        }
+
+
+        #endregion
+        #region Fees Login
+        public async Task<CommonResponse<LoginResponse>> FeesLoginAsync(LoginRequestwithIP request)
+        {
+            var response = new CommonResponse<LoginResponse>();
+
+            int validpassword = await _userRepo.ValidateAccountantlogin(request);
+            if (validpassword == 0)
+            {
+                response.Status = Status.Failed;
+                response.Message = "Invalid Username or Password";
+                return response;
+            }
+            bool validuser = await _userRepo.Checkdesignation(request);
+            if (!validuser)
+            {
+                response.Status = Status.Failed;
+                response.Message = "Your Not Authorised To Access Fees Admin";
+                return response;
+            }
+            var result = await _userRepo.SMSStaffLoginAsync(request);
+            if (result.InstitutionCode == 0)
+            {
+                response.Status = Status.Failed;
+                response.Message = "Invalid User Name or Password";
+            }
+            else
+            {
+                await _commonService.CreateJWTToken(response, result, request);
+            }
             return response;
         }
         #endregion

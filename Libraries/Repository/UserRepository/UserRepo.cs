@@ -33,7 +33,24 @@ namespace Repository.UserRepository
                                              }).FirstOrDefaultAsync();
             return response ?? new LoginResponse();
         }
-
+        public async Task<LoginResponse> SMSStaffLoginAsync(LoginRequestwithIP login)
+        {
+            LoginResponse? response = await (from y in _context.StaffPassTables
+                                             join z in _context.StaffMasterViews on y.SysId equals z.Sysid
+                                             where z.MobileNo == login.UserName && y.Password == login.Password
+                                             && y.Status == "Active"
+                                             select new LoginResponse
+                                             {
+                                                 SysId = z.Sysid,
+                                                 UserName = z.Name,
+                                                 UserAuthkey = y.Password,
+                                                 InstitutionCode = y.InstitutionCode,
+                                                 LoginType = "Staff",
+                                                 Guid = z.Guid,
+                                                 IsPrincipal = z.DesignationCode == 1 || z.DesignationCode == 2,
+                                             }).FirstOrDefaultAsync();
+            return response ?? new LoginResponse();
+        }
         public async Task<bool> UpdateAdminPasswordAsync(ChangePasswordRequest request, APIRequestDetails apiRequestDetails)
         {
             var adminAccount = await _context.SmspassTables.FirstOrDefaultAsync(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Password == request.OldPassword);
@@ -106,6 +123,33 @@ namespace Repository.UserRepository
             var settingsDict = possibleSettings.ToDictionary(setting => setting, setting => userRecord.OtherSettings?.Contains(setting) ?? false);
 
             return settingsDict;
+        }
+        #endregion
+        #region Fees Login
+        public async Task<int> ValidateAccountantlogin(LoginRequestwithIP login)
+        {
+            return await (
+        from y in _context.StaffPassTables
+        join z in _context.StaffMasterViews
+            on y.SysId equals z.Sysid
+        where z.MobileNo == login.UserName
+              && y.Password == login.Password
+              && y.Status == "Active"
+        select z.Sysid).FirstOrDefaultAsync();
+
+        }
+
+        public async Task<bool> Checkdesignation(LoginRequestwithIP login)
+        {
+            return await(
+        from y in _context.StaffPassTables
+        join z in _context.StaffMasterViews
+            on y.SysId equals z.Sysid
+        where z.MobileNo == login.UserName
+              && y.Password == login.Password
+              && y.Status == "Active" && z.DesignationCode == 201
+        select 1
+    ).AnyAsync();
         }
         #endregion
     }
