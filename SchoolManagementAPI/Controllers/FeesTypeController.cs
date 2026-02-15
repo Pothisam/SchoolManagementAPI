@@ -37,5 +37,14 @@ namespace SchoolManagementAPI.Controllers
 
             return Ok(result);
         }
+        [HttpPost("DeleteFeesType")]
+        public async Task<IActionResult> DeleteFeesType(FeesTypePKRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+
+            var result = await _FeesTypeService.DeleteFeesTypeAsync(request, apiRequestDetails);
+
+            return Ok(result);
+        }
     }
 }
