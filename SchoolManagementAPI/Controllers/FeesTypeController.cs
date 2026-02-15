@@ -1,0 +1,41 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Models.ClassModels;
+using Models.FeesTypeModels;
+using Services.CommonServices;
+using Services.FeesTypeServices;
+
+namespace SchoolManagementAPI.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    [Authorize]
+    public class FeesTypeController : Controller
+    {
+        private readonly ICommonService _ICommonService;
+        private readonly IFeesTypeService _FeesTypeService;
+        public FeesTypeController(ICommonService ICommonService, IFeesTypeService feesTypeService   )
+        {
+            _ICommonService = ICommonService;
+            _FeesTypeService = feesTypeService;
+        }
+        [HttpPost("GetFeesType")]
+        public async Task<IActionResult> GetFeesType()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+
+            var result = await _FeesTypeService.GetFeesTypeListAsync(apiRequestDetails);
+
+            return Ok(result);
+        }
+        [HttpPost("SaveFeesType")]
+        public async Task<IActionResult> SaveFeesType(SaveFeesTypeRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+
+            var result = await _FeesTypeService.SaveFeesTypeAsync(request, apiRequestDetails);
+
+            return Ok(result);
+        }
+    }
+}

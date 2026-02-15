@@ -7,6 +7,7 @@ using Repository.ClassSectionRepository;
 using Repository.CommonRepository;
 using Repository.DocumentLibraryRepository;
 using Repository.Entity;
+using Repository.FeesTypeRepository;
 using Repository.InstitutionDetails;
 using Repository.ReportRepository;
 using Repository.StaffRepository;
@@ -31,6 +32,8 @@ namespace Repository
             service.AddScoped<IDocumentLibraryRepo, DocumentLibraryRepo>();
             service.AddScoped<IStudentRepo, StudentRepo>();
             service.AddScoped<IReportRepo, ReportRepo>();
+
+            service.AddScoped<IFeesTypeRepo, FeesTypeRepo>();
             return service;
         }
     }

@@ -31,6 +31,8 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<DocumentLibrary> DocumentLibraries { get; set; }
 
+    public virtual DbSet<FeesType> FeesTypes { get; set; }
+
     public virtual DbSet<InstitutionDetail> InstitutionDetails { get; set; }
 
     public virtual DbSet<SmspassTable> SmspassTables { get; set; }
@@ -314,6 +316,33 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.TableName)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<FeesType>(entity =>
+        {
+            entity.HasKey(e => e.Sysid);
+
+            entity.ToTable("FeesType", tb => tb.HasTrigger("FeesTypeAudit"));
+
+            entity.Property(e => e.EntryDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Entryby)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.FeesDescription)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Modifiedby)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
         });
 
         modelBuilder.Entity<InstitutionDetail>(entity =>
