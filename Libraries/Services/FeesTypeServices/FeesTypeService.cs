@@ -100,14 +100,15 @@ namespace Services.FeesTypeServices
                 return response;
             }
 
-            entity.Status = "Deleted";
+            entity.Status = entity.Status == "Active" ? "Inactive" : "Active";
             entity.Modifiedby = apiRequestDetails.UserName;
             entity.ModifiedDate = DateTime.Now;
-
+            response.Status = entity.Status == "Active" ? Status.Success : Status.Failed;
+            response.Message = entity.Status == "Active" ? "Record Activated" : "Record Inactived";
             await _feesTyperepo.SaveChangesAsync();
 
-            response.Status = Status.Success;
-            response.Message = "Record Deleted Successfully";
+            //response.Status = Status.Success;
+            //response.Message = "Record Deleted Successfully";
             return response;
         }
     }

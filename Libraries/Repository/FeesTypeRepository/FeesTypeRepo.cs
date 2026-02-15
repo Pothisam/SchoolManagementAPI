@@ -27,6 +27,7 @@ namespace Repository.FeesTypeRepository
                                 {
                                     Sysid = x.Sysid,
                                     FeesDescription = x.FeesDescription,
+                                    status = x.Status,
                                     Entryby = x.Entryby,
                                     EntryDate = x.EntryDate,
                                     Modifiedby = x.Modifiedby,
