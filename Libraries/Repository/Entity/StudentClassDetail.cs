@@ -32,4 +32,6 @@ public partial class StudentClassDetail
     public DateTime ModifiedDate { get; set; }
 
     public virtual StudentDetail StudentDetailsFk { get; set; } = null!;
+
+    public virtual ICollection<StudentFeesTransaction> StudentFeesTransactions { get; set; } = new List<StudentFeesTransaction>();
 }

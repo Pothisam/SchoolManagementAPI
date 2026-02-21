@@ -53,6 +53,8 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<StudentDetail> StudentDetails { get; set; }
 
+    public virtual DbSet<StudentFeesTransaction> StudentFeesTransactions { get; set; }
+
     public virtual DbSet<StudentMasterView> StudentMasterViews { get; set; }
 
     public virtual DbSet<StudentPassTable> StudentPassTables { get; set; }
@@ -1129,6 +1131,70 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.Volunteers)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+        });
+
+        modelBuilder.Entity<StudentFeesTransaction>(entity =>
+        {
+            entity.HasKey(e => e.SysId);
+
+            entity.ToTable("StudentFeesTransaction", tb => tb.HasTrigger("StudentFeesTransactionAudit"));
+
+            entity.Property(e => e.BankName)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.ChequeDate).HasColumnType("datetime");
+            entity.Property(e => e.ChequeNo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Credit).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Debit).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Description)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+            entity.Property(e => e.EntryBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.EntryDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.FeesTypeFkid).HasColumnName("FeesTypeFKID");
+            entity.Property(e => e.GenerateDate).HasColumnType("datetime");
+            entity.Property(e => e.ModifiedBy)
+                .HasMaxLength(30)
+                .IsUnicode(false);
+            entity.Property(e => e.ModifiedDate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.PaymentMode)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+            entity.Property(e => e.Remark)
+                .HasMaxLength(250)
+                .IsUnicode(false);
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('Active')");
+            entity.Property(e => e.StudentClassDetailsFkid).HasColumnName("StudentClassDetailsFKID");
+            entity.Property(e => e.StudentFkid).HasColumnName("StudentFKID");
+            entity.Property(e => e.TransationType)
+                .HasMaxLength(20)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.FeesTypeFk).WithMany(p => p.StudentFeesTransactions)
+                .HasForeignKey(d => d.FeesTypeFkid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StudentFeesTransaction_FeesType");
+
+            entity.HasOne(d => d.StudentClassDetailsFk).WithMany(p => p.StudentFeesTransactions)
+                .HasForeignKey(d => d.StudentClassDetailsFkid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StudentFeesTransaction_AcadamicYear");
+
+            entity.HasOne(d => d.StudentFk).WithMany(p => p.StudentFeesTransactions)
+                .HasForeignKey(d => d.StudentFkid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_StudentFeesTransaction_Student");
         });
 
         modelBuilder.Entity<StudentMasterView>(entity =>

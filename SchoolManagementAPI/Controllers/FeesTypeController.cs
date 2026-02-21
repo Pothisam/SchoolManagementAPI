@@ -46,5 +46,13 @@ namespace SchoolManagementAPI.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("GetFeesListView")]
+        public async Task<IActionResult> GetFeesListView(GetFeesGentrationRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _FeesTypeService.GetFeesTypeListAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
     }
 }

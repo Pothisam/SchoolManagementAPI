@@ -131,5 +131,7 @@ public partial class StudentDetail
 
     public virtual ICollection<StudentClassDetail> StudentClassDetails { get; set; } = new List<StudentClassDetail>();
 
+    public virtual ICollection<StudentFeesTransaction> StudentFeesTransactions { get; set; } = new List<StudentFeesTransaction>();
+
     public virtual ICollection<StudentPassTable> StudentPassTables { get; set; } = new List<StudentPassTable>();
 }

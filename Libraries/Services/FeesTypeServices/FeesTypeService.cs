@@ -102,13 +102,32 @@ namespace Services.FeesTypeServices
 
             entity.Status = entity.Status == "Active" ? "Inactive" : "Active";
             entity.Modifiedby = apiRequestDetails.UserName;
-            entity.ModifiedDate = DateTime.Now;
             response.Status = entity.Status == "Active" ? Status.Success : Status.Failed;
             response.Message = entity.Status == "Active" ? "Record Activated" : "Record Inactived";
             await _feesTyperepo.SaveChangesAsync();
 
             //response.Status = Status.Success;
             //response.Message = "Record Deleted Successfully";
+            return response;
+        }
+
+        public async Task<CommonResponse<List<StudentFeeGenerateStatusResponse>>> GetFeesTypeListAsync(GetFeesGentrationRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StudentFeeGenerateStatusResponse>>();
+
+            List<StudentFeeGenerateStatusResponse> result = await _feesTyperepo.GetFeesListViewAsync(request, apiRequestDetails);
+
+            if (result.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+            }
+
             return response;
         }
     }

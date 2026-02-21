@@ -16,4 +16,16 @@ namespace Models.FeesTypeModels
         public string Modifiedby { get; set; }
         public DateTime? ModifiedDate { get; set; }
     }
+    public class StudentFeeGenerateStatusResponse
+    {
+        public int Sysid { get; set; }
+        public string StudentName { get; set; } = "";
+        public string Stdid { get; set; } = "";
+        public string ClassName { get; set; } = "";
+        public string SectionName { get; set; } = "";
+        public string Hostel { get; set; }          // change type if yours is string/int
+        public string Year { get; set; } = "";    // change type if yours is int
+        public decimal Debit { get; set; }
+        public string Status { get; set; } = "";
+    }
 }

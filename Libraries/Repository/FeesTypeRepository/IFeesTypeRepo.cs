@@ -17,5 +17,6 @@ namespace Repository.FeesTypeRepository
         Task<FeesType> GetFeesTypeBySysIdAsync(int sysId, APIRequestDetails apiRequestDetails);
 
         Task SaveChangesAsync();
+        Task<List<StudentFeeGenerateStatusResponse>> GetFeesListViewAsync(GetFeesGentrationRequest request, APIRequestDetails apiRequestDetails);
     }
 }

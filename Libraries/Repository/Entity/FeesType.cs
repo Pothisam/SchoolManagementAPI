@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Repository.Entity;
@@ -20,4 +20,6 @@ public partial class FeesType
     public string? Modifiedby { get; set; }
 
     public DateTime ModifiedDate { get; set; }
+
+    public virtual ICollection<StudentFeesTransaction> StudentFeesTransactions { get; set; } = new List<StudentFeesTransaction>();
 }

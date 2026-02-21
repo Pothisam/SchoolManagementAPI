@@ -14,4 +14,12 @@ namespace Models.FeesTypeModels
     {
         public int Sysid { get; set; }
     }
+    public class GetFeesGentrationRequest
+    {
+        public int acadamicYear { get; set; }
+        public int classfkid  { get; set; }
+        public int sectionfkid { get; set; }
+        public int feestypefkid { get; set; }
+        public int amount { get; set; }
+    }
 }
