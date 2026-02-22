@@ -130,5 +130,104 @@ namespace Services.FeesTypeServices
 
             return response;
         }
+
+        public async Task<CommonResponse<string>> InsertStudentFeesAsync(GentrationFeesRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<string>();
+            const string transType = "DR";
+            var now = DateTime.Now;
+
+            decimal debit = request.amount;
+            decimal credit = 0;
+            var feesDesc = await _feesTyperepo.GetFeesTypeDescriptionAsync(request.feestypefkid, apiRequestDetails);
+            var description = string.IsNullOrWhiteSpace(feesDesc) ? "Fees Generated" : feesDesc;
+            int inserted = 0;
+            int duplicate = 0;
+            int classNotFound = 0;
+            int failed = 0;
+            foreach (var studentId in request.studentdetailsfkid.Distinct())
+            {
+                // 1) Find StudentClassDetailsFkid
+                var scdSysId = await _feesTyperepo.GetStudentClassDetailsSysIdAsync(
+                    studentId,
+                    request.academicYearFkid,
+                    request.sectionfkid,
+                    apiRequestDetails);
+
+                if (scdSysId == null || scdSysId.Value <= 0)
+                {
+                    classNotFound++;
+                    continue;
+                }
+
+                // 2) Duplicate check (your rule)
+                var exists = await _feesTyperepo.IsFeesTransactionExistsAsync(
+                    studentId,
+                    request.feestypefkid,
+                    scdSysId.Value,
+                    transType,
+                    debit,
+                    apiRequestDetails);
+
+                if (exists)
+                {
+                    duplicate++;
+                    continue;
+                }
+
+                // 3) RefNo based on FY from GenerateDate
+                var refNo = await _feesTyperepo.GetNextRefNoByGenerateDateAsync(now, transType, apiRequestDetails);
+
+                // 4) Create entity (only columns available in StudentFeesTransaction)
+                var entity = new StudentFeesTransaction
+                {
+                    StudentFkid = studentId,
+                    FeesTypeFkid = request.feestypefkid,
+                    StudentClassDetailsFkid = scdSysId.Value,
+
+                    RefNo = refNo,
+
+                    //PaymentMode = null,
+                    //BankName = null,
+                    //ChequeNo = null,
+                    //ChequeDate = now,
+
+                    TransationType = transType,
+                    GenerateDate = now,
+                    Description = description,
+
+                    Debit = debit,
+                    Credit = credit,
+
+                    Remark = "",
+
+                    Status = "Created",
+
+                    InstitutionCode = apiRequestDetails.InstitutionCode,
+                    EntryBy = apiRequestDetails.UserName,
+                    EntryDate = now,
+                    ModifiedBy = apiRequestDetails.UserName,
+                    ModifiedDate = now
+                };
+                var saved = await _feesTyperepo.AddStudentFeesTransactionAsync(entity);
+
+                if (saved) inserted++;
+                else failed++;
+            }
+            if (inserted > 0)
+            {
+                response.Status = Status.Success;
+                response.Message =
+                    $"Fees inserted successfully. Inserted: {inserted}, Duplicates skipped: {duplicate}, Class not found: {classNotFound}, Failed: {failed}";
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message =
+                    $"No fees inserted. Duplicates skipped: {duplicate}, Class not found: {classNotFound}, Failed: {failed}";
+            }
+            return response;
+
+        }
     }
 }

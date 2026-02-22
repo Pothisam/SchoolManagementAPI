@@ -15,13 +15,13 @@ public partial class StudentFeesTransaction
 
     public int RefNo { get; set; }
 
-    public string PaymentMode { get; set; } = null!;
+    public string? PaymentMode { get; set; }
 
-    public string BankName { get; set; } = null!;
+    public string? BankName { get; set; }
 
-    public string ChequeNo { get; set; } = null!;
+    public string? ChequeNo { get; set; }
 
-    public DateTime ChequeDate { get; set; }
+    public DateTime? ChequeDate { get; set; }
 
     public string TransationType { get; set; } = null!;
 

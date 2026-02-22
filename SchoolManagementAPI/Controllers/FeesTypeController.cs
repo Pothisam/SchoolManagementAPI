@@ -54,5 +54,12 @@ namespace SchoolManagementAPI.Controllers
             var result = await _FeesTypeService.GetFeesTypeListAsync(request, apiRequestDetails);
             return Ok(result);
         }
+        [HttpPost("InsertStudentFees")]
+        public async Task<IActionResult> InsertStudentFees(GentrationFeesRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _FeesTypeService.InsertStudentFeesAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
     }
 }

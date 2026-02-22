@@ -13,7 +13,9 @@ namespace Services.FeesTypeServices
         Task<CommonResponse<List<FeesTypeListResponse>>> GetFeesTypeListAsync(APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> SaveFeesTypeAsync(SaveFeesTypeRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> DeleteFeesTypeAsync(FeesTypePKRequest request, APIRequestDetails apiRequestDetails);
-
+        #region Gentrate Fees
         Task<CommonResponse<List<StudentFeeGenerateStatusResponse>>> GetFeesTypeListAsync(GetFeesGentrationRequest request,APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> InsertStudentFeesAsync(GentrationFeesRequest request, APIRequestDetails apiRequestDetails);
+        #endregion
     }
 }

@@ -22,4 +22,12 @@ namespace Models.FeesTypeModels
         public int feestypefkid { get; set; }
         public int amount { get; set; }
     }
+    public class GentrationFeesRequest
+    {
+        public int[] studentdetailsfkid { get; set; } = Array.Empty<int>();
+        public int sectionfkid { get; set; }       
+        public int academicYearFkid { get; set; }
+        public int feestypefkid { get; set; }
+        public int amount { get; set; }
+    }
 }

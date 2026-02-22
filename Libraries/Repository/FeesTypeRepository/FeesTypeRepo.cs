@@ -60,11 +60,30 @@ namespace Repository.FeesTypeRepository
         {
             await _context.SaveChangesAsync();
         }
-
+        #region Gentrate Fees
         public async Task<List<StudentFeeGenerateStatusResponse>> GetFeesListViewAsync(GetFeesGentrationRequest request,APIRequestDetails apiRequestDetails)
         {
-            var result = await (
+            // Step 1: Filter + dedupe key: take Max(SysId) per StudentDetailsFkid
+            var scdKeys =
                 from scd in _context.StudentClassDetails
+                where scd.InstitutionCode == apiRequestDetails.InstitutionCode
+                      && scd.AcademicYearFkid == request.acadamicYear
+                      && scd.ClassSectionFkid == request.sectionfkid
+                      && scd.Status == "Active"
+                group scd by new { scd.StudentDetailsFkid, scd.InstitutionCode } into g
+                select new
+                {
+                    g.Key.StudentDetailsFkid,
+                    g.Key.InstitutionCode,
+                    StudentClassDetailsSysId = g.Max(x => x.SysId)
+                };
+
+            // Step 2: Join back to StudentClassDetails using Max(SysId) to get the actual row
+            var query =
+                from k in scdKeys
+                join scd in _context.StudentClassDetails
+                    on new { SysId = k.StudentClassDetailsSysId, k.InstitutionCode }
+                    equals new { SysId = scd.SysId, scd.InstitutionCode }
 
                 join smw in _context.StudentMasterViews
                     on new { Sysid = scd.StudentDetailsFkid, scd.InstitutionCode }
@@ -82,12 +101,12 @@ namespace Repository.FeesTypeRepository
                     on new { SysId = cs.ClassFkid, cs.InstitutionCode }
                     equals new { c.SysId, c.InstitutionCode }
 
-                    // LEFT JOIN StudentFeesTransaction
+                    // LEFT JOIN StudentFeesTransactions (IMPORTANT: StudentClassDetailsFKID = scd.SysId)
                 join sft0 in _context.StudentFeesTransactions
                     on new
                     {
                         StudentFKID = scd.StudentDetailsFkid,
-                        StudentClassDetailsFKID = cs.SysId,
+                        StudentClassDetailsFKID = scd.SysId,
                         FeesTypeFKID = request.feestypefkid,
                         scd.InstitutionCode
                     }
@@ -101,10 +120,8 @@ namespace Repository.FeesTypeRepository
                     into sftGroup
                 from sft in sftGroup.DefaultIfEmpty()
 
-                where ay.SysId == request.acadamicYear
-                   && c.SysId == request.classfkid
-                   && cs.SysId == request.sectionfkid
-                   && scd.InstitutionCode == apiRequestDetails.InstitutionCode
+                    // keep if you want to ensure section belongs to requested class
+                where c.SysId == request.classfkid
 
                 select new StudentFeeGenerateStatusResponse
                 {
@@ -115,12 +132,89 @@ namespace Repository.FeesTypeRepository
                     SectionName = cs.SectionName,
                     Hostel = smw.Hostel,
                     Year = ay.Year,
-                    Debit = (decimal?)sft.Debit ?? (decimal)request.amount,
+                    Debit = sft != null ? ((decimal?)sft.Debit ?? request.amount) : request.amount,
                     Status = sft != null ? "Generated" : "Not Generated"
-                }
-            ).ToListAsync();
+                };
 
-            return result;
+            return await query.ToListAsync();
         }
+
+        public async Task<int?> GetStudentClassDetailsSysIdAsync(int studentFkid, int academicYearFkid, int classSectionFkid, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StudentClassDetails
+                .AsNoTracking()
+                .Where(x =>
+                    x.StudentDetailsFkid == studentFkid &&
+                    x.AcademicYearFkid == academicYearFkid &&
+                    x.ClassSectionFkid == classSectionFkid &&
+                    x.InstitutionCode == apiRequestDetails.InstitutionCode &&
+                    x.Status == "Active")
+                .Select(x => (int?)x.SysId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> IsFeesTransactionExistsAsync(int studentFkid, int feesTypeFkid, int studentClassDetailsFkid, string transationType, decimal debit, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StudentFeesTransactions
+                .AsNoTracking()
+                .AnyAsync(x =>
+                    x.InstitutionCode == apiRequestDetails.InstitutionCode &&
+                    x.StudentFkid == studentFkid &&
+                    x.FeesTypeFkid == feesTypeFkid &&
+                    x.StudentClassDetailsFkid == studentClassDetailsFkid &&
+                    x.TransationType == transationType &&
+                    x.Debit == debit &&
+                    x.Status != "Deleted");
+        }
+
+        public async Task<int> GetNextRefNoByGenerateDateAsync(DateTime generateDate, string transationType, APIRequestDetails apiRequestDetails)
+        {
+            var fyStart = GetFinancialYearStartDate(generateDate);
+            var fyEndExclusive = fyStart.AddYears(1);
+
+            var maxRef = await _context.StudentFeesTransactions
+                .AsNoTracking()
+                .Where(x =>
+                    x.InstitutionCode == apiRequestDetails.InstitutionCode &&
+                    x.TransationType == transationType &&
+                    x.GenerateDate >= fyStart &&
+                    x.GenerateDate < fyEndExclusive &&
+                    x.Status != "Deleted")
+                .MaxAsync(x => (int?)x.RefNo);
+
+            return (maxRef ?? 0) + 1;
+        }
+        private static DateTime GetFinancialYearStartDate(DateTime date)
+        {
+            // India FY: Apr 1 - Mar 31
+            int startYear = date.Month >= 4 ? date.Year : date.Year - 1;
+            return new DateTime(startYear, 4, 1);
+        }
+        public async Task<string?> GetFeesTypeDescriptionAsync(int feesTypeFkid, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.FeesTypes
+                 .AsNoTracking()
+                 .Where(x =>
+                     x.Sysid == feesTypeFkid &&
+                     x.InstitutionCode == apiRequestDetails.InstitutionCode)
+                 .Select(x => x.FeesDescription)
+                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> AddStudentFeesTransactionAsync(StudentFeesTransaction entity)
+        {
+            try
+            {
+                _context.StudentFeesTransactions.Add(entity);
+                await _context.SaveChangesAsync();
+                return entity.SysId > 0;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
+        #endregion
     }
 }

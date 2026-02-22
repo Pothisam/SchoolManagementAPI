@@ -17,6 +17,16 @@ namespace Repository.FeesTypeRepository
         Task<FeesType> GetFeesTypeBySysIdAsync(int sysId, APIRequestDetails apiRequestDetails);
 
         Task SaveChangesAsync();
+        #region Gentrate Fees
         Task<List<StudentFeeGenerateStatusResponse>> GetFeesListViewAsync(GetFeesGentrationRequest request, APIRequestDetails apiRequestDetails);
+        Task<int?> GetStudentClassDetailsSysIdAsync(int studentFkid, int academicYearFkid, int classSectionFkid, APIRequestDetails apiRequestDetails);
+        Task<bool> IsFeesTransactionExistsAsync(int studentFkid,int feesTypeFkid,int studentClassDetailsFkid,string transationType,decimal debit,APIRequestDetails apiRequestDetails);
+        Task<int> GetNextRefNoByGenerateDateAsync(DateTime generateDate,string transationType,APIRequestDetails apiRequestDetails);
+
+        Task<string?> GetFeesTypeDescriptionAsync(int feesTypeFkid,APIRequestDetails apiRequestDetails);
+
+        Task<bool> AddStudentFeesTransactionAsync(StudentFeesTransaction entity);
+       
+        #endregion
     }
 }
