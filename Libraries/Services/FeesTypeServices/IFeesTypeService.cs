@@ -17,5 +17,10 @@ namespace Services.FeesTypeServices
         Task<CommonResponse<List<StudentFeeGenerateStatusResponse>>> GetFeesTypeListAsync(GetFeesGentrationRequest request,APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> InsertStudentFeesAsync(GentrationFeesRequest request, APIRequestDetails apiRequestDetails);
         #endregion
+        #region Apporve Fees
+        Task<CommonResponse<List<StudentApproveFeesResponse>>> GetApproveFeesAsync(APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<ApproveFeesViewResponse>>> GetApproveFeesViewAsync(GetApproveFeesViewRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> UpdateFeesApproveAsync(UpdateFeesApproveRequest request, APIRequestDetails apiRequestDetails);
+        #endregion
     }
 }

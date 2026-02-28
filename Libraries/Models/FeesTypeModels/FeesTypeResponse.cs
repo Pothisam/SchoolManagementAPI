@@ -28,4 +28,26 @@ namespace Models.FeesTypeModels
         public decimal Debit { get; set; }
         public string Status { get; set; } = "";
     }
+    public class StudentApproveFeesResponse
+    {
+        public int StudentClassDetailsFkid { get; set; }
+        public int AcadamicyearFkid { get; set; }
+        public int FeesTypeFkid { get; set; }
+        public string CourseName { get; set; }
+        public string Section { get; set; }
+        public string AcadamicYear { get; set; }
+        public string Description { get; set; }
+        public DateTime GenerateDate { get; set; }
+        public decimal Debit { get; set; }
+    }
+    public class ApproveFeesViewResponse
+    {
+        public int SysId { get; set; }
+        public string Name { get; set; }
+        public string StdId { get; set; }
+        public string AcadamicYear { get; set; }
+        public string Description { get; set; }
+        public DateTime GenerateDate { get; set; }
+        public decimal Debit { get; set; }
+    }
 }

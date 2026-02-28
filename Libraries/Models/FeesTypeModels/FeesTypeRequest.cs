@@ -30,4 +30,15 @@ namespace Models.FeesTypeModels
         public int feestypefkid { get; set; }
         public int amount { get; set; }
     }
+    public class GetApproveFeesViewRequest
+    {
+        public int AcademicYearSysId { get; set; }
+        public int ClassSectionId { get; set; }
+        public int FeesTypeFkid { get; set; }
+        public DateTime GDate { get; set; } // date passed from UI
+    }
+    public class UpdateFeesApproveRequest
+    {
+        public int[] studentdetailsfkid { get; set; }  = Array.Empty<int>();
+    }
 }

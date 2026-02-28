@@ -229,5 +229,42 @@ namespace Services.FeesTypeServices
             return response;
 
         }
+
+        #region Apporve Fees
+        public async Task<CommonResponse<List<StudentApproveFeesResponse>>> GetApproveFeesAsync(APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StudentApproveFeesResponse>>();
+
+            var data = await _feesTyperepo.GetApproveFeesAsync(apiRequestDetails);
+
+            response.Status = Status.Success;
+            response.Data = data;
+
+            return response;
+        }
+
+        public async Task<CommonResponse<List<ApproveFeesViewResponse>>> GetApproveFeesViewAsync(GetApproveFeesViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<ApproveFeesViewResponse>>();
+
+            var data = await _feesTyperepo.GetApproveFeesViewAsync(request, apiRequestDetails);
+
+            response.Status = Status.Success;
+            response.Data = data;
+
+            return response;
+        }
+
+        public async Task<CommonResponse<string>> UpdateFeesApproveAsync(UpdateFeesApproveRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<string>();
+            int updated = await _feesTyperepo.UpdateFeesApproveAsync(request, apiRequestDetails);
+
+            response.Status = Status.Success;
+            response.Message = "Done";
+            return response;
+        }
+
+        #endregion
     }
 }

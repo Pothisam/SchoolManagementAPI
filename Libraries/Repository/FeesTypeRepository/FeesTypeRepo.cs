@@ -215,6 +215,121 @@ namespace Repository.FeesTypeRepository
             }
         }
 
+
+
+        #endregion
+        #region Apporve Fees
+        public async Task<List<StudentApproveFeesResponse>> GetApproveFeesAsync(APIRequestDetails apiRequestDetails)
+        {
+            var result =
+            from sft in
+                _context.StudentFeesTransactions
+
+            join scd in
+                _context.StudentClassDetails
+                on new { SysId = sft.StudentClassDetailsFkid, sft.InstitutionCode }
+                equals new { SysId = scd.SysId, scd.InstitutionCode }
+
+            join cs in
+                _context.ClassSections
+                on new { SysId = scd.ClassSectionFkid, scd.InstitutionCode }
+                equals new { cs.SysId, cs.InstitutionCode }
+
+            join c in
+                _context.Classes
+                on new { SysId = cs.ClassFkid, cs.InstitutionCode }
+                equals new { c.SysId, c.InstitutionCode }
+
+            join ac in _context.AcademicYears on new { SysId = scd.AcademicYearFkid, scd.InstitutionCode} equals new { ac.SysId, ac.InstitutionCode }
+
+            where sft.Status == "Created"
+                  && sft.TransationType == "DR"
+                  && sft.InstitutionCode == apiRequestDetails.InstitutionCode
+
+            group sft by new
+            {
+                StudentClassDetailsFkid = scd.ClassSectionFkid,
+                CourseNameSD = c.ClassName,
+                Section = cs.SectionName,
+                AcadamicYear = ac.Year,
+                Description = sft.Description,
+                GenerateDate =  sft.GenerateDate.Date,
+                AcadamicyearFkid = ac.SysId,
+                FeesTypeFkid = sft.FeesTypeFkid
+            }
+            into g
+            select new StudentApproveFeesResponse
+            {
+                AcadamicyearFkid = g.Key.AcadamicyearFkid,
+                StudentClassDetailsFkid = g.Key.StudentClassDetailsFkid,
+                FeesTypeFkid = g.Key.FeesTypeFkid,
+                CourseName = g.Key.CourseNameSD,
+                Section = g.Key.Section,
+                AcadamicYear = g.Key.AcadamicYear,
+                Description = g.Key.Description,
+                GenerateDate = g.Key.GenerateDate,
+                Debit = g.Sum(x => x.Debit)
+            };
+
+            return await result.ToListAsync();
+        }
+
+        public async Task<List<ApproveFeesViewResponse>> GetApproveFeesViewAsync(GetApproveFeesViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var query =
+            from sft in _context.StudentFeesTransactions
+
+            join scd in _context.StudentClassDetails
+                on new { SysId = sft.StudentClassDetailsFkid, sft.InstitutionCode }
+                equals new { SysId = scd.SysId, scd.InstitutionCode }
+
+            join sd in _context.StudentDetails
+                on new { SysId = sft.StudentFkid, sft.InstitutionCode }
+                equals new { SysId = sd.SysId, sd.InstitutionCode }
+
+            join ft in _context.FeesTypes
+                on new { SysId = sft.FeesTypeFkid, sft.InstitutionCode }
+                equals new { SysId = ft.Sysid, ft.InstitutionCode }
+            join ac in _context.AcademicYears on new { SysId = scd.AcademicYearFkid, scd.InstitutionCode } equals new { ac.SysId, ac.InstitutionCode }
+            where scd.AcademicYearFkid == request.AcademicYearSysId
+                  && scd.ClassSectionFkid == request.ClassSectionId
+                  && sft.FeesTypeFkid == request.FeesTypeFkid
+                  && sft.GenerateDate.Date == request.GDate.Date
+                  && sft.Status == "Created"
+                  && sft.TransationType == "DR"
+                  && sft.InstitutionCode == apiRequestDetails.InstitutionCode
+
+            select new ApproveFeesViewResponse
+            {
+                SysId = sft.SysId,
+                Name = sd.Name,
+                StdId = sd.Stdid,
+                AcadamicYear = ac.Year,
+                Description = ft.FeesDescription,
+                GenerateDate = sft.GenerateDate,
+                Debit = sft.Debit
+            };
+
+            return await query.ToListAsync();
+        }
+
+        public async Task<int> UpdateFeesApproveAsync(UpdateFeesApproveRequest request, APIRequestDetails apiRequestDetails)
+        {
+            List<StudentFeesTransaction> rows = await _context.StudentFeesTransactions
+        .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && request.studentdetailsfkid.Contains(x.SysId))
+        .ToListAsync();
+
+
+            foreach (StudentFeesTransaction row in rows)
+            {
+                row.Status = "Approved";
+                row.ModifiedBy = apiRequestDetails.UserName;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return rows.Count;
+        }
         #endregion
     }
 }

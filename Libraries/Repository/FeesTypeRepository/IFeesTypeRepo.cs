@@ -26,7 +26,12 @@ namespace Repository.FeesTypeRepository
         Task<string?> GetFeesTypeDescriptionAsync(int feesTypeFkid,APIRequestDetails apiRequestDetails);
 
         Task<bool> AddStudentFeesTransactionAsync(StudentFeesTransaction entity);
-       
+
+        #endregion
+        #region Apporve Fees
+        Task<List<StudentApproveFeesResponse>> GetApproveFeesAsync(APIRequestDetails apiRequestDetails);
+        Task<List<ApproveFeesViewResponse>> GetApproveFeesViewAsync(GetApproveFeesViewRequest request, APIRequestDetails apiRequestDetails);
+        Task<int> UpdateFeesApproveAsync(UpdateFeesApproveRequest request, APIRequestDetails apiRequestDetails);
         #endregion
     }
 }

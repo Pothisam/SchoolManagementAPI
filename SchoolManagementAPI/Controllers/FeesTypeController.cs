@@ -61,5 +61,30 @@ namespace SchoolManagementAPI.Controllers
             var result = await _FeesTypeService.InsertStudentFeesAsync(request, apiRequestDetails);
             return Ok(result);
         }
+
+        [HttpPost("GetApproveFees")]
+        public async Task<IActionResult> GetApproveFees()
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _FeesTypeService.GetApproveFeesAsync(apiRequestDetails);
+
+            return Ok(result);
+        }
+        [HttpPost("GetApproveFeesView")]
+        public async Task<IActionResult> GetApproveFeesView([FromBody] GetApproveFeesViewRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _FeesTypeService.GetApproveFeesViewAsync(request, apiRequestDetails);
+
+            return Ok(result);
+        }
+        [HttpPost("UpdateFeesApprove")]
+        public async Task<IActionResult> UpdateFeesApprove([FromBody] UpdateFeesApproveRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _FeesTypeService.UpdateFeesApproveAsync(request, apiRequestDetails);
+
+            return Ok(result);
+        }
     }
 }
