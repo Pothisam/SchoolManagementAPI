@@ -40,5 +40,6 @@ namespace Models.FeesTypeModels
     public class UpdateFeesApproveRequest
     {
         public int[] studentdetailsfkid { get; set; }  = Array.Empty<int>();
+        public bool Approved { get; set; }
     }
 }

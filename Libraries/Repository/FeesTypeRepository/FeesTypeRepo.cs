@@ -61,7 +61,7 @@ namespace Repository.FeesTypeRepository
             await _context.SaveChangesAsync();
         }
         #region Gentrate Fees
-        public async Task<List<StudentFeeGenerateStatusResponse>> GetFeesListViewAsync(GetFeesGentrationRequest request,APIRequestDetails apiRequestDetails)
+        public async Task<List<StudentFeeGenerateStatusResponse>> GetFeesListViewAsync(GetFeesGentrationRequest request, APIRequestDetails apiRequestDetails)
         {
             // Step 1: Filter + dedupe key: take Max(SysId) per StudentDetailsFkid
             var scdKeys =
@@ -240,7 +240,7 @@ namespace Repository.FeesTypeRepository
                 on new { SysId = cs.ClassFkid, cs.InstitutionCode }
                 equals new { c.SysId, c.InstitutionCode }
 
-            join ac in _context.AcademicYears on new { SysId = scd.AcademicYearFkid, scd.InstitutionCode} equals new { ac.SysId, ac.InstitutionCode }
+            join ac in _context.AcademicYears on new { SysId = scd.AcademicYearFkid, scd.InstitutionCode } equals new { ac.SysId, ac.InstitutionCode }
 
             where sft.Status == "Created"
                   && sft.TransationType == "DR"
@@ -253,7 +253,7 @@ namespace Repository.FeesTypeRepository
                 Section = cs.SectionName,
                 AcadamicYear = ac.Year,
                 Description = sft.Description,
-                GenerateDate =  sft.GenerateDate.Date,
+                GenerateDate = sft.GenerateDate.Date,
                 AcadamicyearFkid = ac.SysId,
                 FeesTypeFkid = sft.FeesTypeFkid
             }
@@ -270,8 +270,20 @@ namespace Repository.FeesTypeRepository
                 GenerateDate = g.Key.GenerateDate,
                 Debit = g.Sum(x => x.Debit)
             };
+            var list = await result
+    .OrderBy(x => x.GenerateDate)
+    .ThenBy(x => x.CourseName)
+    .ThenBy(x => x.Section)
+    .ThenBy(x => x.Description)
+    .ThenBy(x => x.FeesTypeFkid)
+    .ToListAsync();
 
-            return await result.ToListAsync();
+            // auto-increment SysId in memory
+            for (int i = 0; i < list.Count; i++)
+            {
+                list[i].Sysid = i + 1;
+            }
+            return list;
         }
 
         public async Task<List<ApproveFeesViewResponse>> GetApproveFeesViewAsync(GetApproveFeesViewRequest request, APIRequestDetails apiRequestDetails)
@@ -322,7 +334,7 @@ namespace Repository.FeesTypeRepository
 
             foreach (StudentFeesTransaction row in rows)
             {
-                row.Status = "Approved";
+                row.Status = request.Approved ? "Approved" : "Deleted";
                 row.ModifiedBy = apiRequestDetails.UserName;
             }
 

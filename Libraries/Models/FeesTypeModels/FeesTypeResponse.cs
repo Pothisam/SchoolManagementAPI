@@ -30,6 +30,7 @@ namespace Models.FeesTypeModels
     }
     public class StudentApproveFeesResponse
     {
+        public int Sysid { get; set; }
         public int StudentClassDetailsFkid { get; set; }
         public int AcadamicyearFkid { get; set; }
         public int FeesTypeFkid { get; set; }
