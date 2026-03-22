@@ -21,6 +21,7 @@ namespace Models.StudentFeesTransactionModels
         public decimal Balance { get; set; }
         public Guid? Guid { get; set; }
         public int AcadamicYear { get; set; }
+        public int ClassSectionSysId { get; set; }
     }
     public class GetDebitItemResponse
     {
@@ -34,6 +35,7 @@ namespace Models.StudentFeesTransactionModels
         public DateTime ModifiedDate { get; set; }
         public DateTime GenerateDate { get; set; }
         public int FeesId { get; set; }
+
     }
     public class GetDebitResponse
     {
@@ -57,5 +59,17 @@ namespace Models.StudentFeesTransactionModels
     {
         public List<GetCreditItemResponse> R1 { get; set; } = new List<GetCreditItemResponse>();
         public decimal R2 { get; set; }
+    }
+    public class StudentFeeBalanceDto
+    {
+        public decimal Debit { get; set; }
+        public decimal Credit { get; set; }
+    }
+    public class StudentDetailInfoDto
+    {
+        public int StudentFkid { get; set; }
+        public string StudentId { get; set; } = string.Empty;
+        public string StudentName { get; set; } = string.Empty;
+        public int ClassSectionSysId { get; set; }
     }
 }

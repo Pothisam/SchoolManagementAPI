@@ -15,5 +15,6 @@ namespace Services.StudentFeesTransactionServices
         Task<CommonResponse<List<StudentFeesTransactionResponse>>> GetFeesDetailsBtNameList(StudentFeesTransactionByNameRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<GetDebitResponse>> GetDebitAsync(GetDebitRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<GetCreditResponse>> GetCreditAsync(GetDebitRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> AddStudentFeesTransactionAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
     }
 }

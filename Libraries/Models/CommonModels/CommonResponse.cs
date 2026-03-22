@@ -49,6 +49,9 @@ namespace Models.CommonModels
     {
         public string? Column { get; set; }
     }
-
+    public class BankResponse
+    {
+        public string BankName { get; set; }
+    }
 
 }

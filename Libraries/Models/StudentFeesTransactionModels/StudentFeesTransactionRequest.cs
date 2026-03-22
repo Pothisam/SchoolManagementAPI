@@ -21,4 +21,18 @@ namespace Models.StudentFeesTransactionModels
         public int SysId { get; set; }
         public int Batch { get; set; } 
     }
+    public class AddStudentFeesTransactionRequest
+    {
+        public int StudentFkid { get; set; }
+        public int FeesTypeFkid { get; set; }
+        public int StudentClassDetailsFkid { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public DateTime GenerateDate { get; set; }
+        public decimal Amount { get; set; }
+        public string PaymentMode { get; set; } = string.Empty;
+        public string? ChequeNo { get; set; }
+        public string? ChequeDate { get; set; }
+        public string? BankName { get; set; }
+        public string Remark { get; set; } = string.Empty;
+    }
 }

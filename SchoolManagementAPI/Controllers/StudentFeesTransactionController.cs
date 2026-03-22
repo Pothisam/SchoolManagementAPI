@@ -47,5 +47,12 @@ namespace SchoolManagementAPI.Controllers
             var result = await _studentFeesTransactionService.GetCreditAsync(request, apirequestdetails);
             return Ok(result);
         }
+        [HttpPost("AddStudentFeesTransaction")]
+        public async Task<IActionResult> AddStudentFeesTransaction(AddStudentFeesTransactionRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _studentFeesTransactionService.AddStudentFeesTransactionAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
     }
 }

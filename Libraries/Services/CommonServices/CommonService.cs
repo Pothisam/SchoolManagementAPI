@@ -185,5 +185,16 @@ namespace Services.CommonServices
 
             return output;
         }
+
+        public async Task<CommonResponse<List<BankResponse>>> GetBankDetailsAsync()
+        {
+            var response = new CommonResponse<List<BankResponse>>();
+
+            var result = await _ICommonRepo.GetBankDetailsAsync();
+
+            response.Data = result;
+
+            return response;
+        }
     }
 }

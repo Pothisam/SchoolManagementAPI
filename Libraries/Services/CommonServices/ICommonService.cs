@@ -19,5 +19,6 @@ namespace Services.CommonServices
         Task<CommonResponse<List<RecordHistoryResponse>>> GetRecordHistory(GetRecordHistoryRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<PostOfficeResponse>>> GetPostOffice(PostOfficeRequest request);
         TOutput TransformClass<TInput, TOutput>(TInput input) where TOutput : new();
+        Task<CommonResponse<List<BankResponse>>> GetBankDetailsAsync();
     }
 }

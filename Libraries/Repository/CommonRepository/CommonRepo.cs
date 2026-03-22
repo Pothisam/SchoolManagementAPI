@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models.CommonModels;
 using Repository.Entity;
 using System;
@@ -113,6 +113,17 @@ namespace Repository.CommonRepository
                                                                       StateName = x.StateName,
                                                                   }).ToListAsync();
             return PostOfficeResponse;
+        }
+
+        public async Task<List<BankResponse>> GetBankDetailsAsync()
+        {
+            var response = await (from x in _context.ListOfBankInIndia
+                                  select new BankResponse
+                                  {
+                                      BankName = x.BankName
+                                  }).ToListAsync();
+
+            return response;
         }
     }
 }

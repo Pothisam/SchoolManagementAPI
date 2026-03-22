@@ -46,8 +46,9 @@ namespace Repository.StudentFeesTransactionRepository
                                       && c.SysId == request.Class
                                       && cs.SysId == request.Section
                                       && sft.InstitutionCode == apiRequestDetails.InstitutionCode
+                                      && sft.Status == "Approved"
 
-                                group new { sft, sd, c, cs, ay } by new
+                                group new { sft, sd, c, cs, ay, scd } by new
                                 {
                                     sd.SysId,
                                     sd.Stdid,
@@ -57,8 +58,9 @@ namespace Repository.StudentFeesTransactionRepository
                                     c.ClassName,
                                     cs.SectionName,
                                     ay.Year,
-                                    AcademicYearSysId =ay.SysId
-                                    
+                                    AcademicYearSysId = ay.SysId,
+                                    CSSysid =scd.SysId
+
                                 }
                                 into g
                                 select new StudentFeesTransactionResponse
@@ -66,12 +68,13 @@ namespace Repository.StudentFeesTransactionRepository
                                     SysId = g.Key.SysId,
                                     Stdid = g.Key.Stdid,
                                     rollno = g.Key.RollNo,
-                                    Name = g.Key.Name + " "+ g.Key.Initial,
+                                    Name = g.Key.Name + " " + g.Key.Initial,
 
                                     Initial = g.Key.Initial,
-                                    ClassName = g.Key.ClassName +" ("+ g.Key.SectionName+")",
+                                    ClassName = g.Key.ClassName + " (" + g.Key.SectionName + ")",
                                     SectionName = g.Key.SectionName,
                                     Year = g.Key.Year,
+                                    ClassSectionSysId = g.Key.CSSysid,
                                     Debit = g.Sum(x => x.sft.Debit),
                                     Credit = g.Sum(x => x.sft.Credit),
                                     Balance = g.Sum(x => x.sft.Debit) - g.Sum(x => x.sft.Credit),
@@ -111,14 +114,15 @@ namespace Repository.StudentFeesTransactionRepository
                                     on scd.AcademicYearFkid equals ay.SysId
                                 join y in documentQuery on sd.SysId equals y.Fkid into documentGroup
                                 where
+                                 sft.Status == "Approved" &&
              sft.InstitutionCode == apiRequestDetails.InstitutionCode &&
              (
                  scd.RollNo.StartsWith(request.StudentName) ||
-                 (sd.Name + " " + sd.Initial).StartsWith(request.StudentName)||
+                 (sd.Name + " " + sd.Initial).StartsWith(request.StudentName) ||
                  sd.Stdid.StartsWith(request.StudentName)
              )
 
-                                group new { sft, sd, c, cs, ay } by new
+                                group new { sft, sd, c, cs, ay, scd } by new
                                 {
                                     sd.SysId,
                                     sd.Stdid,
@@ -128,7 +132,8 @@ namespace Repository.StudentFeesTransactionRepository
                                     c.ClassName,
                                     cs.SectionName,
                                     ay.Year,
-                                    AcademicYearSysId = ay.SysId
+                                    AcademicYearSysId = ay.SysId,
+                                    CSSysid = scd.SysId
                                 }
                                 into g
                                 select new StudentFeesTransactionResponse
@@ -145,6 +150,7 @@ namespace Repository.StudentFeesTransactionRepository
                                     Credit = g.Sum(x => x.sft.Credit),
                                     Balance = g.Sum(x => x.sft.Debit) - g.Sum(x => x.sft.Credit),
                                     AcadamicYear = g.Key.AcademicYearSysId,
+                                    ClassSectionSysId = g.Key.CSSysid,
                                     Guid = documentQuery
                                                    .OrderBy(d => d.ModifiedBy)
                                                    .Select(d => (Guid?)d.Guid)
@@ -204,7 +210,7 @@ namespace Repository.StudentFeesTransactionRepository
         {
             List<string> statusList = new List<string> { "Approved", "Deleted", "Reject" };
 
-            List<GetCreditItemResponse> r1 = await(
+            List<GetCreditItemResponse> r1 = await (
                 from sft in _context.StudentFeesTransactions
 
                 join scd in _context.StudentClassDetails
@@ -246,5 +252,75 @@ namespace Repository.StudentFeesTransactionRepository
                 R2 = r2
             };
         }
+        #region Fees Add
+
+        public async Task<StudentFeeBalanceDto?> GetApprovedDebitCreditAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await (
+                from x in _context.StudentFeesTransactions
+                join y in _context.StudentClassDetails
+                    on x.StudentClassDetailsFkid equals y.SysId
+                where x.StudentFkid == request.StudentFkid
+                      && x.FeesTypeFkid == request.FeesTypeFkid
+                      && x.StudentClassDetailsFkid == request.StudentClassDetailsFkid
+                      && x.Status == "Approved"
+                      && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                group x by new { x.StudentFkid, x.FeesTypeFkid } into g
+                select new StudentFeeBalanceDto
+                {
+                    Debit = g.Sum(s => s.Debit),
+                    Credit = g.Sum(s => s.Credit)
+                }
+            ).FirstOrDefaultAsync();
+        }
+
+        public async Task<int> GetNextRefNoAsync(string finYear, APIRequestDetails apiRequestDetails)
+        {
+            int count = await _context.StudentFeesTransactions.Where(x => x.TransationType == "CR" && x.InstitutionCode == apiRequestDetails.InstitutionCode &&
+              (
+                 (x.GenerateDate.Month >= 4
+                ? x.GenerateDate.Year.ToString() + "-" + (x.GenerateDate.Year + 1).ToString()
+                : (x.GenerateDate.Year - 1).ToString() + "-" + x.GenerateDate.Year.ToString()
+            ) == finYear)).CountAsync();
+
+            return count + 1;
+        }
+
+        public async Task<StudentDetailInfoDto?> GetStudentDetailInfoAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await (
+                from x in _context.StudentDetails
+                join y in _context.StudentClassDetails
+                    on x.SysId equals y.StudentDetailsFkid
+                where x.SysId == request.StudentFkid && y.SysId == request.StudentClassDetailsFkid && x.InstitutionCode == apiRequestDetails.InstitutionCode
+                select new StudentDetailInfoDto
+                {
+                    StudentFkid = x.SysId,
+                    StudentId = x.Stdid,
+                    StudentName = x.Name + " " + x.Initial,
+                    ClassSectionSysId = y.SysId
+                }
+            ).FirstOrDefaultAsync();
+        }
+
+        public async Task<FeesType?> GetFeesTypeByIdAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.FeesTypes
+                .FirstOrDefaultAsync(x => x.Sysid == request.FeesTypeFkid && x.InstitutionCode == apiRequestDetails.InstitutionCode);
+        }
+
+        public async Task<bool> ChequeNumberExistsAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StudentFeesTransactions
+                .AnyAsync(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.ChequeNo == request.ChequeNo.Trim().ToUpper());
+        }
+
+        public async Task<int> AddStudentFeesTransactionAsync(StudentFeesTransaction entity)
+        {
+            _context.StudentFeesTransactions.Add(entity);
+            await _context.SaveChangesAsync();
+            return entity.SysId;
+        }
+        #endregion
     }
 }

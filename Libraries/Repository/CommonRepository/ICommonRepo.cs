@@ -1,4 +1,4 @@
-﻿using Models.CommonModels;
+using Models.CommonModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +15,6 @@ namespace Repository.CommonRepository
         Task<byte[]?> GetFavIconAsync(APIRequestDetails apiRequestDetails);
         Task<List<RecordHistoryResponse>> GetRecordHistory(GetRecordHistoryRequest request, APIRequestDetails apiRequestDetails);
         Task<List<PostOfficeResponse>> GetPostOffice(PostOfficeRequest request);
+        Task<List<BankResponse>> GetBankDetailsAsync();
     }
 }

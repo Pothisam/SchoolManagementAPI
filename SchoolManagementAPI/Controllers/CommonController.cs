@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models.CommonModels;
 using SchoolManagementAPI.Attributes;
@@ -42,6 +42,12 @@ namespace SchoolManagementAPI.Controllers
         public async Task<IActionResult> GetPostOffice(PostOfficeRequest request)
         {
             var result = await _ICommonService.GetPostOffice(request);
+            return Ok(result);
+        }
+        [HttpPost("GetBankDetails")]
+        public async Task<IActionResult> GetBankDetails()
+        {
+            var result = await _ICommonService.GetBankDetailsAsync();
             return Ok(result);
         }
     }
