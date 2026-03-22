@@ -35,6 +35,8 @@ public partial class SchoolManagementContext : DbContext
 
     public virtual DbSet<InstitutionDetail> InstitutionDetails { get; set; }
 
+    public virtual DbSet<ListOfBankInIndium> ListOfBankInIndia { get; set; }
+
     public virtual DbSet<SmspassTable> SmspassTables { get; set; }
 
     public virtual DbSet<StaffDetail> StaffDetails { get; set; }
@@ -436,6 +438,17 @@ public partial class SchoolManagementContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("website");
+        });
+
+        modelBuilder.Entity<ListOfBankInIndium>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.BankName)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .UseCollation("Latin1_General_CI_AI");
+            entity.Property(e => e.Sysid).ValueGeneratedOnAdd();
         });
 
         modelBuilder.Entity<SmspassTable>(entity =>

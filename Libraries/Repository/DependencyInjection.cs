@@ -11,6 +11,7 @@ using Repository.FeesTypeRepository;
 using Repository.InstitutionDetails;
 using Repository.ReportRepository;
 using Repository.StaffRepository;
+using Repository.StudentFeesTransactionRepository;
 using Repository.StudentRepository;
 using Repository.UserRepository;
 
@@ -32,8 +33,8 @@ namespace Repository
             service.AddScoped<IDocumentLibraryRepo, DocumentLibraryRepo>();
             service.AddScoped<IStudentRepo, StudentRepo>();
             service.AddScoped<IReportRepo, ReportRepo>();
-
             service.AddScoped<IFeesTypeRepo, FeesTypeRepo>();
+            service.AddScoped<IStudentFeesTransactionRepo, StudentFeesTransactionRepo>();
             return service;
         }
     }

@@ -15,6 +15,7 @@ using Services.FeesTypeServices;
 using Services.InstitutionDetailsServices;
 using Services.ReportServices;
 using Services.StaffServices;
+using Services.StudentFeesTransactionServices;
 using Services.StudentServices;
 using Services.UserServices;
 
@@ -35,6 +36,7 @@ namespace Services
             service.AddScoped<IDocumentLibraryServices, DocumentLibraryService>();
             service.AddScoped<IStudentService, StudentService>();
             service.AddScoped<IReportService, ReportService>();
+            service.AddScoped<IStudentFeesTransactionService, StudentFeesTransactionService>();
 
             service.AddScoped<IFeesTypeService, FeesTypeService>();
             return service;

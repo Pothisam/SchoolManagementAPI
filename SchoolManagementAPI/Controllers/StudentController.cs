@@ -69,6 +69,13 @@ namespace CMS.API.Controllers
             var result = await _IStudentService.GetStudentDetailBySysid(request, apiRequestDetails);
             return Ok(result);
         }
+        [HttpPost("GetStudentDetailBySysidBatch")]
+        public async Task<IActionResult> GetStudentDetailBySysidBatch(StudentMasterDetailsViewRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _IStudentService.GetStudentDetailsByIDBatchAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
         [HttpPost("UpdateStudent")]
         public async Task<IActionResult> UpdateStudent(UpdateStudentDetailRequest request)
         {

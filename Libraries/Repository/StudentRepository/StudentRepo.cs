@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Models.CommonModels;
+using Models.StudentFeesTransactionModels;
 using Models.StudentModels;
 using Repository.Entity;
 
@@ -131,8 +132,14 @@ namespace Repository.StudentRepository
                         .Take(5),
                     "AadharCardNo" => _context.StudentMasterViews
                     .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.AadharCardNo.StartsWith(request.SearchParam))
-                    .OrderBy(x => x.RollNo)
+                    .OrderBy(x => x.AadharCardNo)
                     .Select(x => x.AadharCardNo)
+                    .Distinct()
+                    .Take(5),
+                    "stdid" => _context.StudentMasterViews
+                    .Where(x => x.InstitutionCode == apiRequestDetails.InstitutionCode && x.Stdid.StartsWith(request.SearchParam))
+                    .OrderBy(x => x.Stdid)
+                    .Select(x => x.Stdid)
                     .Distinct()
                     .Take(5),
                     _ => throw new NotImplementedException($"Column '{request.ColumnName}' is not supported.")
@@ -399,6 +406,46 @@ namespace Repository.StudentRepository
                 x.ClassSectionFkid == request.ClassSectionFkid &&
                 x.InstitutionCode == apiRequestDetails.InstitutionCode);
             return alreadyExists;
+        }
+
+        public async Task<StudentMasterDetailsViewResponse> GetStudentMasterDetailBySysid(StudentMasterDetailsViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var documentQuery = _context.DocumentLibraries
+                .Where(d => d.Action == "Image-Upload"
+                            && d.TableName == "StudentDetails"
+                            && d.FileSize != 0);
+            var result = await(from sd in _context.StudentDetails
+                               join scd in _context.StudentClassDetails
+                                    on sd.SysId equals scd.SysId into scdJoin
+                               from scd in scdJoin.DefaultIfEmpty()
+
+                               join cs in _context.ClassSections
+                                   on scd.ClassSectionFkid equals cs.SysId
+
+                               join c in _context.Classes
+                                   on cs.ClassFkid equals c.SysId
+
+                               join ay in _context.AcademicYears
+                                   on scd.AcademicYearFkid equals ay.SysId
+                               join y in documentQuery on sd.SysId equals y.Fkid into documentGroup
+                               where sd.SysId == request.Sysid
+                                  && ay.SysId == request.Batch
+                                  && sd.InstitutionCode == apiRequestDetails.InstitutionCode
+                               select new StudentMasterDetailsViewResponse
+                               {
+                                   Sysid = sd.SysId,
+                                   Stdid = sd.Stdid,
+                                   AcadamicYear = ay.Year,
+                                   Name = sd.Name + " " + sd.Initial,
+                                   ClassName = c.ClassName + " (" + cs.SectionName + ")",
+                                   DOB = sd.Dob,
+                                   RollNo = scd.RollNo,
+                                   Guid = documentQuery
+                                                .OrderBy(d => d.ModifiedBy)
+                                                .Select(d => (Guid?)d.Guid)
+                                                .FirstOrDefault()
+                               }).FirstOrDefaultAsync();
+            return result;
         }
     }
 }

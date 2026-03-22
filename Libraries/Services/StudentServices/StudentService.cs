@@ -177,6 +177,18 @@ namespace Services.StudentServices
                 var L3 = await _IStudentRepo.GetStudentAutoComplete(AadharCardNo, apiRequestDetails);
                 result = L1.Union(L2).Union(L3).Take(5).ToList();
             }
+            else if(request.ColumnName == "NameRollNoAadharstdid")
+            {
+                AutoCompleteRequest Name = new AutoCompleteRequest { TableName = request.TableName, ColumnName = "Name", SearchParam = request.SearchParam };
+                var L1 = await _IStudentRepo.GetStudentAutoComplete(Name, apiRequestDetails);
+                AutoCompleteRequest RollNo = new AutoCompleteRequest { TableName = request.TableName, ColumnName = "RollNo", SearchParam = request.SearchParam };
+                var L2 = await _IStudentRepo.GetStudentAutoComplete(RollNo, apiRequestDetails);
+                AutoCompleteRequest AadharCardNo = new AutoCompleteRequest { TableName = request.TableName, ColumnName = "AadharCardNo", SearchParam = request.SearchParam };
+                var L3 = await _IStudentRepo.GetStudentAutoComplete(AadharCardNo, apiRequestDetails);
+                AutoCompleteRequest stdid = new AutoCompleteRequest { TableName = request.TableName, ColumnName = "stdid", SearchParam = request.SearchParam };
+                var L4 = await _IStudentRepo.GetStudentAutoComplete(stdid, apiRequestDetails);
+                result = L1.Union(L2).Union(L3).Union(L4).Take(5).ToList();
+            }
             else
             {
                 result = await _IStudentRepo.GetStudentAutoComplete(request, apiRequestDetails);
@@ -401,6 +413,23 @@ namespace Services.StudentServices
                 : "Unable to update student details"
             };
         }
+        public async Task<CommonResponse<StudentMasterDetailsViewResponse>> GetStudentDetailsByIDBatchAsync(StudentMasterDetailsViewRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<StudentMasterDetailsViewResponse>();
+            var result = await _IStudentRepo.GetStudentMasterDetailBySysid(request, apiRequestDetails);
+
+            if (result != null)
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+            }
+
+            return response;
+        }
         #endregion
         #region Document Library
         public async Task<CommonResponse<string>> AddStudentDocumentAsync(DocumentLibraryBulkInsertByFKID request, APIRequestDetails apiRequestDetails)
@@ -508,5 +537,7 @@ namespace Services.StudentServices
                 Message = $"Inserted: {insertedCount}, Skipped: {skippedCount}"
             };
         }
+
+        
     }
 }

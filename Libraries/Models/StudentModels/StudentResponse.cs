@@ -331,5 +331,22 @@ namespace Models.StudentModels
         public int AcademicYearFkid { get; set; }
         public int ClassSectionFkid { get; set; }
     }
+    public class StudentMasterDetailsViewRequest
+    {
+        public required int Sysid { get; set; }
+        public required int Batch { get; set; }
+    }
+    public class StudentMasterDetailsViewResponse
+    {
+        public required int Sysid { get; set; }
+        public  string  AcadamicYear { get; set; }
+        public  string Stdid { get; set; }
+        public  string Name { get; set; }
+        public  string ClassName { get; set; }
+        public  string ClassSection { get; set; }
+        public string RollNo { get; set; }
+        public DateTime DOB { get; set; }
+        public Guid? Guid { get; set; }
+    }
 
 }

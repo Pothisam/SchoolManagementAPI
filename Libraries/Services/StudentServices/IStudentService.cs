@@ -14,6 +14,7 @@ namespace Services.StudentServices
         Task<CommonResponse<StudentCountResponse>> GetStudentCountAsync(APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<StudentDetailsShortResponse>>> GetStudentDetailsShortAsync(StudentShortRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<StudentDetailsShortResponse>>> GetStudentDetailsShortAsync(StudentSearchRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<StudentMasterDetailsViewResponse>> GetStudentDetailsByIDBatchAsync(StudentMasterDetailsViewRequest request, APIRequestDetails apiRequestDetails);
         #endregion
         #region View Student Details
         Task<CommonResponse<StudentDetailsResponse>> GetStudentDetailBySysid(StudentDetailsViewRequest request, APIRequestDetails apiRequestDetails);

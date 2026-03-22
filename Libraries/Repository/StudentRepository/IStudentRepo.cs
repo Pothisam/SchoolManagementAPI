@@ -27,5 +27,7 @@ namespace Repository.StudentRepository
         #endregion
         Task<bool> InsertStudentClassDetailAsync(StudentClassDetail request);
         Task<bool> IsStudentClassDetailExistsAsync(int StudentId,AddStudentClassDetailRequest request, APIRequestDetails apiRequestDetails);
+        Task<StudentMasterDetailsViewResponse> GetStudentMasterDetailBySysid(StudentMasterDetailsViewRequest request, APIRequestDetails apiRequestDetails);
+
     }
 }
