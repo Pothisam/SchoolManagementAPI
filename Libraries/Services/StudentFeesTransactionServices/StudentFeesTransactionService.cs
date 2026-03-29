@@ -169,5 +169,52 @@ namespace Services.StudentFeesTransactionServices
                 ? $"{generateDate.Year}-{generateDate.Year + 1}"
                 : $"{generateDate.Year - 1}-{generateDate.Year}";
         }
+        #region Fees Report
+        public async Task<CommonResponse<List<GetFeesReportDateWiseResponse>>> GetFeesReportDateWiseAsync(GetFeesReportDateWiseRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<GetFeesReportDateWiseResponse>>();
+
+            if (request.FromDate.Date > request.ToDate.Date)
+            {
+                response.Status = Status.Failed;
+                response.Message = "FromDate should not be greater than ToDate";
+                return response;
+            }
+
+            var result = await _studentFeesTransactionRepo.GetFeesReportDateWiseAsync(request, apiRequestDetails);
+
+            if (result.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "No records found";
+                response.Data = new List<GetFeesReportDateWiseResponse>();
+            }
+
+            return response;
+        }
+
+        public async Task<CommonResponse<GetFeesReportDateWisePrintResponse>> GetFeesReportByIdAsync(GetPrintCashReceiptValueRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<GetFeesReportDateWisePrintResponse>();
+
+            var result = await _studentFeesTransactionRepo.GetFeesReportByIdAsync(request, apiRequestDetails);
+
+            if (result == null)
+            {
+                response.Status = Status.Failed;
+                response.Message = "Record not found";
+                return response;
+            }
+
+            response.Status = Status.Success;
+            response.Data = result;
+            return response;
+        }
+        #endregion
     }
 }

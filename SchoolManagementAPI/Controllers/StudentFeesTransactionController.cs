@@ -54,5 +54,19 @@ namespace SchoolManagementAPI.Controllers
             var result = await _studentFeesTransactionService.AddStudentFeesTransactionAsync(request, apiRequestDetails);
             return Ok(result);
         }
+        [HttpPost("GetFeesReportDateWise")]
+        public async Task<IActionResult> GetFeesReportDateWise(GetFeesReportDateWiseRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _studentFeesTransactionService.GetFeesReportDateWiseAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        [HttpPost("GetFeesReportById")]
+        public async Task<IActionResult> GetFeesReportById(GetPrintCashReceiptValueRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _studentFeesTransactionService.GetFeesReportByIdAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
     }
 }

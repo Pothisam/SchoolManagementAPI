@@ -35,4 +35,14 @@ namespace Models.StudentFeesTransactionModels
         public string? BankName { get; set; }
         public string Remark { get; set; } = string.Empty;
     }
+    public class GetFeesReportDateWiseRequest
+    {
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+        public int FeesTypeFkid { get; set; }
+    }
+    public class GetPrintCashReceiptValueRequest
+    {
+        public int SysId { get; set; }
+    }
 }

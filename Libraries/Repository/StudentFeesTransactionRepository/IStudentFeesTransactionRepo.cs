@@ -22,6 +22,8 @@ namespace Repository.StudentFeesTransactionRepository
         Task<FeesType?> GetFeesTypeByIdAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
         Task<bool> ChequeNumberExistsAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
         Task<int> AddStudentFeesTransactionAsync(StudentFeesTransaction entity);
+        Task<List<GetFeesReportDateWiseResponse>> GetFeesReportDateWiseAsync(GetFeesReportDateWiseRequest request, APIRequestDetails apiRequestDetails);
+        Task<GetFeesReportDateWisePrintResponse?> GetFeesReportByIdAsync(GetPrintCashReceiptValueRequest request, APIRequestDetails apiRequestDetails);
         #endregion
     }
 }

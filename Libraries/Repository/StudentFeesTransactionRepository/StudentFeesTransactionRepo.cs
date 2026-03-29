@@ -321,6 +321,117 @@ namespace Repository.StudentFeesTransactionRepository
             await _context.SaveChangesAsync();
             return entity.SysId;
         }
+
+
         #endregion
+        #region Fees Report
+        public async Task<List<GetFeesReportDateWiseResponse>> GetFeesReportDateWiseAsync(GetFeesReportDateWiseRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await (
+                from sft in _context.StudentFeesTransactions
+
+                join sd in _context.StudentDetails
+                    on sft.StudentFkid equals sd.SysId
+
+                join scd in _context.StudentClassDetails
+                    on sft.StudentClassDetailsFkid equals scd.SysId
+
+                join ay in _context.AcademicYears
+                    on scd.AcademicYearFkid equals ay.SysId
+
+                join cs in _context.ClassSections
+                    on scd.ClassSectionFkid equals cs.SysId
+
+                join c in _context.Classes
+                    on cs.ClassFkid equals c.SysId
+                join ft in _context.FeesTypes
+                    on sft.FeesTypeFkid equals ft.Sysid
+
+                where sft.TransationType == "CR"
+                      && sft.Credit > 0
+                      && sft.Status == "Approved"
+                      && sft.InstitutionCode == apiRequestDetails.InstitutionCode
+                      && sft.FeesTypeFkid == request.FeesTypeFkid
+                      && sft.GenerateDate >= request.FromDate
+                      && sft.GenerateDate <= request.ToDate
+
+                select new GetFeesReportDateWiseResponse
+                {
+                    SysId = sft.SysId,
+                    RollNo = scd.RollNo ?? string.Empty,
+                    Name = sd.Name,
+                    Stdid = sd.Stdid,
+                    AcadamicYear = ay.Year,
+                    ClassName = c.ClassName,
+                    SectionName = cs.SectionName,
+                    Description = sft.Description,
+                    GenerateDate = sft.GenerateDate,
+                    Credit = sft.Credit,
+                    DOB = sd.Dob,
+                    RecicptNo = GetFinancialYear(sft.GenerateDate) + '-' + sft.RefNo.ToString(),
+                    Createdby = sft.EntryBy,
+                    FeesDescription = ft.FeesDescription
+                }
+            )
+            .OrderBy(x => x.GenerateDate)
+            .ThenBy(x => x.Name)
+            .ToListAsync();
+        }
+
+        public async Task<GetFeesReportDateWisePrintResponse?> GetFeesReportByIdAsync(GetPrintCashReceiptValueRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await (
+        from sft in _context.StudentFeesTransactions
+
+        join sd in _context.StudentDetails
+            on sft.StudentFkid equals sd.SysId
+
+        join scd in _context.StudentClassDetails
+            on sft.StudentClassDetailsFkid equals scd.SysId
+
+        join ay in _context.AcademicYears
+            on scd.AcademicYearFkid equals ay.SysId
+
+        join cs in _context.ClassSections
+            on scd.ClassSectionFkid equals cs.SysId
+
+        join c in _context.Classes
+            on cs.ClassFkid equals c.SysId
+
+        where sft.SysId == request.SysId
+              && sft.TransationType == "CR"
+              && sft.Credit > 0
+              && sft.Status == "Approved"
+              && sft.InstitutionCode == apiRequestDetails.InstitutionCode
+
+        select new GetFeesReportDateWisePrintResponse
+        {
+            SysId = sft.SysId,
+            RollNo = scd.RollNo ?? string.Empty,
+            Name = sd.Name,
+            Stdid = sd.Stdid,
+            AcadamicYear = ay.Year,
+            ClassName = c.ClassName,
+            SectionName = cs.SectionName,
+            Description = sft.Description,
+            GenerateDate = sft.GenerateDate,
+            Credit = sft.Credit,
+            DOB = sd.Dob,
+            RecicptNo = GetFinancialYear(sft.GenerateDate) +'-'+ sft.RefNo.ToString()
+        }
+    ).FirstOrDefaultAsync();
+        }
+        public static string GetFinancialYear(DateTime generateDate)
+        {
+            int startYear = generateDate.Month >= 4
+        ? generateDate.Year
+        : generateDate.Year - 1;
+
+            int endYear = startYear + 1;
+
+            return $"{startYear % 100:D2}-{endYear % 100:D2}";
+        }
+        #endregion
+
     }
 }

@@ -72,4 +72,36 @@ namespace Models.StudentFeesTransactionModels
         public string StudentName { get; set; } = string.Empty;
         public int ClassSectionSysId { get; set; }
     }
+    public class GetFeesReportDateWiseResponse
+    {
+        public int SysId { get; set; }
+        public string RollNo { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public string Stdid { get; set; } = string.Empty;
+        public string AcadamicYear { get; set; } = string.Empty;
+        public string ClassName { get; set; } = string.Empty;
+        public string SectionName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime GenerateDate { get; set; }
+        public decimal Credit { get; set; }
+        public DateTime DOB { get; set; }
+        public string RecicptNo { get; set; } = string.Empty;
+        public string Createdby { get; set; } = string.Empty;
+        public string FeesDescription { get; set; } = string.Empty;
+    }
+    public class GetFeesReportDateWisePrintResponse
+    {
+        public int SysId { get; set; }
+        public string RollNo { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+        public DateTime DOB { get; set; }
+        public string RecicptNo { get; set; } = string.Empty;
+        public string Stdid { get; set; } = string.Empty;
+        public string AcadamicYear { get; set; } = string.Empty;
+        public string ClassName { get; set; } = string.Empty;
+        public string SectionName { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public DateTime GenerateDate { get; set; }
+        public decimal Credit { get; set; }
+    }
 }
