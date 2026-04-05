@@ -118,7 +118,7 @@ namespace Repository.FeesTypeRepository
                         sft0.InstitutionCode
                     }
                     into sftGroup
-                from sft in sftGroup.DefaultIfEmpty()
+                from sft in sftGroup.Where(x => x.TransationType == "DR" && x.Debit > 0 && x.Description != "concession").DefaultIfEmpty()
 
                     // keep if you want to ensure section belongs to requested class
                 where c.SysId == request.classfkid
@@ -387,7 +387,7 @@ namespace Repository.FeesTypeRepository
                     equals new { c.SysId, c.InstitutionCode }
 
                     // LEFT JOIN StudentFeesTransactions (IMPORTANT: StudentClassDetailsFKID = scd.SysId)
-                join sft0 in _context.StudentFeesTransactions.Where(x=> x.Debit < 0)
+                join sft0 in _context.StudentFeesTransactions.Where(x => x.Debit < 0)
                     on new
                     {
                         StudentFKID = scd.StudentDetailsFkid,
@@ -422,6 +422,33 @@ namespace Repository.FeesTypeRepository
                 };
 
             return await query.ToListAsync();
+        }
+
+        public async Task<bool> IsConcessionTransactionExistsAsync(int studentFkid, int feesTypeFkid, int studentClassDetailsFkid, string transationType, decimal debit, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StudentFeesTransactions
+                .AsNoTracking()
+                .AnyAsync(x =>
+                    x.InstitutionCode == apiRequestDetails.InstitutionCode &&
+                    x.StudentFkid == studentFkid &&
+                    x.FeesTypeFkid == feesTypeFkid &&
+                    x.StudentClassDetailsFkid == studentClassDetailsFkid &&
+                    x.TransationType == transationType &&
+                    x.Debit == -debit &&
+                    x.Description == "Concession" &&
+                    x.Status != "Deleted");
+        }
+
+        public async Task<decimal> GetConcessionAmountAsync(int Sysid, APIRequestDetails apiRequestDetails)
+        {
+            return await _context.StudentClassDetails
+                .AsNoTracking()
+                .Where(x =>
+                    x.SysId == Sysid &&
+                    x.InstitutionCode == apiRequestDetails.InstitutionCode &&
+                    x.Status == "Active")
+                .Select(x => x.Concession ?? 0m)
+                .FirstOrDefaultAsync();
         }
         #endregion
     }

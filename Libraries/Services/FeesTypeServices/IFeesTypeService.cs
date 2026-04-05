@@ -24,6 +24,7 @@ namespace Services.FeesTypeServices
         #endregion
         #region Gentrate Concession
         Task<CommonResponse<List<StudentConcessionGenerateStatusResponse>>> GetConcessionListViewAsync(GeConcessionGentrationRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> InsertStudentConcessionAsync(GenerationConcessionRequest request, APIRequestDetails apiRequestDetails);
         #endregion
     }
 }

@@ -49,4 +49,11 @@ namespace Models.FeesTypeModels
         public int sectionfkid { get; set; }
         public int feestypefkid { get; set; }
     }
+    public class GenerationConcessionRequest
+    {
+        public int[] studentdetailsfkid { get; set; } = Array.Empty<int>();
+        public int sectionfkid { get; set; }
+        public int academicYearFkid { get; set; }
+        public int feestypefkid { get; set; }
+    }
 }

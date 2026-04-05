@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -286,6 +287,94 @@ namespace Services.FeesTypeServices
                 response.Message = "No Data Found";
             }
 
+            return response;
+        }
+
+        public async Task<CommonResponse<string>> InsertStudentConcessionAsync(GenerationConcessionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<string>();
+            const string transType = "DR";
+            var now = DateTime.Now;
+            decimal credit = 0;
+            var description = "Concession";
+            int inserted = 0;
+            int duplicate = 0;
+            int classNotFound = 0;
+            int failed = 0;
+            foreach (var studentId in request.studentdetailsfkid.Distinct())
+            {
+                // 1) Find StudentClassDetailsFkid
+                var scdSysId = await _feesTyperepo.GetStudentClassDetailsSysIdAsync(
+                    studentId,
+                    request.academicYearFkid,
+                    request.sectionfkid,
+                    apiRequestDetails);
+
+                if (scdSysId == null || scdSysId.Value <= 0)
+                {
+                    classNotFound++;
+                    continue;
+                }
+                var debit = await _feesTyperepo.GetConcessionAmountAsync(scdSysId.Value, apiRequestDetails);
+                var exists = await _feesTyperepo.IsConcessionTransactionExistsAsync(
+                    studentId,
+                    request.feestypefkid,
+                    scdSysId.Value,
+                    transType,
+                    debit,
+                    apiRequestDetails);
+
+                if (exists)
+                {
+                    duplicate++;
+                    continue;
+                }
+                // 3) RefNo based on FY from GenerateDate
+                var refNo = await _feesTyperepo.GetNextRefNoByGenerateDateAsync(now, transType, apiRequestDetails);
+
+                // 4) Create entity (only columns available in StudentFeesTransaction)
+                var entity = new StudentFeesTransaction
+                {
+                    StudentFkid = studentId,
+                    FeesTypeFkid = request.feestypefkid,
+                    StudentClassDetailsFkid = scdSysId.Value,
+
+                    RefNo = refNo,
+
+                    TransationType = transType,
+                    GenerateDate = now,
+                    Description = description,
+
+                    Debit = -debit,
+                    Credit = credit,
+
+                    Remark = "",
+
+                    Status = "Created",
+
+                    InstitutionCode = apiRequestDetails.InstitutionCode,
+                    EntryBy = apiRequestDetails.UserName,
+                    EntryDate = now,
+                    ModifiedBy = apiRequestDetails.UserName,
+                    ModifiedDate = now
+                };
+                var saved = await _feesTyperepo.AddStudentFeesTransactionAsync(entity);
+
+                if (saved) inserted++;
+                else failed++;
+            }
+            if (inserted > 0)
+            {
+                response.Status = Status.Success;
+                response.Message =
+                    $"Concession inserted successfully. Inserted: {inserted}, Duplicates skipped: {duplicate}, Class not found: {classNotFound}, Failed: {failed}";
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message =
+                    $"No Concession inserted. Duplicates skipped: {duplicate}, Class not found: {classNotFound}, Failed: {failed}";
+            }
             return response;
         }
         #endregion

@@ -94,6 +94,13 @@ namespace SchoolManagementAPI.Controllers
             var result = await _FeesTypeService.GetConcessionListViewAsync(request, apiRequestDetails);
             return Ok(result);
         }
+        [HttpPost("InsertStudentConcession")]
+        public async Task<IActionResult> InsertStudentConcession(GenerationConcessionRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _FeesTypeService.InsertStudentConcessionAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
         #endregion
     }
 }

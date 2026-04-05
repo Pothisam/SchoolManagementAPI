@@ -35,6 +35,8 @@ namespace Repository.FeesTypeRepository
         #endregion
         #region Gentrate Concession
         Task<List<StudentConcessionGenerateStatusResponse>> GetConcessionListViewAsync(GeConcessionGentrationRequest request, APIRequestDetails apiRequestDetails);
+        Task<bool> IsConcessionTransactionExistsAsync(int studentFkid, int feesTypeFkid, int studentClassDetailsFkid, string transationType, decimal debit, APIRequestDetails apiRequestDetails);
+        Task<decimal> GetConcessionAmountAsync(int Sysid, APIRequestDetails apiRequestDetails);
         #endregion
     }
 }
