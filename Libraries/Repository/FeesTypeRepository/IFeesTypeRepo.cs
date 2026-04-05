@@ -20,10 +20,10 @@ namespace Repository.FeesTypeRepository
         #region Gentrate Fees
         Task<List<StudentFeeGenerateStatusResponse>> GetFeesListViewAsync(GetFeesGentrationRequest request, APIRequestDetails apiRequestDetails);
         Task<int?> GetStudentClassDetailsSysIdAsync(int studentFkid, int academicYearFkid, int classSectionFkid, APIRequestDetails apiRequestDetails);
-        Task<bool> IsFeesTransactionExistsAsync(int studentFkid,int feesTypeFkid,int studentClassDetailsFkid,string transationType,decimal debit,APIRequestDetails apiRequestDetails);
-        Task<int> GetNextRefNoByGenerateDateAsync(DateTime generateDate,string transationType,APIRequestDetails apiRequestDetails);
+        Task<bool> IsFeesTransactionExistsAsync(int studentFkid, int feesTypeFkid, int studentClassDetailsFkid, string transationType, decimal debit, APIRequestDetails apiRequestDetails);
+        Task<int> GetNextRefNoByGenerateDateAsync(DateTime generateDate, string transationType, APIRequestDetails apiRequestDetails);
 
-        Task<string?> GetFeesTypeDescriptionAsync(int feesTypeFkid,APIRequestDetails apiRequestDetails);
+        Task<string?> GetFeesTypeDescriptionAsync(int feesTypeFkid, APIRequestDetails apiRequestDetails);
 
         Task<bool> AddStudentFeesTransactionAsync(StudentFeesTransaction entity);
 
@@ -32,6 +32,9 @@ namespace Repository.FeesTypeRepository
         Task<List<StudentApproveFeesResponse>> GetApproveFeesAsync(APIRequestDetails apiRequestDetails);
         Task<List<ApproveFeesViewResponse>> GetApproveFeesViewAsync(GetApproveFeesViewRequest request, APIRequestDetails apiRequestDetails);
         Task<int> UpdateFeesApproveAsync(UpdateFeesApproveRequest request, APIRequestDetails apiRequestDetails);
+        #endregion
+        #region Gentrate Concession
+        Task<List<StudentConcessionGenerateStatusResponse>> GetConcessionListViewAsync(GeConcessionGentrationRequest request, APIRequestDetails apiRequestDetails);
         #endregion
     }
 }

@@ -145,5 +145,7 @@ public partial class StudentMasterView
 
     public string ClassSection { get; set; } = null!;
 
+    public decimal? Concession { get; set; }
+
     public Guid? Guid { get; set; }
 }

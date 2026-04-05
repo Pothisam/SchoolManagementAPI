@@ -351,7 +351,7 @@ namespace Repository.StudentFeesTransactionRepository
                       && sft.Credit > 0
                       && sft.Status == "Approved"
                       && sft.InstitutionCode == apiRequestDetails.InstitutionCode
-                      && sft.FeesTypeFkid == request.FeesTypeFkid
+                      && (request.FeesTypeFkid == 0 || sft.FeesTypeFkid == request.FeesTypeFkid)
                       && sft.GenerateDate >= request.FromDate
                       && sft.GenerateDate <= request.ToDate
 

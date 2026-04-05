@@ -106,7 +106,8 @@ namespace Services.StudentServices
                 ClassSectionFkid = request.studentdetails.ClassSection,
                 InstitutionCode = apiRequestDetails.InstitutionCode,
                 StudentType = request.studentdetails.StudentType,
-                EnteredBy = apiRequestDetails.UserName
+                EnteredBy = apiRequestDetails.UserName,
+                Concession = request.studentdetails.Concession,
 
             };
             var StudentID = await _IStudentRepo.AddStudent(studentdetails, Studentpasstable, StudentClassDetail);
@@ -402,6 +403,7 @@ namespace Services.StudentServices
                 classDetail.RollNo = request.RollNo;
                 classDetail.ExamRegisterNumber = request.ExamRegisterNumber;
                 classDetail.ModifiedBy = apiRequestDetails.UserName;
+                classDetail.Concession = request.Concession;
             }
 
             var result = await _IStudentRepo.UpdateAsync(student, classDetail);

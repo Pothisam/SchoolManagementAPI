@@ -19,6 +19,8 @@ public partial class StudentClassDetail
 
     public string? ExamRegisterNumber { get; set; }
 
+    public decimal? Concession { get; set; }
+
     public string Status { get; set; } = null!;
 
     public int InstitutionCode { get; set; }

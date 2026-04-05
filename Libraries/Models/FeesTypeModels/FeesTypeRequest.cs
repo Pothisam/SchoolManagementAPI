@@ -42,4 +42,11 @@ namespace Models.FeesTypeModels
         public int[] studentdetailsfkid { get; set; }  = Array.Empty<int>();
         public bool Approved { get; set; }
     }
+    public class GeConcessionGentrationRequest
+    {
+        public int acadamicYear { get; set; }
+        public int classfkid { get; set; }
+        public int sectionfkid { get; set; }
+        public int feestypefkid { get; set; }
+    }
 }

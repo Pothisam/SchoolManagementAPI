@@ -86,5 +86,14 @@ namespace SchoolManagementAPI.Controllers
 
             return Ok(result);
         }
+        #region Gentrate Concession
+        [HttpPost("GetConcessionList")]
+        public async Task<IActionResult> GetConcessionList(GeConcessionGentrationRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _FeesTypeService.GetConcessionListViewAsync(request, apiRequestDetails);
+            return Ok(result);
+        }
+        #endregion
     }
 }

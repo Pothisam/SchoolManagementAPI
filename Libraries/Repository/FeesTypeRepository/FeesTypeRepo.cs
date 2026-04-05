@@ -342,6 +342,87 @@ namespace Repository.FeesTypeRepository
 
             return rows.Count;
         }
+
+
+        #endregion
+        #region Gentrate Concession
+        public async Task<List<StudentConcessionGenerateStatusResponse>> GetConcessionListViewAsync(GeConcessionGentrationRequest request, APIRequestDetails apiRequestDetails)
+        {
+            // Step 1: Filter + dedupe key: take Max(SysId) per StudentDetailsFkid
+            var scdKeys =
+                from scd in _context.StudentClassDetails
+                where scd.InstitutionCode == apiRequestDetails.InstitutionCode
+                      && scd.AcademicYearFkid == request.acadamicYear
+                      && scd.ClassSectionFkid == request.sectionfkid
+                      && scd.Status == "Active"
+                group scd by new { scd.StudentDetailsFkid, scd.InstitutionCode } into g
+                select new
+                {
+                    g.Key.StudentDetailsFkid,
+                    g.Key.InstitutionCode,
+                    StudentClassDetailsSysId = g.Max(x => x.SysId)
+                };
+
+            // Step 2: Join back to StudentClassDetails using Max(SysId) to get the actual row
+            var query =
+                from k in scdKeys
+                join scd in _context.StudentClassDetails
+                    on new { SysId = k.StudentClassDetailsSysId, k.InstitutionCode }
+                    equals new { SysId = scd.SysId, scd.InstitutionCode }
+
+                join smw in _context.StudentMasterViews
+                    on new { Sysid = scd.StudentDetailsFkid, scd.InstitutionCode }
+                    equals new { Sysid = smw.Sysid, smw.InstitutionCode }
+
+                join ay in _context.AcademicYears
+                    on new { SysId = scd.AcademicYearFkid, scd.InstitutionCode }
+                    equals new { ay.SysId, ay.InstitutionCode }
+
+                join cs in _context.ClassSections
+                    on new { SysId = scd.ClassSectionFkid, scd.InstitutionCode }
+                    equals new { cs.SysId, cs.InstitutionCode }
+
+                join c in _context.Classes
+                    on new { SysId = cs.ClassFkid, cs.InstitutionCode }
+                    equals new { c.SysId, c.InstitutionCode }
+
+                    // LEFT JOIN StudentFeesTransactions (IMPORTANT: StudentClassDetailsFKID = scd.SysId)
+                join sft0 in _context.StudentFeesTransactions.Where(x=> x.Debit < 0)
+                    on new
+                    {
+                        StudentFKID = scd.StudentDetailsFkid,
+                        StudentClassDetailsFKID = scd.SysId,
+                        FeesTypeFKID = request.feestypefkid,
+                        scd.InstitutionCode
+                    }
+                    equals new
+                    {
+                        StudentFKID = sft0.StudentFkid,
+                        StudentClassDetailsFKID = sft0.StudentClassDetailsFkid,
+                        FeesTypeFKID = sft0.FeesTypeFkid,
+                        sft0.InstitutionCode
+                    }
+                    into sftGroup
+                from sft in sftGroup.DefaultIfEmpty()
+
+                    // keep if you want to ensure section belongs to requested class
+                where c.SysId == request.classfkid
+
+                select new StudentConcessionGenerateStatusResponse
+                {
+                    Sysid = smw.Sysid,
+                    StudentName = smw.StudentName,
+                    Stdid = smw.Stdid,
+                    ClassName = c.ClassName,
+                    SectionName = cs.SectionName,
+                    Hostel = smw.Hostel,
+                    Year = ay.Year,
+                    Amount = scd.Concession ?? 0,
+                    Status = sft != null ? "Generated" : "Not Generated"
+                };
+
+            return await query.ToListAsync();
+        }
         #endregion
     }
 }

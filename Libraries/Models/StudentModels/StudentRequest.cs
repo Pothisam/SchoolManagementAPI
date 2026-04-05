@@ -133,6 +133,7 @@ namespace Models.StudentModels
         public string? ImageContentType { get; set; }
 
         public string? ImageData { get; set; }
+        public decimal? Concession { get; set; }
 
     }
     public partial class StudentRequestbySysid

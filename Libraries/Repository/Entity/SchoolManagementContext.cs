@@ -929,6 +929,9 @@ public partial class SchoolManagementContext : DbContext
 
             entity.Property(e => e.AcademicYearFkid).HasColumnName("AcademicYearFKID");
             entity.Property(e => e.ClassSectionFkid).HasColumnName("ClassSectionFKID");
+            entity.Property(e => e.Concession)
+                .HasColumnType("decimal(8, 2)")
+                .HasColumnName("concession");
             entity.Property(e => e.EnteredBy)
                 .HasMaxLength(30)
                 .IsUnicode(false);
@@ -1267,6 +1270,9 @@ public partial class SchoolManagementContext : DbContext
             entity.Property(e => e.Community)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.Concession)
+                .HasColumnType("decimal(8, 2)")
+                .HasColumnName("concession");
             entity.Property(e => e.DateOfAdmission).HasColumnType("date");
             entity.Property(e => e.Dob)
                 .HasColumnType("date")

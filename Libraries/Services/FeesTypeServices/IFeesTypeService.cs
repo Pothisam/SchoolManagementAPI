@@ -22,5 +22,8 @@ namespace Services.FeesTypeServices
         Task<CommonResponse<List<ApproveFeesViewResponse>>> GetApproveFeesViewAsync(GetApproveFeesViewRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<string>> UpdateFeesApproveAsync(UpdateFeesApproveRequest request, APIRequestDetails apiRequestDetails);
         #endregion
+        #region Gentrate Concession
+        Task<CommonResponse<List<StudentConcessionGenerateStatusResponse>>> GetConcessionListViewAsync(GeConcessionGentrationRequest request, APIRequestDetails apiRequestDetails);
+        #endregion
     }
 }

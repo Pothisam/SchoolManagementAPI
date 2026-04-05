@@ -150,6 +150,7 @@ namespace Models.StudentModels
         public string ClassSection { get; set; } = null!;
 
         public Guid? Guid { get; set; }
+        public decimal Concession { get; set; }
     }
     public class StudentCountResponse
     {
@@ -324,6 +325,8 @@ namespace Models.StudentModels
         public string ClassSection { get; set; } = null!;
 
         public Guid? Guid { get; set; }
+
+        public decimal? Concession { get; set; }
     }
     public class AddStudentClassDetailRequest
     {

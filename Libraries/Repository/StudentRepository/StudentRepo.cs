@@ -337,7 +337,8 @@ namespace Repository.StudentRepository
                                                                       ClassSectionSysId = x.ClassSectionSysId,
                                                                       Section = x.Section,
                                                                       ClassSection = x.ClassSection,
-                                                                      Guid = x.Guid
+                                                                      Guid = x.Guid,
+                                                                      Concession = x.Concession ?? 0
                                                                   }).FirstOrDefaultAsync();
             return StudentMasterView ?? new StudentMasterViewResponse();
         }

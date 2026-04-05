@@ -265,6 +265,29 @@ namespace Services.FeesTypeServices
             return response;
         }
 
+
+
+        #endregion
+        #region Gentrate Concession
+        public async Task<CommonResponse<List<StudentConcessionGenerateStatusResponse>>> GetConcessionListViewAsync(GeConcessionGentrationRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StudentConcessionGenerateStatusResponse>>();
+
+            List<StudentConcessionGenerateStatusResponse> result = await _feesTyperepo.GetConcessionListViewAsync(request, apiRequestDetails);
+
+            if (result.Any())
+            {
+                response.Status = Status.Success;
+                response.Data = result;
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "No Data Found";
+            }
+
+            return response;
+        }
         #endregion
     }
 }
