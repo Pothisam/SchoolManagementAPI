@@ -49,6 +49,7 @@ namespace Models.StudentFeesTransactionModels
         public string Description { get; set; }
         public decimal Credit { get; set; }
         public string Status { get; set; }
+        public string Remark { get; set; }
         public string EntryBy { get; set; }
         public string ModifiedBy { get; set; }
         public DateTime ModifiedDate { get; set; }
@@ -88,6 +89,7 @@ namespace Models.StudentFeesTransactionModels
         public string RecicptNo { get; set; } = string.Empty;
         public string Createdby { get; set; } = string.Empty;
         public string FeesDescription { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
     }
     public class GetFeesReportDateWisePrintResponse
     {

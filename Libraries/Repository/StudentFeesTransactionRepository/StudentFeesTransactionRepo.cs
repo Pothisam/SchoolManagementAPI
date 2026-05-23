@@ -48,7 +48,7 @@ namespace Repository.StudentFeesTransactionRepository
                                       && sft.InstitutionCode == apiRequestDetails.InstitutionCode
                                       && sft.Status == "Approved"
 
-                                group new { sft, sd, c, cs, ay, scd } by new
+                                group new { sft, sd, c, cs, ay, scd, documentGroup } by new
                                 {
                                     sd.SysId,
                                     sd.Stdid,
@@ -79,10 +79,10 @@ namespace Repository.StudentFeesTransactionRepository
                                     Credit = g.Sum(x => x.sft.Credit),
                                     Balance = g.Sum(x => x.sft.Debit) - g.Sum(x => x.sft.Credit),
                                     AcadamicYear = g.Key.AcademicYearSysId,
-                                    Guid = documentQuery
-                                                   .OrderBy(d => d.ModifiedBy)
-                                                   .Select(d => (Guid?)d.Guid)
-                                                   .FirstOrDefault()
+                                    Guid = g.SelectMany(x => x.documentGroup)
+            .OrderByDescending(d => d.ModifiedDate)
+            .Select(d => (Guid?)d.Guid)
+            .FirstOrDefault()
                                 }).ToListAsync();
 
             return result;
@@ -240,7 +240,8 @@ namespace Repository.StudentFeesTransactionRepository
                     ModifiedBy = sft.ModifiedBy,
                     ModifiedDate = sft.ModifiedDate,
                     GenerateDate = sft.GenerateDate,
-                    FeesId = sft.FeesTypeFkid
+                    FeesId = sft.FeesTypeFkid,
+                    Remark = sft.Remark
                 }
             ).ToListAsync();
 
@@ -349,7 +350,6 @@ namespace Repository.StudentFeesTransactionRepository
 
                 where sft.TransationType == "CR"
                       && sft.Credit > 0
-                      && sft.Status == "Approved"
                       && sft.InstitutionCode == apiRequestDetails.InstitutionCode
                       && (request.FeesTypeFkid == 0 || sft.FeesTypeFkid == request.FeesTypeFkid)
                       && sft.GenerateDate >= request.FromDate
@@ -370,7 +370,8 @@ namespace Repository.StudentFeesTransactionRepository
                     DOB = sd.Dob,
                     RecicptNo = GetFinancialYear(sft.GenerateDate) + '-' + sft.RefNo.ToString(),
                     Createdby = sft.EntryBy,
-                    FeesDescription = ft.FeesDescription
+                    FeesDescription = ft.FeesDescription,
+                    Status = sft.Status
                 }
             )
             .OrderBy(x => x.GenerateDate)
@@ -431,7 +432,36 @@ namespace Repository.StudentFeesTransactionRepository
 
             return $"{startYear % 100:D2}-{endYear % 100:D2}";
         }
-        #endregion
 
+        public async Task<bool> DeleteCredit(DeleteFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            try
+            {
+                var entity = await _context.StudentFeesTransactions
+                    .FirstOrDefaultAsync(x =>
+                        x.SysId == request.SysId &&
+                        x.InstitutionCode == apiRequestDetails.InstitutionCode);
+
+                if (entity == null)
+                {
+                    return false;
+                }
+
+                entity.Status = "Deleted";
+                entity.Remark = request.Remark;
+                entity.ModifiedBy = apiRequestDetails.UserName;
+
+                _context.StudentFeesTransactions.Update(entity);
+
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        #endregion
     }
 }

@@ -25,5 +25,8 @@ namespace Repository.StudentFeesTransactionRepository
         Task<List<GetFeesReportDateWiseResponse>> GetFeesReportDateWiseAsync(GetFeesReportDateWiseRequest request, APIRequestDetails apiRequestDetails);
         Task<GetFeesReportDateWisePrintResponse?> GetFeesReportByIdAsync(GetPrintCashReceiptValueRequest request, APIRequestDetails apiRequestDetails);
         #endregion
+        #region Fees Report
+        Task<bool> DeleteCredit(DeleteFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
+        #endregion
     }
 }

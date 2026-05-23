@@ -215,6 +215,23 @@ namespace Services.StudentFeesTransactionServices
             response.Data = result;
             return response;
         }
+
+        public async Task<CommonResponse<string>> DeleteCredit(DeleteFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<string>();
+            var result = await _studentFeesTransactionRepo.DeleteCredit(request, apiRequestDetails);
+            if (result)
+            {
+                response.Status = Status.Success;
+                response.Message = "transaction deleted Successfully";
+            }
+            else
+            {
+                response.Status = Status.Failed;
+                response.Message = "Failed to delete transaction";
+            }
+            return response;
+        }
         #endregion
     }
 }

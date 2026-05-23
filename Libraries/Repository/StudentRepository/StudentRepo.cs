@@ -412,12 +412,13 @@ namespace Repository.StudentRepository
         public async Task<StudentMasterDetailsViewResponse> GetStudentMasterDetailBySysid(StudentMasterDetailsViewRequest request, APIRequestDetails apiRequestDetails)
         {
             var documentQuery = _context.DocumentLibraries
-                .Where(d => d.Action == "Image-Upload"
-                            && d.TableName == "StudentDetails"
-                            && d.FileSize != 0);
+    .Where(d => d.Action == "Image-Upload"
+                && d.TableName == "StudentDetails"
+                && d.FileSize != 0
+                && d.InstitutionCode == apiRequestDetails.InstitutionCode);
             var result = await(from sd in _context.StudentDetails
                                join scd in _context.StudentClassDetails
-                                    on sd.SysId equals scd.SysId into scdJoin
+                                    on sd.SysId equals scd.StudentDetailsFkid into scdJoin
                                from scd in scdJoin.DefaultIfEmpty()
 
                                join cs in _context.ClassSections
@@ -441,10 +442,11 @@ namespace Repository.StudentRepository
                                    ClassName = c.ClassName + " (" + cs.SectionName + ")",
                                    DOB = sd.Dob,
                                    RollNo = scd.RollNo,
-                                   Guid = documentQuery
-                                                .OrderBy(d => d.ModifiedBy)
-                                                .Select(d => (Guid?)d.Guid)
-                                                .FirstOrDefault()
+                                   Guid = documentGroup
+    .OrderByDescending(d => d.ModifiedDate)
+    .ThenByDescending(d => d.Sysid)
+    .Select(d => (Guid?)d.Guid)
+    .FirstOrDefault()
                                }).FirstOrDefaultAsync();
             return result;
         }

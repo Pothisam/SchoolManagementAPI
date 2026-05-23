@@ -19,7 +19,12 @@ namespace Models.StudentFeesTransactionModels
     public class GetDebitRequest
     {
         public int SysId { get; set; }
-        public int Batch { get; set; } 
+        public int Batch { get; set; }
+    }
+    public class DeleteFeesTransactionRequest
+    {
+        public int SysId { get; set; }
+        public string Remark { get; set; }
     }
     public class AddStudentFeesTransactionRequest
     {

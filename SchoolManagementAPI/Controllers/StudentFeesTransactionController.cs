@@ -68,5 +68,12 @@ namespace SchoolManagementAPI.Controllers
             var result = await _studentFeesTransactionService.GetFeesReportByIdAsync(request, apiRequestDetails);
             return Ok(result);
         }
+        [HttpPost("DeleteTransaction")]
+        public async Task<IActionResult> DeleteTransaction(DeleteFeesTransactionRequest request)
+        {
+            var apiRequestDetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _studentFeesTransactionService.DeleteCredit(request, apiRequestDetails);
+            return Ok(result);
+        }
     }
 }

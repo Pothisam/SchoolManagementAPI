@@ -18,5 +18,6 @@ namespace Services.StudentFeesTransactionServices
         Task<CommonResponse<string>> AddStudentFeesTransactionAsync(AddStudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<GetFeesReportDateWiseResponse>>> GetFeesReportDateWiseAsync(GetFeesReportDateWiseRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<GetFeesReportDateWisePrintResponse>> GetFeesReportByIdAsync(GetPrintCashReceiptValueRequest request,APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<string>> DeleteCredit(DeleteFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
     }
 }
