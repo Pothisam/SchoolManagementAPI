@@ -5,6 +5,7 @@ using Repository.AcademicYearRepository;
 using Repository.ClassRepository;
 using Repository.ClassSectionRepository;
 using Repository.CommonRepository;
+using Repository.DashboardRepository;
 using Repository.DocumentLibraryRepository;
 using Repository.Entity;
 using Repository.FeesTypeRepository;
@@ -35,6 +36,7 @@ namespace Repository
             service.AddScoped<IReportRepo, ReportRepo>();
             service.AddScoped<IFeesTypeRepo, FeesTypeRepo>();
             service.AddScoped<IStudentFeesTransactionRepo, StudentFeesTransactionRepo>();
+            service.AddScoped<IDashboardRepo, DashboardRepo>();
             return service;
         }
     }

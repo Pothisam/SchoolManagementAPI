@@ -10,6 +10,7 @@ using Services.AcademicYearServices;
 using Services.ClassSectionServices;
 using Services.ClassServices;
 using Services.CommonServices;
+using Services.DashboardServices;
 using Services.DocumentLibraryServices;
 using Services.FeesTypeServices;
 using Services.InstitutionDetailsServices;
@@ -39,6 +40,7 @@ namespace Services
             service.AddScoped<IStudentFeesTransactionService, StudentFeesTransactionService>();
 
             service.AddScoped<IFeesTypeService, FeesTypeService>();
+            service.AddScoped<IDashboardService, DashboardService>();
             return service;
         }
     }
