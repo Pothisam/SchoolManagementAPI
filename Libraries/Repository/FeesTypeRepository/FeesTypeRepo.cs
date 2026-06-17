@@ -118,7 +118,7 @@ namespace Repository.FeesTypeRepository
                         sft0.InstitutionCode
                     }
                     into sftGroup
-                from sft in sftGroup.Where(x => x.TransationType == "DR" && x.Debit > 0 && x.Description != "concession").DefaultIfEmpty()
+                from sft in sftGroup.Where(x => x.TransationType == "DR" && x.Debit > 0 && x.Description != "concession" && x.Status != "Deleted").DefaultIfEmpty()
 
                     // keep if you want to ensure section belongs to requested class
                 where c.SysId == request.classfkid
