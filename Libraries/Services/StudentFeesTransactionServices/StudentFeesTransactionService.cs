@@ -34,6 +34,15 @@ namespace Services.StudentFeesTransactionServices
             }
             return response;
         }
+        public async Task<CommonResponse<List<StudentFeesTransactionFeesTypeResponse>>> GetFeesListWithFeesTypeAsync(StudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            var response = new CommonResponse<List<StudentFeesTransactionFeesTypeResponse>>();
+            var result = await _studentFeesTransactionRepo.GetFeesListWithFeesTypeAsync(request, apiRequestDetails);
+            response.Status = Status.Success;
+            response.Message = result.Count == 0 ? "No Data Found" : "";
+            response.Data = result;
+            return response;
+        }
         public async Task<CommonResponse<List<StudentFeesTransactionResponse>>> GetFeesDetailsBtNameList(StudentFeesTransactionByNameRequest request, APIRequestDetails apiRequestDetails)
         {
             var response = new CommonResponse<List<StudentFeesTransactionResponse>>();

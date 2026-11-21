@@ -26,6 +26,13 @@ namespace SchoolManagementAPI.Controllers
             var result = await _studentFeesTransactionService.GetFeesList(request, apirequestdetails);
             return Ok(result);
         }
+        [HttpPost("GetFeesDetailsByClassWithFeesType")]
+        public async Task<IActionResult> GetFeesDetailsByClassWithFeesType(StudentFeesTransactionRequest request)
+        {
+            var apirequestdetails = _ICommonService.GetAPIRequestDetails(User);
+            var result = await _studentFeesTransactionService.GetFeesListWithFeesTypeAsync(request, apirequestdetails);
+            return Ok(result);
+        }
         [HttpPost("GetFeesDetailsByName")]
         public async Task<IActionResult> GetFeesDetailsByName(StudentFeesTransactionByNameRequest request)
         {

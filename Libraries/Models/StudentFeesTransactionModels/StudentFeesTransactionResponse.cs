@@ -23,6 +23,24 @@ namespace Models.StudentFeesTransactionModels
         public int AcadamicYear { get; set; }
         public int ClassSectionSysId { get; set; }
     }
+    public class StudentFeesTransactionFeesTypeResponse
+    {
+        public int SysId { get; set; }
+        public string Stdid { get; set; }
+        public string rollno { get; set; }
+        public string Name { get; set; }
+        public string Initial { get; set; }
+        public string ClassName { get; set; }
+        public string SectionName { get; set; }
+        public string Year { get; set; }
+        public int AcadamicYear { get; set; }
+        public int ClassSectionSysId { get; set; }
+        public int FeesTypeId { get; set; }
+        public string FeesDescription { get; set; }
+        public decimal Debit { get; set; }
+        public decimal Credit { get; set; }
+        public decimal Balance { get; set; }
+    }
     public class GetDebitItemResponse
     {
         public int SysId { get; set; }

@@ -12,6 +12,7 @@ namespace Services.StudentFeesTransactionServices
     public interface IStudentFeesTransactionService
     {
         Task<CommonResponse<List<StudentFeesTransactionResponse>>> GetFeesList(StudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
+        Task<CommonResponse<List<StudentFeesTransactionFeesTypeResponse>>> GetFeesListWithFeesTypeAsync(StudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<List<StudentFeesTransactionResponse>>> GetFeesDetailsBtNameList(StudentFeesTransactionByNameRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<GetDebitResponse>> GetDebitAsync(GetDebitRequest request, APIRequestDetails apiRequestDetails);
         Task<CommonResponse<GetCreditResponse>> GetCreditAsync(GetDebitRequest request, APIRequestDetails apiRequestDetails);

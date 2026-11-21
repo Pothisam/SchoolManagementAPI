@@ -87,6 +87,56 @@ namespace Repository.StudentFeesTransactionRepository
 
             return result;
         }
+        public async Task<List<StudentFeesTransactionFeesTypeResponse>> GetFeesListWithFeesTypeAsync(StudentFeesTransactionRequest request, APIRequestDetails apiRequestDetails)
+        {
+            return await (
+                from sft in _context.StudentFeesTransactions.AsNoTracking()
+                join scd in _context.StudentClassDetails.AsNoTracking() on sft.StudentClassDetailsFkid equals scd.SysId
+                join sd in _context.StudentDetails.AsNoTracking() on scd.StudentDetailsFkid equals sd.SysId
+                join cs in _context.ClassSections.AsNoTracking() on scd.ClassSectionFkid equals cs.SysId
+                join c in _context.Classes.AsNoTracking() on cs.ClassFkid equals c.SysId
+                join ay in _context.AcademicYears.AsNoTracking() on scd.AcademicYearFkid equals ay.SysId
+                join ft in _context.FeesTypes.AsNoTracking() on sft.FeesTypeFkid equals ft.Sysid
+                where ay.SysId == request.Batch
+                      && c.SysId == request.Class
+                      && cs.SysId == request.Section
+                      && sft.InstitutionCode == apiRequestDetails.InstitutionCode
+                      && sft.Status == "Approved"
+                group sft by new
+                {
+                    sd.SysId,
+                    sd.Stdid,
+                    scd.RollNo,
+                    sd.Name,
+                    sd.Initial,
+                    c.ClassName,
+                    cs.SectionName,
+                    ay.Year,
+                    AcademicYearSysId = ay.SysId,
+                    CSSysid = scd.SysId,
+                    FeesTypeId = ft.Sysid,
+                    ft.FeesDescription
+                } into g
+                orderby g.Key.RollNo, g.Key.FeesDescription
+                select new StudentFeesTransactionFeesTypeResponse
+                {
+                    SysId = g.Key.SysId,
+                    Stdid = g.Key.Stdid,
+                    rollno = g.Key.RollNo,
+                    Name = g.Key.Name + " " + g.Key.Initial,
+                    Initial = g.Key.Initial,
+                    ClassName = g.Key.ClassName + " (" + g.Key.SectionName + ")",
+                    SectionName = g.Key.SectionName,
+                    Year = g.Key.Year,
+                    AcadamicYear = g.Key.AcademicYearSysId,
+                    ClassSectionSysId = g.Key.CSSysid,
+                    FeesTypeId = g.Key.FeesTypeId,
+                    FeesDescription = g.Key.FeesDescription,
+                    Debit = g.Sum(x => x.Debit),
+                    Credit = g.Sum(x => x.Credit),
+                    Balance = g.Sum(x => x.Debit) - g.Sum(x => x.Credit)
+                }).ToListAsync();
+        }
         public async Task<List<StudentFeesTransactionResponse>> GetFeesDetailsBtNameList(StudentFeesTransactionByNameRequest request, APIRequestDetails apiRequestDetails)
         {
             var documentQuery = _context.DocumentLibraries
