@@ -11,6 +11,8 @@ namespace Models.DashboardModels
     {
         public int ClassSysId { get; set; }
         public string? ClassName { get; set; }
+        public int FeesTypeId { get; set; }
+        public string? FeesDescription { get; set; }
         public decimal TotalFeesAmount { get; set; }
         public decimal FeesAmountReceived { get; set; }
         public decimal FeesBalance { get; set; }

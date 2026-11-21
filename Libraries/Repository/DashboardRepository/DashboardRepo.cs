@@ -43,15 +43,18 @@ namespace Repository.DashboardRepository
                 join cs in _context.ClassSections.AsNoTracking() on scd.ClassSectionFkid equals cs.SysId
                 join c in _context.Classes.AsNoTracking() on cs.ClassFkid equals c.SysId
                 join ay in _context.AcademicYears.AsNoTracking() on scd.AcademicYearFkid equals ay.SysId
+                join ft in _context.FeesTypes.AsNoTracking() on sft.FeesTypeFkid equals ft.Sysid
                 where sft.InstitutionCode == apiRequestDetails.InstitutionCode
                    && ay.SysId == request.AcademicYearSysId
                    && sft.Status == "Approved"
-                group sft by new { c.SysId, c.ClassName } into g
-                orderby g.Key.ClassName
+                group sft by new { c.SysId, c.ClassName, FeesTypeId = ft.Sysid, ft.FeesDescription } into g
+                orderby g.Key.ClassName, g.Key.FeesDescription
                 select new FeesSummaryClassWiseResponse
                 {
                     ClassSysId = g.Key.SysId,
                     ClassName = g.Key.ClassName,
+                    FeesTypeId = g.Key.FeesTypeId,
+                    FeesDescription = g.Key.FeesDescription,
                     TotalFeesAmount = g.Sum(x => x.Debit),
                     FeesAmountReceived = g.Sum(x => x.Credit),
                     FeesBalance = g.Sum(x => x.Debit) - g.Sum(x => x.Credit)
